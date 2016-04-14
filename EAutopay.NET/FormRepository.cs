@@ -8,6 +8,8 @@ namespace EAutopay.NET
 {
     public class FormRepository
     {
+        private FormRepository() { }
+
         /// <summary>
         /// Returns form object with specified ID.
         /// </summary>
