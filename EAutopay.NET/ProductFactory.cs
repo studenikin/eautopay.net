@@ -7,6 +7,8 @@ namespace EAutopay.NET
 {
     public class ProductFactory
     {
+        private ProductFactory() { }
+
         public static Product Get(int id)
         {
             var allProducts = GetAll();
