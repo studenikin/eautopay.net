@@ -1,1 +1,3 @@
 language: csharp
+
+sudo: false  # use the new container-based Travis infrastructure
