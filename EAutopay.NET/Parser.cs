@@ -45,21 +45,24 @@ namespace EAutopay.NET
 
         public static List<Product> GetProducts(string body)
         {
+            var products = new List<Product>();
+
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(body);
             var root = htmlDoc.DocumentNode;
 
-            //XPath returns product data rows without header
-            var rows = root.SelectSingleNode("//table").SelectNodes("tr[@id]");
-            var products = new List<Product>();
-
-            if (rows != null)
+            var table = root.SelectSingleNode("//table");
+            if (table !=null)
             {
-                foreach (var row in rows)
+                var rows = table.SelectNodes("tr[@id]"); //takes TRs without header
+                if (rows != null)
                 {
-                    var p = new Product();
-                    FillProduct(p, row);
-                    products.Add(p);
+                    foreach (var row in rows)
+                    {
+                        var p = new Product();
+                        FillProduct(p, row);
+                        products.Add(p);
+                    }
                 }
             }
 
@@ -88,15 +91,18 @@ namespace EAutopay.NET
             var root = htmlDoc.DocumentNode;
 
             var table = root.SelectSingleNode("//table[@id='table_group_0']");
-            var rows = table.SelectNodes("tr[@id]");
-
-            if (rows != null)
+            if (table != null)
             {
-                foreach (var tr in rows)
+                var rows = table.SelectNodes("tr[@id]");
+
+                if (rows != null)
                 {
-                    var form = new HtmlFormDataRow();
-                    FillFormDataRow(form, tr);
-                    forms.Add(form);
+                    foreach (var tr in rows)
+                    {
+                        var form = new HtmlFormDataRow();
+                        FillFormDataRow(form, tr);
+                        forms.Add(form);
+                    }
                 }
             }
             return forms;

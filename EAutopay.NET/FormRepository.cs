@@ -14,7 +14,7 @@ namespace EAutopay.NET
         /// Returns form object with specified ID.
         /// </summary>
         /// <param name="id">ID of the form to be returned.</param>
-        /// <returns></returns>
+        /// <returns>Form with specified ID.</returns>
         public static Form Get(int id)
         {
             var forms = GetAll();
@@ -24,7 +24,7 @@ namespace EAutopay.NET
         /// <summary>
         /// Returns all forms existing in E-Autopay.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of forms.</returns>
         public static List<Form> GetAll()
         {
             var forms = new List<Form>();
