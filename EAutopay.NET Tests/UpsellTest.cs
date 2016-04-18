@@ -104,15 +104,18 @@ namespace EAutopay.NET_Tests
 
                 // Check that the "Allow upsells" checkbox has been enabled.
                 var checkbox = root.SelectSingleNode("//input[@name='additional_tovar_offer'][@type='checkbox']");
+                Assert.IsNotNull(checkbox);
                 Assert.AreEqual(true, checkbox.Attributes["checked"] != null);
                 Assert.AreEqual("checked", checkbox.Attributes["checked"].Value);
 
                 // Check that the "Interval" textbox has correct value.
                 var interval = root.SelectSingleNode("//input[@name='time_for_add']");
+                Assert.IsNotNull(interval);
                 Assert.AreEqual(Config.UPSELL_INTERVAL, interval.Attributes["value"].Value);
 
                 // Check that the "Upsell page" textbox has correct value.
                 var page = root.SelectSingleNode("//input[@name='additional_tovar_page_offer']");
+                Assert.IsNotNull(page);
                 Assert.AreEqual(Config.GetUpsellPageURI(), page.Attributes["value"].Value);
             }
         }
@@ -130,6 +133,7 @@ namespace EAutopay.NET_Tests
 
                 // Check that the "Allow upsells" checkbox has been disabled.
                 var checkbox = root.SelectSingleNode("//input[@name='additional_tovar_offer'][@type='checkbox']");
+                Assert.IsNotNull(checkbox);
                 Assert.IsNull(checkbox.Attributes["checked"]);
             }
         }
