@@ -54,7 +54,7 @@ namespace EAutopay.NET
             var table = root.SelectSingleNode("//table");
             if (table !=null)
             {
-                var rows = table.SelectNodes("tr[@id]"); //takes TRs without header
+                var rows = table.SelectNodes("tr[@id]"); // takes TRs without header
                 if (rows != null)
                 {
                     foreach (var row in rows)
