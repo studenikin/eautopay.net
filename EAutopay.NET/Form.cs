@@ -38,17 +38,18 @@ namespace EAutopay.NET
             };
 
             var poster = new Poster();
-            poster.HttpPost(Config.URI_FORM_SAVE, paramz);
-
-            if (IsNew)
+            using (var resp = poster.HttpPost(Config.URI_FORM_SAVE, paramz))
             {
-                var lastForm = FormRepository.GetNewest();
-                if (lastForm != null)
+                if (IsNew)
                 {
-                    _id = lastForm.ID;
+                    var lastForm = FormRepository.GetNewest();
+                    if (lastForm != null)
+                    {
+                        _id = lastForm.ID;
+                    }
                 }
+                return _id;
             }
-            return _id;
         }
 
         public void Delete()
@@ -61,9 +62,10 @@ namespace EAutopay.NET
             };
 
             var poster = new Poster();
-            poster.HttpPost(Config.URI_FORM_DELETE, paramz);
-
-            IsNew = true;
+            using (var resp = poster.HttpPost(Config.URI_FORM_DELETE, paramz))
+            {
+                IsNew = true;
+            }
         }
 
         internal void Fill(IFormDataRow dr)
