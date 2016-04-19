@@ -51,7 +51,7 @@ namespace EAutopay.NET
 
 
         /// <summary>
-        /// Creates new product if ID equals zero.
+        /// Updates product or creates new one if ID equals zero.
         /// </summary>
         /// <returns>Product ID.</returns>
         public int Save()
@@ -76,8 +76,8 @@ namespace EAutopay.NET
                     ID = Parser.GetProductID(reader.ReadToEnd());
                 }
                 SetPrice();
+                return ID;
             }
-            return ID;
         }
 
         private string GetNameForUpsell()
@@ -115,7 +115,7 @@ namespace EAutopay.NET
             };
 
             var poster = new Poster();
-            poster.HttpPost(Config.URI_SAVE_PRODUCT, paramz);
+            using (var resp = poster.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
         }
 
 
@@ -183,7 +183,7 @@ namespace EAutopay.NET
             };
 
             var poster = new Poster();
-            poster.HttpPost(Config.URI_SAVE_PRODUCT, paramz);
+            using (var resp = poster.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace EAutopay.NET
             };
 
             var poster = new Poster();
-            poster.HttpPost(Config.GetUpsellURI(ID), paramz);
+            using (var resp = poster.HttpPost(Config.GetUpsellURI(ID), paramz)) { }
         }
 
         /// <summary>
@@ -242,25 +242,6 @@ namespace EAutopay.NET
                 upsell.Remove();
             }
         }
-
-
-        /*
-         * Ignored since reference is removed automatically after executing Remove();
-        /// <summary>
-        /// Removes all references between main product and specified upsell.
-        /// </summary>
-        /// <param name="upsell">Upsell to be removed.</param>
-        private void RemoveUpsellReference(Product upsell)
-        {
-            var paramz = new NameValueCollection
-            {
-                {"_method", "DELETE"}
-            };
-
-            var poster = new Poster();
-            poster.HttpPost(Config.GetUpsellReferenceURI(ID, upsell.ID), paramz);
-        }
-        */
 
 
         /// <summary>
