@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EAutopay
+﻿namespace EAutopay
 {
     public class Config
     {

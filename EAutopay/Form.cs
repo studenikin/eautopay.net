@@ -1,31 +1,22 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 
 namespace EAutopay
 {
     public class Form
     {
         private int _id;
+
         public int ID
         {
-            get
-            {
-                return _id;
-            }
+            get { return _id;}
         }
 
         public string Name { get; set; }
 
         private bool IsNew
         {
-            get
-            {
-                return _id == 0;
-            }
-            set
-            {
-                _id = 0;
-            }
+            get { return _id == 0;}
+            set { _id = 0; }
         }
 
         public int Save()

@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Globalization;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace EAutopay
@@ -15,18 +12,12 @@ namespace EAutopay
 
         public string PriceFormatted
         {
-            get
-            {
-                return Price.ToString("C");
-            }
+            get { return Price.ToString("C");}
         }
 
         public string PriceInvariant
         {
-            get
-            {
-                return Price.ToString("F", CultureInfo.InvariantCulture); // format: 999.50
-            }
+            get { return Price.ToString("F", CultureInfo.InvariantCulture); /* format: 999.50 */ }
         }
 
         public bool IsUpsell
