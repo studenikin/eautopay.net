@@ -50,8 +50,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="FackedCache.cs" />
+    <Compile Include="PosterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EAutopay.NET\EAutopay.NET.csproj">
+      <Project>{3a37f964-d48b-4e4f-bbb6-71884ed9eb75}</Project>
+      <Name>EAutopay.NET</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

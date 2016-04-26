@@ -73,7 +73,7 @@ namespace EAutopay.NET
 
         public HttpWebResponse HttpPost(string uri, NameValueCollection paramz)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.UserAgent = "Mozila";
@@ -85,9 +85,9 @@ namespace EAutopay.NET
             request.CookieContainer = new CookieContainer();
             request.CookieContainer.Add(Cookies);
 
-            using (Stream stream = request.GetRequestStream())
+            using (var stream = request.GetRequestStream())
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(stream))
                 {
                     string postData = "";
                     paramz.Add("_token", Token);
@@ -120,7 +120,7 @@ namespace EAutopay.NET
                 uri = uri.Trim('&');
             }
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
             request.CookieContainer = new CookieContainer();
             request.CookieContainer.Add(Cookies);
 
