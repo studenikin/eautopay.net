@@ -8,19 +8,21 @@ namespace EAutopay.NET
 {
     public class Poster
     {
+        private ICache _cache;
+
         private string Token
         {
             get
             {
-                if (HttpContext.Current.Cache["eautopay_token"] == null)
+                if (_cache.Get("eautopay_token") == null)
                 {
                     Token = RetrieveToken();
                 }
-                return (string)HttpContext.Current.Cache["eautopay_token"];
+                return (string)_cache.Get("eautopay_token");
             }
             set
             {
-                HttpContext.Current.Cache.Insert("eautopay_token", value);
+                _cache.Set("eautopay_token", value);
             }
         }
 
@@ -28,27 +30,32 @@ namespace EAutopay.NET
         {
             get
             {
-                if (HttpContext.Current.Cache["eautopay_cookies"] != null)
+                if (_cache.Get("eautopay_cookies") != null)
                 {
-                    return (CookieCollection)HttpContext.Current.Cache["eautopay_cookies"];
+                    return (CookieCollection)_cache.Get("eautopay_cookies");
                 }
                 return new CookieCollection();
             }
             set
             {
                 var cookies = new CookieCollection();
-                if (HttpContext.Current.Cache["eautopay_cookies"] != null)
+                if (_cache.Get("eautopay_cookies") != null)
                 {
-                    cookies = (CookieCollection)HttpContext.Current.Cache["eautopay_cookies"];
+                    cookies = (CookieCollection)_cache.Get("eautopay_cookies");
                 }
                 cookies.Add(value);
-                HttpContext.Current.Cache.Insert("eautopay_cookies", cookies);
+                _cache.Set("eautopay_cookies", cookies);
             }
         }
 
 
-        public Poster()
+        public Poster(): this(null)
+        { }
+
+        public Poster(ICache cache)
         {
+            _cache = cache ?? new HttpCache();
+
             if (string.IsNullOrEmpty(Token))
             {
                 Token = RetrieveToken();
@@ -66,7 +73,7 @@ namespace EAutopay.NET
 
         public HttpWebResponse HttpPost(string uri, NameValueCollection paramz)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.UserAgent = "Mozila";
@@ -78,9 +85,9 @@ namespace EAutopay.NET
             request.CookieContainer = new CookieContainer();
             request.CookieContainer.Add(Cookies);
 
-            using (Stream stream = request.GetRequestStream())
+            using (var stream = request.GetRequestStream())
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(stream))
                 {
                     string postData = "";
                     paramz.Add("_token", Token);
@@ -113,7 +120,7 @@ namespace EAutopay.NET
                 uri = uri.Trim('&');
             }
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
             request.CookieContainer = new CookieContainer();
             request.CookieContainer.Add(Cookies);
 
