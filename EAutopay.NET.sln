@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EAutopay.NET", "EAutopay.NET\EAutopay.NET.csproj", "{3A37F964-D48B-4E4F-BBB6-71884ED9EB75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EAutopay.NET.Tests", "EAutopay.NET Tests\EAutopay.NET.Tests.csproj", "{548D84FF-BE2C-4690-97DB-E9A2D7C2709F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EAutopay.NET.Tests.Integration", "EAutopay.NET.Tests.Integration\EAutopay.NET.Tests.Integration.csproj", "{548D84FF-BE2C-4690-97DB-E9A2D7C2709F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EAutopay.NET.Tests", "EAutopay.NET.Tests\EAutopay.NET.Tests.csproj", "{1A0A67B6-74E5-40EA-9687-78DA71C4C635}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +23,10 @@ Global
 		{548D84FF-BE2C-4690-97DB-E9A2D7C2709F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{548D84FF-BE2C-4690-97DB-E9A2D7C2709F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{548D84FF-BE2C-4690-97DB-E9A2D7C2709F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0A67B6-74E5-40EA-9687-78DA71C4C635}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0A67B6-74E5-40EA-9687-78DA71C4C635}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0A67B6-74E5-40EA-9687-78DA71C4C635}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0A67B6-74E5-40EA-9687-78DA71C4C635}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -50,7 +50,9 @@
     <Compile Include="Form.cs" />
     <Compile Include="FormRepository.cs" />
     <Compile Include="HtmlFormDataRow.cs" />
+    <Compile Include="HttpCache.cs" />
     <Compile Include="IFormDataRow.cs" />
+    <Compile Include="ICache.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Poster.cs" />
     <Compile Include="Product.cs" />
