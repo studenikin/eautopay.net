@@ -67,8 +67,8 @@ namespace EAutopay
                 {"product_id", ID.ToString().Equals("0") ? "" : ID.ToString()}
             };
 
-            var poster = new Poster();
-            using (var resp = poster.HttpPost(Config.URI_SAVE_PRODUCT, paramz))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz))
             {
                 if (IsNew)
                 {
@@ -114,8 +114,8 @@ namespace EAutopay
                 {"price1", PriceInvariant}
             };
 
-            var poster = new Poster();
-            using (var resp = poster.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
         }
 
 
@@ -182,8 +182,8 @@ namespace EAutopay
                 {"product_id", ID.ToString()}
             };
 
-            var poster = new Poster();
-            using (var resp = poster.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
         }
 
         /// <summary>
@@ -203,8 +203,8 @@ namespace EAutopay
                 {"success_page", Config.GetUpsellSuccessPage()}
             };
 
-            var poster = new Poster();
-            using (var resp = poster.HttpPost(Config.GetUpsellURI(ID), paramz)) { }
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpPost(Config.GetUpsellURI(ID), paramz)) { }
         }
 
         /// <summary>
@@ -254,8 +254,8 @@ namespace EAutopay
                 {"id", ID.ToString()}
             };
 
-            var poster = new Poster();
-            using (var resp = poster.HttpGet(Config.URI_DELETE_PRODUCT, paramz)) { }
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.URI_DELETE_PRODUCT, paramz)) { }
         }
     }
 }

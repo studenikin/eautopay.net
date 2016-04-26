@@ -17,8 +17,8 @@ namespace EAutopay
 
         public static List<Product> GetAll()
         {
-            var poster = new Poster();
-            using (var resp = poster.HttpGet(Config.URI_PRODUCT_LIST))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.URI_PRODUCT_LIST))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 return Parser.GetProducts(reader.ReadToEnd());

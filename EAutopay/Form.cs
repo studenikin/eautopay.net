@@ -37,8 +37,8 @@ namespace EAutopay
                 {"name_form", Name}
             };
 
-            var poster = new Poster();
-            using (var resp = poster.HttpPost(Config.URI_FORM_SAVE, paramz))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpPost(Config.URI_FORM_SAVE, paramz))
             {
                 if (IsNew)
                 {
@@ -61,8 +61,8 @@ namespace EAutopay
                 {"id", ID.ToString()}
             };
 
-            var poster = new Poster();
-            using (var resp = poster.HttpPost(Config.URI_FORM_DELETE, paramz))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpPost(Config.URI_FORM_DELETE, paramz))
             {
                 IsNew = true;
             }

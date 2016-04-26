@@ -20,11 +20,11 @@ namespace EAutopay.Tests
             var cookies = new CookieCollection();
             cache.Set("eautopay_cookies", cookies);
 
-            var p = new Poster(cache);
+            var crawler = new Crawler(cache);
 
             string uri = "http://tempuri.org";
             var paramz = new NameValueCollection { { "param1", "1" }, { "param2", "xyz" } };
-            p.HttpGet(uri, paramz);
+            crawler.HttpGet(uri, paramz);
 
             var mock = new { uri };
 

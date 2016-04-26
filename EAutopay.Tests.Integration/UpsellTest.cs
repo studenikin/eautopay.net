@@ -93,8 +93,8 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellHasBeenEnabled(Product product)
         {
-            var poster = new Poster();
-            using (var resp = poster.HttpGet(Config.GetSendSettingsURI(product.ID)))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(product.ID)))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
 
@@ -122,8 +122,8 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellHasBeenDisabled(Product product)
         {
-            var poster = new Poster();
-            using (var resp = poster.HttpGet(Config.GetSendSettingsURI(product.ID)))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(product.ID)))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
 
@@ -140,8 +140,8 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellReferenceHasBeenCreated(Product product, Product upsell)
         {
-            var poster = new Poster();
-            using (var resp = poster.HttpGet(Config.GetSendSettingsURI(product.ID)))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(product.ID)))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 string html = reader.ReadToEnd();
@@ -153,8 +153,8 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellReferenceHasBeenRemoved(Product product, Product upsell)
         {
-            var poster = new Poster();
-            using (var resp = poster.HttpGet(Config.GetSendSettingsURI(product.ID)))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(product.ID)))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 string html = reader.ReadToEnd();

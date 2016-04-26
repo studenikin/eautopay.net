@@ -33,8 +33,8 @@ namespace EAutopay
             paramz["login"] = _login;
             paramz["password"] = _password;
 
-            var poster = new Poster();
-            using (var resp = poster.HttpPost(Config.URI_LOGIN, paramz))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpPost(Config.URI_LOGIN, paramz))
             {
                 var result = new AuthResult();
                 result.SetStatusFromLoginResponse(resp);
@@ -47,8 +47,8 @@ namespace EAutopay
             NameValueCollection paramz = new NameValueCollection();
             paramz["secret_answer"] = _secret;
 
-            var poster = new Poster();
-            using (var resp = poster.HttpPost(Config.URI_SECRET, paramz)) 
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpPost(Config.URI_SECRET, paramz)) 
             {
                 var result = new AuthResult();
                 result.SetStatusFromSecretResponse(resp);
@@ -58,14 +58,14 @@ namespace EAutopay
 
         public static void Logout()
         {
-            var poster = new Poster();
-            using (var resp = poster.HttpGet(Config.URI_LOGOUT)) { }
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.URI_LOGOUT)) { }
         }
 
         public static bool IsLogged()
         {
-            var poster = new Poster();
-            using (var resp = poster.HttpGet(Config.URI_MAIN))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.URI_MAIN))
             {
                 var ud = new UriDetector(resp.ResponseUri);
                 return ud.IsMainURI();

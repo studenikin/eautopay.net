@@ -29,8 +29,8 @@ namespace EAutopay
         {
             var forms = new List<Form>();
 
-            var poster = new Poster();
-            using (var resp = poster.HttpGet(Config.URI_FORM_LIST))
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.URI_FORM_LIST))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());

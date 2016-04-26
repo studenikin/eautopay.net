@@ -6,7 +6,7 @@ using System.Collections.Specialized;
 
 namespace EAutopay
 {
-    public class Poster
+    public class Crawler
     {
         private ICache _cache;
 
@@ -49,10 +49,10 @@ namespace EAutopay
         }
 
 
-        public Poster(): this(null)
+        public Crawler(): this(null)
         { }
 
-        public Poster(ICache cache)
+        public Crawler(ICache cache)
         {
             _cache = cache ?? new HttpCache();
 
