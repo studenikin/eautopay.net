@@ -5,12 +5,12 @@ using System.Net;
 using System.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using EAutopay.NET;
+using EAutopay;
 
 using HtmlAgilityPack;
 
 
-namespace EAutopay.NET_Tests
+namespace EAutopay.Tests.Integration
 {
     
     [TestClass]

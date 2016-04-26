@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EAutopay.NET
+namespace EAutopay
 {
     public class Config
     {

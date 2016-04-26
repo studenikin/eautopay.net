@@ -3,10 +3,10 @@ using System.Web;
 using System.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using EAutopay.NET;
+using EAutopay;
 
 
-namespace EAutopay.NET_Tests
+namespace EAutopay.Tests.Integration
 {
     [TestClass]
     public class AuthTest

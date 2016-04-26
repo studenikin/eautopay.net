@@ -6,7 +6,7 @@ using System.Globalization;
 using HtmlAgilityPack;
 
 
-namespace EAutopay.NET
+namespace EAutopay
 {
     public class Parser
     {

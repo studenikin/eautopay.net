@@ -3,10 +3,10 @@ using System.Net;
 using System.Collections.Specialized;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using EAutopay.NET;
+using EAutopay;
 
 
-namespace EAutopay.NET.Tests
+namespace EAutopay.Tests
 {
     [TestClass]
     public class PosterTest

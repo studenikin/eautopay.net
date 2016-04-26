@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace EAutopay.NET
+namespace EAutopay
 {
     public class ProductFactory
     {

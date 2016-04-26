@@ -55,9 +55,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EAutopay.NET\EAutopay.NET.csproj">
+    <ProjectReference Include="..\EAutopay\EAutopay.csproj">
       <Project>{3a37f964-d48b-4e4f-bbb6-71884ed9eb75}</Project>
-      <Name>EAutopay.NET</Name>
+      <Name>EAutopay</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

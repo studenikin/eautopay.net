@@ -6,10 +6,10 @@ using System.Web.SessionState;
 using System.Reflection;
 using System.Configuration;
 
-using EAutopay.NET;
+using EAutopay;
 
 
-namespace EAutopay.NET_Tests
+namespace EAutopay.Tests.Integration
 {
     class Common
     {

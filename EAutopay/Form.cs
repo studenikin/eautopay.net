@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 
-namespace EAutopay.NET
+namespace EAutopay
 {
     public class Form
     {

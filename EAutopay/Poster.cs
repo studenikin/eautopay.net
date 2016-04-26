@@ -4,7 +4,7 @@ using System.Net;
 using System.Web;
 using System.Collections.Specialized;
 
-namespace EAutopay.NET
+namespace EAutopay
 {
     public class Poster
     {
