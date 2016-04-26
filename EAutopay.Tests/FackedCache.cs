@@ -14,7 +14,11 @@ namespace EAutopay.Tests
 
         public object Get(string key)
         {
-            return _cache[key];
+            if (_cache.ContainsKey(key))
+            {
+                return _cache[key];
+            }
+            return null;
         }
 
         public void Set(string key, object data)
