@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EAutopay.NET.Tests
+namespace EAutopay.Tests
 {
     class FackedCache : ICache
     {

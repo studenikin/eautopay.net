@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace EAutopay.NET
+namespace EAutopay
 {
     internal class UriDetector
     {

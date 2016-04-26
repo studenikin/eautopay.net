@@ -2,7 +2,7 @@
 using System.Net;
 
 
-namespace EAutopay.NET
+namespace EAutopay
 {
     public class AuthResult
     {

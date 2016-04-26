@@ -1,5 +1,5 @@
 ﻿
-namespace EAutopay.NET
+namespace EAutopay
 {
     public interface ICache
     {

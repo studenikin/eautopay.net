@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace EAutopay.NET
+namespace EAutopay
 {
     public class Product
     {
