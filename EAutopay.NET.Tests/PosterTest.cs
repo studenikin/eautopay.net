@@ -11,7 +11,7 @@ namespace EAutopay.NET.Tests
     [TestClass]
     public class PosterTest
     {
-        [TestMethod]
+        [TestMethod, Ignore]
         public void Paramz_Added_To_URI_ON_GET()
         {
             var cache = new FackedCache();
