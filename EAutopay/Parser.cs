@@ -12,9 +12,7 @@ namespace EAutopay
         private string _html;
 
         public Parser()
-        {
-
-        }
+        {}
 
         public Parser(string html)
         {
@@ -42,12 +40,12 @@ namespace EAutopay
             return "";
         }
 
-        public static List<Product> GetProducts(string body)
+        internal List<IProductDataRow> GetProductDataRows()
         {
-            var products = new List<Product>();
+            var products = new List<IProductDataRow>();
 
             var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(body);
+            htmlDoc.LoadHtml(_html);
             var root = htmlDoc.DocumentNode;
 
             var table = root.SelectSingleNode("//table");
@@ -58,22 +56,20 @@ namespace EAutopay
                 {
                     foreach (var row in rows)
                     {
-                        var p = new Product();
-                        FillProduct(p, row);
+                        var p = new HtmlProductDataRow();
+                        FillProductDataRow(p, row);
                         products.Add(p);
                     }
                 }
             }
-
             return products;
         }
 
-        private static void FillProduct(Product p, HtmlNode tr)
+        private void FillProductDataRow(IProductDataRow p, HtmlNode tr)
         {
             var tds = tr.SelectNodes("td");
 
             p.ID = int.Parse(tds[1].InnerText.Trim());
-
             p.Name = tds[2].InnerText.Trim();
 
             // price comes as: "999.00 руб."
@@ -107,7 +103,7 @@ namespace EAutopay
             return forms;
         }
 
-        private void FillFormDataRow(HtmlFormDataRow form, HtmlNode tr)
+        private void FillFormDataRow(IFormDataRow form, HtmlNode tr)
         {
             var tds = tr.SelectNodes("td");
             form.ID = int.Parse(tds[0].InnerText.Trim());

@@ -6,7 +6,7 @@ namespace EAutopay
 {
     public class Product
     {
-        public int ID { get; set; }
+        public int ID { get; private set; }
         public string Name { get; set; }
         public double Price { get; set; }
 
@@ -247,6 +247,13 @@ namespace EAutopay
 
             var crawler = new Crawler();
             using (var resp = crawler.HttpGet(Config.URI_DELETE_PRODUCT, paramz)) { }
+        }
+
+        internal void Fill(IProductDataRow dr)
+        {
+            ID = dr.ID;
+            Name = dr.Name;
+            Price = dr.Price;
         }
     }
 }
