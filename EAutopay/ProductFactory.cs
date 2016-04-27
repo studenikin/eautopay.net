@@ -9,19 +9,38 @@ namespace EAutopay
     {
         private ProductFactory() { }
 
+        /// <summary>
+        /// Returns product with specified ID.
+        /// </summary>
+        /// <param name="id">Product ID.</param>
+        /// <returns>Product object.</returns>
         public static Product Get(int id)
         {
             var allProducts = GetAll();
             return allProducts.Where(p => p.ID == id).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Returns all products existing in E-Autopay for specified account.
+        /// </summary>
+        /// <returns></returns>
         public static List<Product> GetAll()
         {
             var crawler = new Crawler();
             using (var resp = crawler.HttpGet(Config.URI_PRODUCT_LIST))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
-                return Parser.GetProducts(reader.ReadToEnd());
+                var parser = new Parser(reader.ReadToEnd());
+
+                var ret = new List<Product>();
+                var productRows = parser.GetProductDataRows();
+                foreach (var row in productRows)
+                {
+                    var p = new Product();
+                    p.Fill(row);
+                    ret.Add(p);
+                }
+                return ret;
             }
         }
 
@@ -42,11 +61,7 @@ namespace EAutopay
 
         public static Product CreateCopy(Product other)
         {
-            var p = new Product();
-            p.ID = other.ID;
-            p.Name = other.Name;
-            p.Price = other.Price;
-            return p;
+            return Get(other.ID);
         }
     }
 }
