@@ -64,7 +64,8 @@ namespace EAutopay
                 if (IsNew)
                 {
                     var reader = new StreamReader(resp.GetResponseStream());
-                    ID = Parser.GetProductID(reader.ReadToEnd());
+                    var parser = new Parser(reader.ReadToEnd());
+                    ID = parser.GetProductID();
                 }
                 SetPrice();
                 return ID;

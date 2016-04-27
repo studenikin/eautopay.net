@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Web.Helpers;
 
 using HtmlAgilityPack;
 
@@ -15,18 +15,23 @@ namespace EAutopay
         {
             _html = html;
         }
-
-        public static int GetProductID(string body)
+        /// <summary>
+        /// Retrieves product id from the json source.
+        /// Just after the product has been created and gets redirected to the "Save Price" page.
+        /// </summary>
+        /// <returns>Product ID as integer.</returns>
+        public int GetProductID()
         {
-            var regex = new Regex(@"edit\\/(.*?)\\/");
-            var matches = regex.Matches(body);
-            if (matches.Count > 0)
-            {
-                return int.Parse(matches[0].Groups[1].Value);
-            }
-            return 0;
+            var json = Json.Decode(_html);
+            var uri = json.redirect.to; // comes as: "/adminka/product/edit/231455/name"
+
+            return int.Parse(uri.Replace("/adminka/product/edit/", "").Replace("/name", ""));
         }
 
+        /// <summary>
+        /// Gets secure token residing on the Login page.
+        /// </summary>
+        /// <returns>Secure token as string.</returns>
         public string GetToken()
         {
             var root = GetRootNode(_html);
