@@ -1,53 +1,49 @@
 ﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Web.Helpers;
 
 using HtmlAgilityPack;
 
 
 namespace EAutopay
 {
-    public class Parser
+    internal class Parser
     {
         private string _html;
-
-        public Parser()
-        {}
 
         public Parser(string html)
         {
             _html = html;
         }
-
-        public static int GetProductID(string body)
+        /// <summary>
+        /// Retrieves product id from the json source.
+        /// Just after the product has been created and gets redirected to the "Save Price" page.
+        /// </summary>
+        /// <returns>Product ID as integer.</returns>
+        public int GetProductID()
         {
-            var regex = new Regex(@"edit\\/(.*?)\\/");
-            var matches = regex.Matches(body);
-            if (matches.Count > 0)
-            {
-                return int.Parse(matches[0].Groups[1].Value);
-            }
-            return 0;
+            var json = Json.Decode(_html);
+            var uri = json.redirect.to; // comes as: "/adminka/product/edit/231455/name"
+
+            return int.Parse(uri.Replace("/adminka/product/edit/", "").Replace("/name", ""));
         }
 
-        public static string GetToken(string body)
+        /// <summary>
+        /// Gets secure token residing on the Login page.
+        /// </summary>
+        /// <returns>Secure token as string.</returns>
+        public string GetToken()
         {
-            Regex regex = new Regex("<input.*name=\"_token\".*?value=\"(.*?)\"");
-            foreach (Match m in regex.Matches(body))
-            {
-                return m.Groups.Count > 1 ? m.Groups[1].Value : "";
-            }
-            return "";
+            var root = GetRootNode(_html);
+            var token = root.SelectSingleNode("//input[@name='_token']");
+            return token != null ? token.Attributes["value"].Value : "";
         }
 
-        internal List<IProductDataRow> GetProductDataRows()
+        public List<IProductDataRow> GetProductDataRows()
         {
             var products = new List<IProductDataRow>();
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(_html);
-            var root = htmlDoc.DocumentNode;
-
+            var root = GetRootNode(_html);
             var table = root.SelectSingleNode("//table");
             if (table !=null)
             {
@@ -77,14 +73,11 @@ namespace EAutopay
             p.Price = double.Parse(price.Substring(0, price.IndexOf(" ")).Trim(), CultureInfo.InvariantCulture);
         }
 
-        internal List<IFormDataRow> GetFormDataRows()
+        public List<IFormDataRow> GetFormDataRows()
         {
             var forms = new List<IFormDataRow>();
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(_html);
-            var root = htmlDoc.DocumentNode;
-
+            var root = GetRootNode(_html);
             var table = root.SelectSingleNode("//table[@id='table_group_0']");
             if (table != null)
             {
@@ -108,6 +101,13 @@ namespace EAutopay
             var tds = tr.SelectNodes("td");
             form.ID = int.Parse(tds[0].InnerText.Trim());
             form.Name = tds[2].InnerText.Trim();
+        }
+
+        private HtmlNode GetRootNode(string html)
+        {
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(html);
+            return htmlDoc.DocumentNode;
         }
     }
 
