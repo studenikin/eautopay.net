@@ -7,12 +7,9 @@ using HtmlAgilityPack;
 
 namespace EAutopay
 {
-    public class Parser
+    internal class Parser
     {
         private string _html;
-
-        public Parser()
-        {}
 
         public Parser(string html)
         {
@@ -30,24 +27,18 @@ namespace EAutopay
             return 0;
         }
 
-        public static string GetToken(string body)
+        public string GetToken()
         {
-            Regex regex = new Regex("<input.*name=\"_token\".*?value=\"(.*?)\"");
-            foreach (Match m in regex.Matches(body))
-            {
-                return m.Groups.Count > 1 ? m.Groups[1].Value : "";
-            }
-            return "";
+            var root = GetRootNode(_html);
+            var token = root.SelectSingleNode("//input[@name='_token']");
+            return token != null ? token.Attributes["value"].Value : "";
         }
 
-        internal List<IProductDataRow> GetProductDataRows()
+        public List<IProductDataRow> GetProductDataRows()
         {
             var products = new List<IProductDataRow>();
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(_html);
-            var root = htmlDoc.DocumentNode;
-
+            var root = GetRootNode(_html);
             var table = root.SelectSingleNode("//table");
             if (table !=null)
             {
@@ -77,14 +68,11 @@ namespace EAutopay
             p.Price = double.Parse(price.Substring(0, price.IndexOf(" ")).Trim(), CultureInfo.InvariantCulture);
         }
 
-        internal List<IFormDataRow> GetFormDataRows()
+        public List<IFormDataRow> GetFormDataRows()
         {
             var forms = new List<IFormDataRow>();
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(_html);
-            var root = htmlDoc.DocumentNode;
-
+            var root = GetRootNode(_html);
             var table = root.SelectSingleNode("//table[@id='table_group_0']");
             if (table != null)
             {
@@ -108,6 +96,13 @@ namespace EAutopay
             var tds = tr.SelectNodes("td");
             form.ID = int.Parse(tds[0].InnerText.Trim());
             form.Name = tds[2].InnerText.Trim();
+        }
+
+        private HtmlNode GetRootNode(string html)
+        {
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(html);
+            return htmlDoc.DocumentNode;
         }
     }
 

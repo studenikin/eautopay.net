@@ -65,7 +65,8 @@ namespace EAutopay
             using (var resp = HttpGet(Config.URI_LOGIN))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
-                return Parser.GetToken(reader.ReadToEnd());
+                var parser = new Parser(reader.ReadToEnd());
+                return parser.GetToken();
             }
         }
 
