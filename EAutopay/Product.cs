@@ -123,7 +123,7 @@ namespace EAutopay
         /// <returns>Reference to the upsell created.</returns>
         public Product AddUpsell(double price)
         {
-            EnableUpsells();
+            ProductService.EnableUpsells(this);
 
             Product upsell = ProductFactory.CreateCopy(this);
             upsell.IsNew = true;
@@ -131,72 +131,8 @@ namespace EAutopay
             upsell.Price = price;
             upsell.Save();
 
-            BindUpsell(upsell);
+            ProductService.BindUpsell(this, upsell);
             return upsell;
-        }
-
-        /// <summary>
-        /// Tells E-Autopay that the product can have upsells.
-        /// </summary>
-        private void EnableUpsells()
-        {
-            ToggleUpsells(true);
-        }
-
-        /// <summary>
-        /// Tells E-Autopay that the product is disabled for upsells.
-        /// </summary>
-        private void DisableUpsells()
-        {
-            ToggleUpsells(false);
-        }
-
-        /// <summary>
-        /// Toggles ability to have upsells.
-        /// </summary>
-        /// <param name="enable">True if product can have upsells. False - otherwise.</param>
-        private void ToggleUpsells(bool enable)
-        {
-            var paramz = new NameValueCollection
-            {
-                {"tovar_type", "1"},
-                {"edit[]", "sendsettings"},
-                {"pay_nal", "0"},
-                {"confirm_required", "0"},
-                {"nal_pdt_url", ""},
-                {"nal_ok_url", ""},
-                {"nal_countries[]", "Россия"},
-                {"additional_tovar_offer", enable ? "1" : "0"},
-                {"time_for_add", Config.UPSELL_INTERVAL},
-                {"no_multi_upsells", "0"},
-                {"upsell_error_url", ""},
-                {"additional_tovar_page_offer", Config.GetUpsellPageURI()},
-                {"product_id", ID.ToString()}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
-        }
-
-        /// <summary>
-        /// Adds upsell to the list of upsells of main product.
-        /// </summary>
-        private void BindUpsell(Product upsell)
-        {
-            var paramz = new NameValueCollection
-            {
-                {"tovar_type", "0"},
-                {"action", "create"},
-                {"commission[0][commission]", "0"},
-                {"commission[0][currency]", "руб"},
-                {"not_pay_commission", "0"},                
-                {"additional_tovar_id", upsell.ID.ToString()},
-                {"additional_tovar_price", upsell.PriceInvariant},
-                {"success_page", Config.GetUpsellSuccessPage()}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.GetUpsellURI(ID), paramz)) { }
         }
 
         /// <summary>
@@ -215,7 +151,7 @@ namespace EAutopay
                 var parent = ProductFactory.GetProductByUpsell(this);
                 if (parent != null)
                 {
-                    parent.DisableUpsells();
+                    ProductService.DisableUpsells(parent);
                 }
             }
 
