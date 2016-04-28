@@ -84,6 +84,34 @@ namespace EAutopay
             request.CookieContainer = new CookieContainer();
             request.CookieContainer.Add(Cookies);
 
+            WritePostData(request, paramz);
+
+            var resp = (HttpWebResponse)request.GetResponse();
+            Cookies = resp.Cookies;
+            return resp;
+        }
+
+        public HttpWebResponse HttpGet(string uri)
+        {
+            return HttpGet(uri, null);
+        }
+
+        public HttpWebResponse HttpGet(string uri, NameValueCollection paramz)
+        {
+
+            string uriWithParams = GetUriWithParams(uri, paramz);
+
+            var request = (HttpWebRequest)WebRequest.Create(uriWithParams);
+            request.CookieContainer = new CookieContainer();
+            request.CookieContainer.Add(Cookies);
+
+            var resp = (HttpWebResponse)request.GetResponse();
+            Cookies = resp.Cookies;
+            return resp;
+        }
+
+        private void WritePostData(HttpWebRequest request, NameValueCollection paramz)
+        {
             using (var stream = request.GetRequestStream())
             {
                 using (var writer = new StreamWriter(stream))
@@ -97,17 +125,9 @@ namespace EAutopay
                     writer.Write(postData.Trim('&'));
                 }
             }
-            var resp = (HttpWebResponse)request.GetResponse();
-            Cookies = resp.Cookies;
-            return resp;
         }
 
-        public HttpWebResponse HttpGet(string uri)
-        {
-            return HttpGet(uri, null);
-        }
-
-        public HttpWebResponse HttpGet(string uri, NameValueCollection paramz)
+        private string GetUriWithParams(string uri, NameValueCollection paramz)
         {
             if (paramz != null)
             {
@@ -118,14 +138,7 @@ namespace EAutopay
                 }
                 uri = uri.Trim('&');
             }
-
-            var request = (HttpWebRequest)WebRequest.Create(uri);
-            request.CookieContainer = new CookieContainer();
-            request.CookieContainer.Add(Cookies);
-
-            var resp = (HttpWebResponse)request.GetResponse();
-            Cookies = resp.Cookies;
-            return resp;
+            return uri;
         }
     }
 }

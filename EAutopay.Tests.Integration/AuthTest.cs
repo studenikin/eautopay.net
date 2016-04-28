@@ -29,7 +29,7 @@ namespace EAutopay.Tests.Integration
         [TestMethod]
         public void Auth_LoginSuccess()
         {
-            var result = Common.Login();
+            var result = Common.LoginAndGetResult();
 
             Assert.AreEqual(AuthResult.Statuses.Ok, result.Status);
         }

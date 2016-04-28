@@ -23,11 +23,20 @@ namespace EAutopay.Tests.Integration
                 new HttpResponse(null));
         }
 
-        public static AuthResult Login() 
+        public static AuthResult LoginAndGetResult() 
         {
             var settings = ConfigurationManager.AppSettings;
             var auth = new Auth(settings["login"], settings["password"], settings["secret"]);
             return auth.Login();
+        }
+
+        public static void Login()
+        {
+            var authResult = LoginAndGetResult();
+            if (authResult.Status != AuthResult.Statuses.Ok)
+            {
+                throw new Exception("Cannot login! Login status is: " + authResult.Status);
+            }
         }
 
         public static void Logout()

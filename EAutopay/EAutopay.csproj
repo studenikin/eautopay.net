@@ -57,7 +57,7 @@
     <Compile Include="ICache.cs" />
     <Compile Include="IProductDataRow.cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="Poster.cs" />
+    <Compile Include="Crawler.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
