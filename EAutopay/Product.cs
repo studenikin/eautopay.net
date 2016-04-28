@@ -7,7 +7,9 @@ namespace EAutopay
     public class Product
     {
         public int ID { get; private set; }
+
         public string Name { get; set; }
+
         public double Price { get; set; }
 
         public string PriceFormatted
@@ -39,7 +41,6 @@ namespace EAutopay
         }
 
         public Product() { }
-
 
         /// <summary>
         /// Updates product or creates new one if ID equals zero.
@@ -109,7 +110,6 @@ namespace EAutopay
             var crawler = new Crawler();
             using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
         }
-
 
         public bool HasUpsell()
         {
@@ -234,7 +234,6 @@ namespace EAutopay
                 upsell.Remove();
             }
         }
-
 
         /// <summary>
         /// Removes product in E-Autopay.

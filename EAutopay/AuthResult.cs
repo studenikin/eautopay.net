@@ -14,6 +14,7 @@ namespace EAutopay
         }
 
         private Statuses _status;
+
         public Statuses Status { get { return _status; } }
 
         public AuthResult()

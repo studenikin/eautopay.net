@@ -46,7 +46,6 @@ namespace EAutopay
             }
         }
 
-
         public Crawler(): this(null)
         { }
 
