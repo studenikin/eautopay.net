@@ -14,7 +14,7 @@
         public const string URI_FORM_DELETE = "https://demo4.e-autopay.com/adminka/form_generator/delete_form.php ";
 
         public const string UPSELL_SUFFIX = "Upsell";
-        public const string UPSELL_INTERVAL = "20";
+        public const int UPSELL_INTERVAL = 20;
 
         public static string GetUpsellURI(int productId)
         {

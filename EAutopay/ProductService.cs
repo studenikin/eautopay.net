@@ -44,7 +44,7 @@ namespace EAutopay
                 {"nal_ok_url", ""},
                 {"nal_countries[]", "Россия"},
                 {"additional_tovar_offer", enable ? "1" : "0"},
-                {"time_for_add", Config.UPSELL_INTERVAL},
+                {"time_for_add", Config.UPSELL_INTERVAL.ToString()},
                 {"no_multi_upsells", "0"},
                 {"upsell_error_url", ""},
                 {"additional_tovar_page_offer", Config.GetUpsellPageURI()},
