@@ -1,20 +1,18 @@
 ﻿using System;
-using System.IO;
 using System.Web;
 using System.Linq;
-using System.Web.SessionState;
-using System.Reflection;
 using System.Configuration;
 
-using EAutopay;
-
+using EAutopay.Forms;
+using EAutopay.Products;
+using EAutopay.Security;
 
 namespace EAutopay.Tests.Integration
 {
     class Common
     {
-        public const string TEST_PRODUCT_NAME = "#_TEST_PRODUCT_#";
-        public const string TEST_FORM_NAME = "#_TEST_FORM_#";
+        internal const string TEST_PRODUCT_NAME = "#_TEST_PRODUCT_#";
+        internal const string TEST_FORM_NAME = "#_TEST_FORM_#";
 
         public static HttpContext GetHttpContext()
         {

@@ -3,8 +3,11 @@ using System.Linq;
 using System.Collections.Generic;
 
 
-namespace EAutopay
+namespace EAutopay.Forms
 {
+    /// <summary>
+    /// Provides CRUD operations for Form entity.
+    /// </summary>
     public class FormRepository
     {
         private FormRepository() { }

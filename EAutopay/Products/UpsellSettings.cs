@@ -1,4 +1,4 @@
-﻿namespace EAutopay
+﻿namespace EAutopay.Products
 {
     /// <summary>
     /// Encapsulates the "Upsell Settings" section in E-Autopay.

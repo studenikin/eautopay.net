@@ -1,9 +1,8 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using System.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using EAutopay;
+using EAutopay.Security;
 
 
 namespace EAutopay.Tests.Integration

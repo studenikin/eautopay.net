@@ -2,14 +2,25 @@
 using System.Globalization;
 using System.Collections.Specialized;
 
-namespace EAutopay
+namespace EAutopay.Products
 {
     public class Product
     {
-        public int ID { get; private set; }
+        IProductRepository _repository;
 
+        /// <summary>
+        /// Product ID.
+        /// </summary>
+        public int ID { get; internal set; }
+
+        /// <summary>
+        /// Product name.
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Product price.
+        /// </summary>
         public double Price { get; set; }
 
         public string PriceFormatted
@@ -22,6 +33,9 @@ namespace EAutopay
             get { return Price.ToString("F", CultureInfo.InvariantCulture); /* format: 999.50 */ }
         }
 
+        /// <summary>
+        /// Returns True if the product represents upsell. Otherwise - False.
+        /// </summary>
         public bool IsUpsell
         {
             get
@@ -34,43 +48,20 @@ namespace EAutopay
             }
         }
 
-        private bool IsNew
+        internal bool IsNew
         {
             get { return ID == 0; }
             set { ID = 0; }
         }
 
-        public Product() { }
-
-        /// <summary>
-        /// Updates product or creates new one if ID equals zero.
-        /// </summary>
-        /// <returns>Product ID.</returns>
-        public int Save()
+        public Product()
         {
-            var paramz = new NameValueCollection
-            {
-                {"tovar_type", "1"},
-                {"edit[]", "name"},
-                {"category_id", "0"},
-                {"site_url", ""},
-                {"author_fio", ""},
-                {"name", Name},
-                {"product_id", ID.ToString().Equals("0") ? "" : ID.ToString()}
-            };
+            _repository = new EAutopayProductRepository();
+        }
 
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz))
-            {
-                if (IsNew)
-                {
-                    var reader = new StreamReader(resp.GetResponseStream());
-                    var parser = new Parser(reader.ReadToEnd());
-                    ID = parser.GetProductID();
-                }
-                SetPrice();
-                return ID;
-            }
+        public Product(IProductRepository repository)
+        {
+            _repository = repository;
         }
 
         private string GetNameForUpsell()
@@ -94,30 +85,13 @@ namespace EAutopay
             return IsUpsell && Name.Equals(product.GetNameForUpsell());
         }
 
-        private void SetPrice()
-        {
-            var paramz = new NameValueCollection
-            {
-                {"tovar_type", "1"},
-                {"edit[]", "price"},
-                {"currency", "руб"},
-                {"is_any_price", "0"},
-                {"summ_rashod", "0.00"},
-                {"product_id", ID.ToString()},
-                {"price1", PriceInvariant}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
-        }
-
         /// <summary>
         /// Returns True if the product has at least one upsell. Otherwise - False.
         /// </summary>
         /// <returns></returns>
         public bool HasUpsell()
         {
-            return ProductFactory.GetUpsell(this) != null;
+            return _repository.GetUpsell(this) != null;
         }
 
         /// <summary>
@@ -129,11 +103,11 @@ namespace EAutopay
         {
             ProductService.EnableUpsells(this);
 
-            Product upsell = ProductFactory.CreateCopy(this);
+            Product upsell = _repository.CreateCopy(this);
             upsell.IsNew = true;
             upsell.Name = GetNameForUpsell();
             upsell.Price = price;
-            upsell.Save();
+            _repository.Save(upsell);
 
             ProductService.BindUpsell(this, upsell);
             return upsell;
@@ -146,20 +120,18 @@ namespace EAutopay
         {
             if (IsNew) return;
 
-            if (HasUpsell())
+           if (IsUpsell)
             {
-                RemoveUpsell();
+                UnBindUpsell(this);
             }
-            else if (IsUpsell)
+           else
             {
-                var parent = ProductFactory.GetProductByUpsell(this);
-                if (parent != null)
+                if (HasUpsell())
                 {
-                    ProductService.DisableUpsells(parent);
+                    RemoveUpsell();
                 }
             }
-
-            Remove();
+            _repository.Remove(this);
             IsNew = true;
         }
 
@@ -168,25 +140,11 @@ namespace EAutopay
         /// </summary>
         private void RemoveUpsell()
         {
-            var upsell = ProductFactory.GetUpsell(this);
+            var upsell = _repository.GetUpsell(this);
             if (upsell != null)
             {
-                upsell.Remove();
+                _repository.Remove(upsell);
             }
-        }
-
-        /// <summary>
-        /// Removes product in E-Autopay.
-        /// </summary>
-        private void Remove()
-        {
-            var paramz = new NameValueCollection 
-            {
-                {"id", ID.ToString()}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(Config.URI_DELETE_PRODUCT, paramz)) { }
         }
 
         internal void Fill(IProductDataRow dr)
@@ -194,6 +152,27 @@ namespace EAutopay
             ID = dr.ID;
             Name = dr.Name;
             Price = dr.Price;
+        }
+
+        /// <summary>
+        /// Removes all references between this upsell and its parent product.
+        /// </summary>
+        private void UnBindUpsell(Product upsell)
+        {
+            var parent = _repository.GetByUpsell(upsell);
+            if (parent != null)
+            {
+                ProductService.DisableUpsells(parent);
+            }
+        }
+
+        /// <summary>
+        /// Updates product or creates new one if ID equals zero.
+        /// </summary>
+        /// <returns>Product ID.</returns>
+        public int Save()
+        {
+            return _repository.Save(this);
         }
     }
 }
