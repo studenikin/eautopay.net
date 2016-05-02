@@ -1,7 +1,7 @@
 ﻿using System.Net;
 
 
-namespace EAutopay
+namespace EAutopay.Security
 {
     public class AuthResult
     {

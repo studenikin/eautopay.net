@@ -1,13 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Web;
 using System.Linq;
-using System.Web.SessionState;
-using System.Reflection;
 using System.Configuration;
 
-using EAutopay;
-
+using EAutopay.Forms;
+using EAutopay.Products;
+using EAutopay.Security;
 
 namespace EAutopay.Tests.Integration
 {

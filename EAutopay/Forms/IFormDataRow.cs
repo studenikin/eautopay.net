@@ -1,4 +1,4 @@
-﻿namespace EAutopay
+﻿namespace EAutopay.Forms
 {
     internal interface IFormDataRow
     {

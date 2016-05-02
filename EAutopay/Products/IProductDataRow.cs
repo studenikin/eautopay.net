@@ -1,4 +1,4 @@
-﻿namespace EAutopay
+﻿namespace EAutopay.Products
 {
     internal interface IProductDataRow
     {

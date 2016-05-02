@@ -1,5 +1,5 @@
 ﻿
-namespace EAutopay
+namespace EAutopay.Products
 {
     internal class HtmlProductDataRow : IProductDataRow
     {

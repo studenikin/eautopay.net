@@ -1,5 +1,5 @@
 ﻿
-namespace EAutopay
+namespace EAutopay.Forms
 {
     internal class HtmlFormDataRow : IFormDataRow
     {

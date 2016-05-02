@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Collections.Specialized;
 
-namespace EAutopay
+namespace EAutopay.Products
 {
     /// <summary>
     /// Encapsulates useful methods for E-Autopay product.

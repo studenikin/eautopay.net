@@ -1,10 +1,7 @@
-﻿using System;
-using System.Web;
-using System.Linq;
-using System.Configuration;
+﻿using System.Web;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using EAutopay;
+using EAutopay.Forms;
 
 namespace EAutopay.Tests.Integration
 {

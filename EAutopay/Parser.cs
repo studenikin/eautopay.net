@@ -2,8 +2,10 @@
 using System.Globalization;
 using System.Web.Helpers;
 
-using HtmlAgilityPack;
+using EAutopay.Forms;
+using EAutopay.Products;
 
+using HtmlAgilityPack;
 
 namespace EAutopay
 {

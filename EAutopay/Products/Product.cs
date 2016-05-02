@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Collections.Specialized;
 
-namespace EAutopay
+namespace EAutopay.Products
 {
     public class Product
     {

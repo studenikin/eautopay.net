@@ -1,11 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Web;
-using System.Net;
-using System.Configuration;
+﻿using System.Web;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using EAutopay;
+using EAutopay.Products;
 
 using HtmlAgilityPack;
 
