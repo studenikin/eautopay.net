@@ -93,7 +93,7 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellHasBeenEnabled(Product product)
         {
-            var settings = UpsellSettingsRepository.Get(product.ID);
+            var settings = ProductService.GetUpsellSettings(product.ID);
 
             Assert.IsTrue(settings.IsUpsellsEnabled);
             Assert.AreEqual(Config.UPSELL_INTERVAL, settings.Interval);
@@ -102,19 +102,19 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellHasBeenDisabled(Product product)
         {
-            var settings = UpsellSettingsRepository.Get(product.ID);
+            var settings = ProductService.GetUpsellSettings(product.ID);
             Assert.IsFalse(settings.IsUpsellsEnabled);
         }
 
         private void Check_UpsellReferenceHasBeenCreated(Product product, Product upsell)
         {
-            var settings = UpsellSettingsRepository.Get(product.ID);
+            var settings = ProductService.GetUpsellSettings(product.ID);
             Assert.IsTrue(settings.HasProductUpsells);
         }
 
         private void Check_UpsellReferenceHasBeenRemoved(Product product, Product upsell)
         {
-            var settings = UpsellSettingsRepository.Get(product.ID);
+            var settings = ProductService.GetUpsellSettings(product.ID);
             Assert.IsFalse(settings.HasProductUpsells);
         }
     }

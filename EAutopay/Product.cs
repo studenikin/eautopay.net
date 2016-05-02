@@ -146,19 +146,17 @@ namespace EAutopay
         {
             if (IsNew) return;
 
-            if (HasUpsell())
+           if (IsUpsell)
             {
-                RemoveUpsell();
+                UnBindUpsell(this);
             }
-            else if (IsUpsell)
+           else
             {
-                var parent = ProductFactory.GetProductByUpsell(this);
-                if (parent != null)
+                if (HasUpsell())
                 {
-                    ProductService.DisableUpsells(parent);
+                    RemoveUpsell();
                 }
             }
-
             Remove();
             IsNew = true;
         }
@@ -194,6 +192,18 @@ namespace EAutopay
             ID = dr.ID;
             Name = dr.Name;
             Price = dr.Price;
+        }
+
+        /// <summary>
+        /// Removes all references between this upsell and its parent product.
+        /// </summary>
+        private void UnBindUpsell(Product upsell)
+        {
+            var parent = ProductFactory.GetProductByUpsell(upsell);
+            if (parent != null)
+            {
+                ProductService.DisableUpsells(parent);
+            }
         }
     }
 }

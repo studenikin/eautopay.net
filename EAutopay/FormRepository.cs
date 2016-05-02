@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace EAutopay
 {
+    /// <summary>
+    /// Provides CRUD operations for Form entity.
+    /// </summary>
     public class FormRepository
     {
         private FormRepository() { }

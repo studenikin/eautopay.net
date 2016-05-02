@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.IO;
+using System.Collections.Specialized;
 
 namespace EAutopay
 {
@@ -74,6 +75,23 @@ namespace EAutopay
 
             var crawler = new Crawler();
             using (var resp = crawler.HttpPost(Config.GetUpsellURI(product.ID), paramz)) { }
+        }
+
+        /// <summary>
+        /// Gets upsell settings for specified product in E-Autopay.
+        /// </summary>
+        /// <param name="productId">Product to get settings for.</param>
+        /// <returns>UpsellSettings object.</returns>
+        public static UpsellSettings GetUpsellSettings(int productId)
+        {
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(productId)))
+            {
+                var reader = new StreamReader(resp.GetResponseStream());
+                var parser = new Parser(reader.ReadToEnd());
+
+                return parser.GetUpsellSettings();
+            }
         }
     }
 }
