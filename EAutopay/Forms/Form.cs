@@ -4,64 +4,43 @@ namespace EAutopay.Forms
 {
     public class Form
     {
-        private int _id;
+        IFormRepository _repository;
 
-        public int ID
-        {
-            get { return _id;}
-        }
+        public int ID { get; internal set; }
 
         public string Name { get; set; }
 
-        private bool IsNew
+        internal bool IsNew
         {
-            get { return _id == 0;}
-            set { _id = 0; }
+            get { return ID == 0;}
+            set { ID = 0; }
+        }
+
+        public Form()
+        {
+            _repository = new EAutopayFormRepository();
+        }
+
+        public Form(IFormRepository repository)
+        {
+            _repository = repository;
         }
 
         public int Save()
         {
-            var paramz = new NameValueCollection
-            {
-                {"action", "new"},
-                {"extra_settings", "{}"},
-                {"name_form", Name}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_FORM_SAVE, paramz))
-            {
-                if (IsNew)
-                {
-                    var lastForm = FormRepository.GetNewest();
-                    if (lastForm != null)
-                    {
-                        _id = lastForm.ID;
-                    }
-                }
-                return _id;
-            }
+            return _repository.Save(this);
         }
 
         public void Delete()
         {
             if (IsNew) return;
-
-            var paramz = new NameValueCollection
-            {
-                {"id", ID.ToString()}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_FORM_DELETE, paramz))
-            {
-                IsNew = true;
-            }
+            _repository.Delete(this);
+            IsNew = true;
         }
 
         internal void Fill(IFormDataRow dr)
         {
-            _id = dr.ID;
+            ID = dr.ID;
             Name = dr.Name;
         }
     }

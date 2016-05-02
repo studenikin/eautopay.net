@@ -9,6 +9,8 @@ namespace EAutopay.Tests.Integration
     [TestClass]
     public class FormTest
     {
+        IFormRepository _formRepository = new EAutopayFormRepository();
+
         [TestInitialize]
         public void SetUp()
         {
@@ -28,7 +30,7 @@ namespace EAutopay.Tests.Integration
         [TestMethod]
         public void Form_Create()
         {
-            int amountBefore = FormRepository.GetAll().Count();
+            int amountBefore = _formRepository.GetAll().Count();
 
             var form = Common.CreateTestForm();
 
@@ -36,7 +38,7 @@ namespace EAutopay.Tests.Integration
             Assert.IsTrue(form.ID > 0);
             Assert.AreEqual(Common.TEST_FORM_NAME, form.Name);
 
-            int amountAfter = FormRepository.GetAll().Count();
+            int amountAfter = _formRepository.GetAll().Count();
             Assert.AreEqual(amountAfter, amountBefore + 1);
         }
 
@@ -44,13 +46,13 @@ namespace EAutopay.Tests.Integration
         public void Form_Remove()
         {
             var form = Common.CreateTestForm();
-            int amountBefore = FormRepository.GetAll().Count();
+            int amountBefore = _formRepository.GetAll().Count();
 
             form.Delete();
 
             Assert.IsTrue(form.ID == 0);
 
-            int amountAfter = FormRepository.GetAll().Count();
+            int amountAfter = _formRepository.GetAll().Count();
             Assert.AreEqual(amountAfter, amountBefore - 1);
         }
     }

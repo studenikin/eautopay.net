@@ -61,7 +61,7 @@ namespace EAutopay.Tests.Integration
 
         public static void RemoveAllTestForms()
         {
-            var forms = FormRepository.GetAll();
+            var forms = new EAutopayFormRepository().GetAll();
             foreach (var form in forms.Where(f => f.Name == TEST_FORM_NAME))
             {
                 form.Delete();
