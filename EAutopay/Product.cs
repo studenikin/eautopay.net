@@ -111,6 +111,10 @@ namespace EAutopay
             using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
         }
 
+        /// <summary>
+        /// Returns True if the product has at least one upsell. Otherwise - False.
+        /// </summary>
+        /// <returns></returns>
         public bool HasUpsell()
         {
             return ProductFactory.GetUpsell(this) != null;
