@@ -93,75 +93,29 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellHasBeenEnabled(Product product)
         {
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(product.ID)))
-            {
-                var reader = new StreamReader(resp.GetResponseStream());
+            var settings = UpsellSettingsRepository.Get(product.ID);
 
-                var html = new HtmlDocument();
-                html.LoadHtml(reader.ReadToEnd());
-                var root = html.DocumentNode;
-
-                // Check that the "Allow upsells" checkbox has been enabled.
-                var checkbox = root.SelectSingleNode("//input[@name='additional_tovar_offer'][@type='checkbox']");
-                Assert.IsNotNull(checkbox);
-                Assert.AreEqual(true, checkbox.Attributes["checked"] != null);
-                Assert.AreEqual("checked", checkbox.Attributes["checked"].Value);
-
-                // Check that the "Interval" textbox has correct value.
-                var interval = root.SelectSingleNode("//input[@name='time_for_add']");
-                Assert.IsNotNull(interval);
-                Assert.AreEqual(Config.UPSELL_INTERVAL, interval.Attributes["value"].Value);
-
-                // Check that the "Upsell page" textbox has correct value.
-                var page = root.SelectSingleNode("//input[@name='additional_tovar_page_offer']");
-                Assert.IsNotNull(page);
-                Assert.AreEqual(Config.GetUpsellPageURI(), page.Attributes["value"].Value);
-            }
+            Assert.IsTrue(settings.IsUpsellsEnabled);
+            Assert.AreEqual(Config.UPSELL_INTERVAL, settings.Interval);
+            Assert.AreEqual(Config.GetUpsellPageURI(), settings.RedirectUri);
         }
 
         private void Check_UpsellHasBeenDisabled(Product product)
         {
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(product.ID)))
-            {
-                var reader = new StreamReader(resp.GetResponseStream());
-
-                var html = new HtmlDocument();
-                html.LoadHtml(reader.ReadToEnd());
-                var root = html.DocumentNode;
-
-                // Check that the "Allow upsells" checkbox has been disabled.
-                var checkbox = root.SelectSingleNode("//input[@name='additional_tovar_offer'][@type='checkbox']");
-                Assert.IsNotNull(checkbox);
-                Assert.IsNull(checkbox.Attributes["checked"]);
-            }
+            var settings = UpsellSettingsRepository.Get(product.ID);
+            Assert.IsFalse(settings.IsUpsellsEnabled);
         }
 
         private void Check_UpsellReferenceHasBeenCreated(Product product, Product upsell)
         {
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(product.ID)))
-            {
-                var reader = new StreamReader(resp.GetResponseStream());
-                string html = reader.ReadToEnd();
-
-                // Check if source contains upsell link. That means the upsell is bouned to the product.
-                Assert.IsTrue(html.IndexOf("&tovar_id="+ upsell.ID) > -1);
-            }
+            var settings = UpsellSettingsRepository.Get(product.ID);
+            Assert.IsTrue(settings.HasProductUpsells);
         }
 
         private void Check_UpsellReferenceHasBeenRemoved(Product product, Product upsell)
         {
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(product.ID)))
-            {
-                var reader = new StreamReader(resp.GetResponseStream());
-                string html = reader.ReadToEnd();
-
-                // Check if source doesn't contain upsell link.
-                Assert.IsTrue(html.IndexOf("&tovar_id=" + upsell.ID) == -1);
-            }
+            var settings = UpsellSettingsRepository.Get(product.ID);
+            Assert.IsFalse(settings.HasProductUpsells);
         }
     }
 }

@@ -109,6 +109,32 @@ namespace EAutopay
             htmlDoc.LoadHtml(html);
             return htmlDoc.DocumentNode;
         }
+
+        /// <summary>
+        /// Gets upsell settings of particular product in E-Autopay. 
+        /// </summary>
+        /// <returns>UpsellSettings object.</returns>
+        public UpsellSettings GetUpsellSettings()
+        {
+            var ret = new UpsellSettings();
+            var root = GetRootNode(_html);
+
+            var checkbox = root.SelectSingleNode("//input[@name='additional_tovar_offer'][@type='checkbox']");
+            if (checkbox.Attributes["checked"] != null)
+            {
+                ret.IsUpsellsEnabled = checkbox.Attributes["checked"].Value == "checked";
+            }
+
+            var interval = root.SelectSingleNode("//input[@name='time_for_add']");
+            ret.Interval = int.Parse(interval.Attributes["value"].Value);
+
+            var page = root.SelectSingleNode("//input[@name='additional_tovar_page_offer']");
+            ret.RedirectUri = page.Attributes["value"].Value;
+
+            ret.HasProductUpsells = root.InnerHtml.IndexOf("&tovar_id=") > -1;
+
+            return ret;
+        }
     }
 
 }
