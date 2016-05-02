@@ -3,16 +3,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using EAutopay.Products;
 
-using HtmlAgilityPack;
-
-
 namespace EAutopay.Tests.Integration
 {
     
     [TestClass]
     public class UpsellTest
     {
-        private Product _product;
+        Product _product;
+        IProductRepository _repository = new EAutopayProductRepository();
 
         [TestInitialize]
         public void SetUp()
@@ -60,7 +58,7 @@ namespace EAutopay.Tests.Integration
 
             _product.Delete();
 
-            Assert.IsNull(ProductFactory.Get(upsell.ID));
+            Assert.IsNull(_repository.Get(upsell.ID));
         }
 
         private Product CreateUpsell(Product mainProduct)
@@ -75,7 +73,7 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellHasBeenCreated(Product upsell)
         {
-            var p = ProductFactory.Get(upsell.ID);
+            var p = _repository.Get(upsell.ID);
             Assert.IsNotNull(p);
             Assert.AreEqual(upsell.Name, p.Name);
             Assert.AreEqual(upsell.PriceInvariant, p.PriceInvariant);
@@ -83,7 +81,7 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellHasBeenRemoved(Product upsell)
         {
-            var p = ProductFactory.Get(upsell.ID);
+            var p = _repository.Get(upsell.ID);
             Assert.IsNull(p);
         }
 

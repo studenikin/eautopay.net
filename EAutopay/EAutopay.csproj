@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Products\IProductRepository.cs" />
     <Compile Include="Security\Auth.cs" />
     <Compile Include="Security\AuthResult.cs" />
     <Compile Include="Config.cs" />
@@ -59,7 +60,7 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Crawler.cs" />
     <Compile Include="Products\Product.cs" />
-    <Compile Include="Products\ProductFactory.cs" />
+    <Compile Include="Products\EAutopayProductRepository.cs" />
     <Compile Include="Products\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Products\UpsellSettings.cs" />

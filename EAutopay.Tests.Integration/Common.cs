@@ -11,8 +11,8 @@ namespace EAutopay.Tests.Integration
 {
     class Common
     {
-        public const string TEST_PRODUCT_NAME = "#_TEST_PRODUCT_#";
-        public const string TEST_FORM_NAME = "#_TEST_FORM_#";
+        internal const string TEST_PRODUCT_NAME = "#_TEST_PRODUCT_#";
+        internal const string TEST_FORM_NAME = "#_TEST_FORM_#";
 
         public static HttpContext GetHttpContext()
         {
