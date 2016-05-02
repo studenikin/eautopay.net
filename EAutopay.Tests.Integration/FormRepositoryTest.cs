@@ -8,6 +8,8 @@ namespace EAutopay.Tests.Integration
     [TestClass]
     public class FormRepositoryTest
     {
+        IFormRepository _formRepository = new EAutopayFormRepository();
+
         [TestInitialize]
         public void SetUp()
         {
@@ -28,7 +30,7 @@ namespace EAutopay.Tests.Integration
         public void FormRepository_IsReturnNullWhenFormDoesntExist()
         {
             int id = 1; // form with such id doesn't exist
-            var form = FormRepository.Get(id);
+            var form = _formRepository.Get(id);
 
             Assert.IsNull(form);
         }
@@ -37,7 +39,7 @@ namespace EAutopay.Tests.Integration
         public void FormRepository_IsReturnCorrectFormByID()
         {
             var form = Common.CreateTestForm();
-            var form2 = FormRepository.Get(form.ID);
+            var form2 = _formRepository.Get(form.ID);
 
             Assert.IsNotNull(form2);
             Assert.AreEqual(form.ID, form2.ID);

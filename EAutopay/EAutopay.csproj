@@ -45,12 +45,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\IFormRepository.cs" />
     <Compile Include="Products\IProductRepository.cs" />
     <Compile Include="Security\Auth.cs" />
     <Compile Include="Security\AuthResult.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Forms\Form.cs" />
-    <Compile Include="Forms\FormRepository.cs" />
+    <Compile Include="Forms\EAutopayFormRepository.cs" />
     <Compile Include="Forms\HtmlFormDataRow.cs" />
     <Compile Include="Products\HtmlProductDataRow.cs" />
     <Compile Include="HttpCache.cs" />
