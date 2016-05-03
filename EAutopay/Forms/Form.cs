@@ -1,6 +1,4 @@
-﻿using System.Collections.Specialized;
-
-namespace EAutopay.Forms
+﻿namespace EAutopay.Forms
 {
     public class Form
     {
@@ -36,12 +34,6 @@ namespace EAutopay.Forms
             if (IsNew) return;
             _repository.Delete(this);
             IsNew = true;
-        }
-
-        internal void Fill(IFormDataRow dr)
-        {
-            ID = dr.ID;
-            Name = dr.Name;
         }
     }
 }

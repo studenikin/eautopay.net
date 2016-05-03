@@ -41,9 +41,9 @@ namespace EAutopay
             return token != null ? token.Attributes["value"].Value : "";
         }
 
-        public List<IProductDataRow> GetProductDataRows()
+        public List<Product> GetProducts()
         {
-            var products = new List<IProductDataRow>();
+            var products = new List<Product>();
 
             var root = GetRootNode(_html);
             var table = root.SelectSingleNode("//table");
@@ -54,7 +54,7 @@ namespace EAutopay
                 {
                     foreach (var row in rows)
                     {
-                        var p = new HtmlProductDataRow();
+                        var p = new Product();
                         FillProductDataRow(p, row);
                         products.Add(p);
                     }
@@ -63,7 +63,7 @@ namespace EAutopay
             return products;
         }
 
-        private void FillProductDataRow(IProductDataRow p, HtmlNode tr)
+        private void FillProductDataRow(Product p, HtmlNode tr)
         {
             var tds = tr.SelectNodes("td");
 
@@ -75,9 +75,9 @@ namespace EAutopay
             p.Price = double.Parse(price.Substring(0, price.IndexOf(" ")).Trim(), CultureInfo.InvariantCulture);
         }
 
-        public List<IFormDataRow> GetFormDataRows()
+        public List<Form> GetForms()
         {
-            var forms = new List<IFormDataRow>();
+            var forms = new List<Form>();
 
             var root = GetRootNode(_html);
             var table = root.SelectSingleNode("//table[@id='table_group_0']");
@@ -89,7 +89,7 @@ namespace EAutopay
                 {
                     foreach (var tr in rows)
                     {
-                        var form = new HtmlFormDataRow();
+                        var form = new Form();
                         FillFormDataRow(form, tr);
                         forms.Add(form);
                     }
@@ -98,7 +98,7 @@ namespace EAutopay
             return forms;
         }
 
-        private void FillFormDataRow(IFormDataRow form, HtmlNode tr)
+        private void FillFormDataRow(Form form, HtmlNode tr)
         {
             var tds = tr.SelectNodes("td");
             form.ID = int.Parse(tds[0].InnerText.Trim());

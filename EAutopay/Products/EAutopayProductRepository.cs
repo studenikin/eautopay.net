@@ -29,16 +29,7 @@ namespace EAutopay.Products
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
-
-                var ret = new List<Product>();
-                var productRows = parser.GetProductDataRows();
-                foreach (var row in productRows)
-                {
-                    var p = new Product();
-                    p.Fill(row);
-                    ret.Add(p);
-                }
-                return ret;
+                return parser.GetProducts();
             }
         }
 
@@ -60,16 +51,6 @@ namespace EAutopay.Products
         {
             var allProducts = GetAll();
             return allProducts.Where(p => p.IsParentFor(upsell)).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Returns product object which is copy of another product object.
-        /// </summary>
-        /// <param name="other">Product object to copy from.</param>
-        /// <returns>Product object.</returns>
-        public  Product CreateCopy(Product other)
-        {
-            return Get(other.ID);
         }
 
         /// <summary>

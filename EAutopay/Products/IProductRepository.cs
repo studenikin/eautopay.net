@@ -12,8 +12,6 @@ namespace EAutopay.Products
 
         Product GetByUpsell(Product upsell);
 
-        Product CreateCopy(Product other);
-
         int Save(Product p);
 
         void Remove(Product p);

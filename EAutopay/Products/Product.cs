@@ -1,10 +1,9 @@
-﻿using System.IO;
+﻿using System;
 using System.Globalization;
-using System.Collections.Specialized;
 
 namespace EAutopay.Products
 {
-    public class Product
+    public class Product : ICloneable
     {
         IProductRepository _repository;
 
@@ -103,7 +102,7 @@ namespace EAutopay.Products
         {
             ProductService.EnableUpsells(this);
 
-            Product upsell = _repository.CreateCopy(this);
+            Product upsell = (Product)this.Clone();
             upsell.IsNew = true;
             upsell.Name = GetNameForUpsell();
             upsell.Price = price;
@@ -147,13 +146,6 @@ namespace EAutopay.Products
             }
         }
 
-        internal void Fill(IProductDataRow dr)
-        {
-            ID = dr.ID;
-            Name = dr.Name;
-            Price = dr.Price;
-        }
-
         /// <summary>
         /// Removes all references between this upsell and its parent product.
         /// </summary>
@@ -173,6 +165,15 @@ namespace EAutopay.Products
         public int Save()
         {
             return _repository.Save(this);
+        }
+
+        /// <summary>
+        /// Creates a copy of the product.
+        /// </summary>
+        /// <returns>Object type of Product.</returns>
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }
