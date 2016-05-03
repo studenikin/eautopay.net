@@ -63,16 +63,6 @@ namespace EAutopay.Products
         }
 
         /// <summary>
-        /// Returns product object which is copy of another product object.
-        /// </summary>
-        /// <param name="other">Product object to copy from.</param>
-        /// <returns>Product object.</returns>
-        public  Product CreateCopy(Product other)
-        {
-            return Get(other.ID);
-        }
-
-        /// <summary>
         /// Removes product in E-Autopay.
         /// </summary>
         public void Remove(Product p)
