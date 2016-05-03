@@ -35,15 +35,8 @@ namespace EAutopay.Forms
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
-
-                foreach (var dr in parser.GetFormDataRows())
-                {
-                    var f = new Form();
-                    f.Fill(dr);
-                    forms.Add(f);
-                }
+                return parser.GetForms();
             }
-            return forms;
         }
 
         /// <summary>

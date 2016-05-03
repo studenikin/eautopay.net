@@ -52,10 +52,8 @@
     <Compile Include="Config.cs" />
     <Compile Include="Forms\Form.cs" />
     <Compile Include="Forms\EAutopayFormRepository.cs" />
-    <Compile Include="Forms\HtmlFormDataRow.cs" />
     <Compile Include="Products\HtmlProductDataRow.cs" />
     <Compile Include="HttpCache.cs" />
-    <Compile Include="Forms\IFormDataRow.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="Products\IProductDataRow.cs" />
     <Compile Include="Parser.cs" />

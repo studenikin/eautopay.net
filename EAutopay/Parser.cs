@@ -75,9 +75,9 @@ namespace EAutopay
             p.Price = double.Parse(price.Substring(0, price.IndexOf(" ")).Trim(), CultureInfo.InvariantCulture);
         }
 
-        public List<IFormDataRow> GetFormDataRows()
+        public List<Form> GetForms()
         {
-            var forms = new List<IFormDataRow>();
+            var forms = new List<Form>();
 
             var root = GetRootNode(_html);
             var table = root.SelectSingleNode("//table[@id='table_group_0']");
@@ -89,7 +89,7 @@ namespace EAutopay
                 {
                     foreach (var tr in rows)
                     {
-                        var form = new HtmlFormDataRow();
+                        var form = new Form();
                         FillFormDataRow(form, tr);
                         forms.Add(form);
                     }
@@ -98,7 +98,7 @@ namespace EAutopay
             return forms;
         }
 
-        private void FillFormDataRow(IFormDataRow form, HtmlNode tr)
+        private void FillFormDataRow(Form form, HtmlNode tr)
         {
             var tds = tr.SelectNodes("td");
             form.ID = int.Parse(tds[0].InnerText.Trim());

@@ -35,11 +35,5 @@
             _repository.Delete(this);
             IsNew = true;
         }
-
-        internal void Fill(IFormDataRow dr)
-        {
-            ID = dr.ID;
-            Name = dr.Name;
-        }
     }
 }
