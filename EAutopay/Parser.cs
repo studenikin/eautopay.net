@@ -41,9 +41,9 @@ namespace EAutopay
             return token != null ? token.Attributes["value"].Value : "";
         }
 
-        public List<IProductDataRow> GetProductDataRows()
+        public List<Product> GetProducts()
         {
-            var products = new List<IProductDataRow>();
+            var products = new List<Product>();
 
             var root = GetRootNode(_html);
             var table = root.SelectSingleNode("//table");
@@ -54,7 +54,7 @@ namespace EAutopay
                 {
                     foreach (var row in rows)
                     {
-                        var p = new HtmlProductDataRow();
+                        var p = new Product();
                         FillProductDataRow(p, row);
                         products.Add(p);
                     }
@@ -63,7 +63,7 @@ namespace EAutopay
             return products;
         }
 
-        private void FillProductDataRow(IProductDataRow p, HtmlNode tr)
+        private void FillProductDataRow(Product p, HtmlNode tr)
         {
             var tds = tr.SelectNodes("td");
 

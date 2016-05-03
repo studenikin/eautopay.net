@@ -146,13 +146,6 @@ namespace EAutopay.Products
             }
         }
 
-        internal void Fill(IProductDataRow dr)
-        {
-            ID = dr.ID;
-            Name = dr.Name;
-            Price = dr.Price;
-        }
-
         /// <summary>
         /// Removes all references between this upsell and its parent product.
         /// </summary>

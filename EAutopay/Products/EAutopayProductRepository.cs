@@ -29,16 +29,7 @@ namespace EAutopay.Products
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
-
-                var ret = new List<Product>();
-                var productRows = parser.GetProductDataRows();
-                foreach (var row in productRows)
-                {
-                    var p = new Product();
-                    p.Fill(row);
-                    ret.Add(p);
-                }
-                return ret;
+                return parser.GetProducts();
             }
         }
 
