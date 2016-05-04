@@ -7,7 +7,7 @@ namespace EAutopay.Products
 {
     public class EAutopayProductRepository : IProductRepository
     {
-        IConfiguration _config;
+        readonly IConfiguration _config;
 
         public EAutopayProductRepository() : this(null)
         { }
