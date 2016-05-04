@@ -55,16 +55,19 @@ namespace EAutopay.Tests.Integration
         {
             var f = new Form();
             f.Name = TEST_FORM_NAME;
-            f.Save();
+
+            var repo = new EAutopayFormRepository();
+            repo.Save(f);
             return f;
         }
 
         public static void RemoveAllTestForms()
         {
-            var forms = new EAutopayFormRepository().GetAll();
-            foreach (var form in forms.Where(f => f.Name == TEST_FORM_NAME))
+            var repo = new EAutopayFormRepository();
+            var forms = repo.GetAll();
+            foreach (var form in repo.GetAll().Where(f => f.Name == TEST_FORM_NAME))
             {
-                form.Delete();
+                repo.Delete(form);
             }
         }
     }

@@ -48,9 +48,11 @@ namespace EAutopay.Tests.Integration
             var form = Common.CreateTestForm();
             int amountBefore = _formRepository.GetAll().Count();
 
-            form.Delete();
+            Assert.IsFalse(form.IsNew);
 
-            Assert.IsTrue(form.ID == 0);
+            _formRepository.Delete(form);
+
+            Assert.IsTrue(form.IsNew);
 
             int amountAfter = _formRepository.GetAll().Count();
             Assert.AreEqual(amountAfter, amountBefore - 1);
