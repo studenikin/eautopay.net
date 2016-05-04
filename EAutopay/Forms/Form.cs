@@ -1,39 +1,27 @@
 ﻿namespace EAutopay.Forms
 {
+    /// <summary>
+    /// Represents form in E-Autopay.
+    /// </summary>
     public class Form
     {
-        IFormRepository _repository;
-
+        /// <summary>
+        /// ID of the form.
+        /// </summary>
         public int ID { get; internal set; }
 
+        /// <summary>
+        /// Name of the form.
+        /// </summary>
         public string Name { get; set; }
 
-        internal bool IsNew
+        /// <summary>
+        /// Returns True if the form hasn't been saved in E-Autopay yet. Otherwise - False.
+        /// </summary>
+        public bool IsNew
         {
             get { return ID == 0;}
             set { ID = 0; }
-        }
-
-        public Form()
-        {
-            _repository = new EAutopayFormRepository();
-        }
-
-        public Form(IFormRepository repository)
-        {
-            _repository = repository;
-        }
-
-        public int Save()
-        {
-            return _repository.Save(this);
-        }
-
-        public void Delete()
-        {
-            if (IsNew) return;
-            _repository.Delete(this);
-            IsNew = true;
         }
     }
 }

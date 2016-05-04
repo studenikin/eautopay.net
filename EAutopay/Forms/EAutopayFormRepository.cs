@@ -94,13 +94,18 @@ namespace EAutopay.Forms
         /// <param name="form">Form to be deleted.</param>
         public void Delete(Form form)
         {
+            if (form.IsNew) return;
+
             var paramz = new NameValueCollection
             {
                 {"id", form.ID.ToString()}
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.FormDeleteUri, paramz)) { }
+            using (var resp = crawler.HttpPost(_config.FormDeleteUri, paramz))
+            {
+                form.ID = 0;
+            }
         }
     }
 
