@@ -30,19 +30,5 @@
         /// </summary>
         public UpsellSettings()
         { }
-
-        ///// <summary>
-        ///// Product in E-Autopay.
-        ///// </summary>
-        //public Product Product { get; private set; }
-
-        ///// <summary>
-        ///// Initializes instance of the class.
-        ///// </summary>
-        ///// <param name="p">Product to check the "Upsell Settings" against.</param>
-        //public UpsellSettings(Product p)
-        //{
-        //    Product = p;
-        //}
     }
 }

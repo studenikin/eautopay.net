@@ -53,7 +53,7 @@ namespace EAutopay.Tests.Integration
             LoginAndLogout();
 
             var settings = ConfigurationManager.AppSettings;
-            var auth = new Auth(settings["login"], settings["password"], "invalid_secret");
+            var auth = new Auth(settings["eautopay_login"], settings["eautopay_password"], "invalid_secret");
 
             var result = auth.Login();
 
@@ -69,7 +69,7 @@ namespace EAutopay.Tests.Integration
             Common.Login();
             Common.Logout();
             
-            Assert.IsFalse(Auth.IsLogged());
+            Assert.IsFalse(IsLogged());
         }
 
 
@@ -80,7 +80,7 @@ namespace EAutopay.Tests.Integration
 
             Common.Login();
 
-            Assert.IsTrue(Auth.IsLogged());
+            Assert.IsTrue(IsLogged());
         }
 
 
@@ -90,7 +90,7 @@ namespace EAutopay.Tests.Integration
         /// </summary>
         private void LoginAndLogout()
         {
-            if (Auth.IsLogged())
+            if (IsLogged())
             {
                 Common.Logout();
             }
@@ -98,5 +98,9 @@ namespace EAutopay.Tests.Integration
             Common.Logout();
         }
 
+        private bool IsLogged()
+        {
+            return new Auth().IsLogged();
+        }
     }
 }

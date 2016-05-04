@@ -5,7 +5,11 @@ namespace EAutopay.Products
 {
     public class Product : ICloneable
     {
-        IProductRepository _repository;
+        const string UPSELL_SUFFIX = "UPSELL";
+
+        readonly IConfiguration _config;
+
+        readonly IProductRepository _repository;
 
         /// <summary>
         /// Product ID.
@@ -41,7 +45,7 @@ namespace EAutopay.Products
             {
                 if (!string.IsNullOrEmpty(Name))
                 {
-                    return Name.ToUpper().Contains(Config.UPSELL_SUFFIX.ToUpper());
+                    return Name.ToUpper().Contains(UPSELL_SUFFIX.ToUpper());
                 }
                 return false;
             }
@@ -53,19 +57,18 @@ namespace EAutopay.Products
             set { ID = 0; }
         }
 
-        public Product()
-        {
-            _repository = new EAutopayProductRepository();
-        }
+        public Product() : this(null, null)
+        {}
 
-        public Product(IProductRepository repository)
+        public Product(IConfiguration config, IProductRepository repository)
         {
-            _repository = repository;
+            _config = config ?? new EAutopayConfig();
+            _repository = repository ?? new EAutopayProductRepository();
         }
 
         private string GetNameForUpsell()
         {
-            return string.Format("{0}_{1}_{2}", Name, Config.UPSELL_SUFFIX, ID);
+            return string.Format("{0}_{1}_{2}", Name, UPSELL_SUFFIX, ID);
         }
 
         /// <summary>
@@ -100,7 +103,8 @@ namespace EAutopay.Products
         /// <returns>Reference to the upsell created.</returns>
         public Product AddUpsell(double price)
         {
-            ProductService.EnableUpsells(this);
+            var service = new ProductService(_config);
+            service.EnableUpsells(this);
 
             Product upsell = (Product)this.Clone();
             upsell.IsNew = true;
@@ -108,7 +112,7 @@ namespace EAutopay.Products
             upsell.Price = price;
             _repository.Save(upsell);
 
-            ProductService.BindUpsell(this, upsell);
+            service.BindUpsell(this, upsell);
             return upsell;
         }
 
@@ -154,7 +158,8 @@ namespace EAutopay.Products
             var parent = _repository.GetByUpsell(upsell);
             if (parent != null)
             {
-                ProductService.DisableUpsells(parent);
+                var service = new ProductService(_config);
+                service.DisableUpsells(parent);
             }
         }
 

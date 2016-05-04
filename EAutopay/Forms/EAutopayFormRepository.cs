@@ -11,6 +11,16 @@ namespace EAutopay.Forms
     /// </summary>
     public class EAutopayFormRepository : IFormRepository
     {
+        readonly IConfiguration _config;
+
+        public EAutopayFormRepository() : this(null)
+        { }
+
+        public EAutopayFormRepository(IConfiguration config)
+        {
+            _config = config ?? new EAutopayConfig();
+        }
+
         /// <summary>
         /// Returns form object with specified ID.
         /// </summary>
@@ -31,7 +41,7 @@ namespace EAutopay.Forms
             var forms = new List<Form>();
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(Config.URI_FORM_LIST))
+            using (var resp = crawler.HttpGet(_config.FormListUri))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
@@ -64,7 +74,7 @@ namespace EAutopay.Forms
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_FORM_SAVE, paramz))
+            using (var resp = crawler.HttpPost(_config.FormSaveUri, paramz))
             {
                 if (form.IsNew)
                 {
@@ -90,7 +100,7 @@ namespace EAutopay.Forms
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_FORM_DELETE, paramz)) { }
+            using (var resp = crawler.HttpPost(_config.FormDeleteUri, paramz)) { }
         }
     }
 
