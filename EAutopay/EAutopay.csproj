@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationMissingException.cs" />
     <Compile Include="Forms\IFormRepository.cs" />
     <Compile Include="IConfiguration.cs" />
     <Compile Include="Products\IProductRepository.cs" />
