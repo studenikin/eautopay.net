@@ -24,7 +24,7 @@ namespace EAutopay.Tests.Integration
         public static AuthResult LoginAndGetResult() 
         {
             var settings = ConfigurationManager.AppSettings;
-            var auth = new Auth(settings["login"], settings["password"], settings["secret"]);
+            var auth = new Auth(settings["eautopay_login"], settings["eautopay_password"], settings["eautopay_secret"]);
             return auth.Login();
         }
 
@@ -39,7 +39,7 @@ namespace EAutopay.Tests.Integration
 
         public static void Logout()
         {
-            Auth.Logout();
+            new Auth().Logout();
         }
 
         public static Product CreateTestProduct()

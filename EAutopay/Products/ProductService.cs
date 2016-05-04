@@ -8,14 +8,21 @@ namespace EAutopay.Products
     /// </summary>
     public class ProductService
     {
-        private ProductService()
+        readonly IConfiguration _config;
+
+        public ProductService() : this(null)
         { }
+
+        public ProductService(IConfiguration config)
+        {
+            _config = config ?? new EAutopayConfig();
+        }
 
         /// <summary>
         /// Tells E-Autopay that the product can have upsells.
         /// </summary>
         /// <param name="p">Product to enable upsells for.</param>
-        public static void EnableUpsells(Product p)
+        public void EnableUpsells(Product p)
         {
             ToggleUpsells(p, true);
         }
@@ -24,7 +31,7 @@ namespace EAutopay.Products
         /// Tells E-Autopay that the product is disabled for upsells.
         /// </summary>
         /// <param name="p">Product to disable upsells for.</param>
-        public static void DisableUpsells(Product p)
+        public void DisableUpsells(Product p)
         {
             ToggleUpsells(p, false);
         }
@@ -33,7 +40,7 @@ namespace EAutopay.Products
         /// Toggles ability to have upsells.
         /// </summary>
         /// <param name="enable">True if product can have upsells. False - otherwise.</param>
-        private static void ToggleUpsells(Product p, bool enable)
+        private void ToggleUpsells(Product p, bool enable)
         {
             var paramz = new NameValueCollection
             {
@@ -45,21 +52,21 @@ namespace EAutopay.Products
                 {"nal_ok_url", ""},
                 {"nal_countries[]", "Россия"},
                 {"additional_tovar_offer", enable ? "1" : "0"},
-                {"time_for_add", Config.UPSELL_INTERVAL.ToString()},
+                {"time_for_add", _config.UpsellInterval.ToString()},
                 {"no_multi_upsells", "0"},
                 {"upsell_error_url", ""},
-                {"additional_tovar_page_offer", Config.GetUpsellPageURI()},
+                {"additional_tovar_page_offer", _config.UpsellLandingPage},
                 {"product_id", p.ID.ToString()}
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
+            using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz)) { }
         }
 
         /// <summary>
         /// Adds upsell to the list of upsells of specified product.
         /// </summary>
-        public static void BindUpsell(Product product, Product upsell)
+        public void BindUpsell(Product product, Product upsell)
         {
             var paramz = new NameValueCollection
             {
@@ -70,11 +77,11 @@ namespace EAutopay.Products
                 {"not_pay_commission", "0"},
                 {"additional_tovar_id", upsell.ID.ToString()},
                 {"additional_tovar_price", upsell.PriceInvariant},
-                {"success_page", Config.GetUpsellSuccessPage()}
+                {"success_page", _config.UpsellSuccessPage}
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.GetUpsellURI(product.ID), paramz)) { }
+            using (var resp = crawler.HttpPost(_config.GetUpsellUri(product.ID), paramz)) { }
         }
 
         /// <summary>
@@ -82,10 +89,10 @@ namespace EAutopay.Products
         /// </summary>
         /// <param name="productId">Product to get settings for.</param>
         /// <returns>UpsellSettings object.</returns>
-        public static UpsellSettings GetUpsellSettings(int productId)
+        public UpsellSettings GetUpsellSettings(int productId)
         {
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(Config.GetSendSettingsURI(productId)))
+            using (var resp = crawler.HttpGet(_config.GetSendSettingsUri(productId)))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());

@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using System.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using EAutopay.Products;
@@ -10,7 +11,10 @@ namespace EAutopay.Tests.Integration
     public class UpsellTest
     {
         Product _product;
-        IProductRepository _repository = new EAutopayProductRepository();
+
+        readonly ProductService _prodService = new ProductService();
+
+        readonly IProductRepository _repository = new EAutopayProductRepository();
 
         [TestInitialize]
         public void SetUp()
@@ -87,29 +91,41 @@ namespace EAutopay.Tests.Integration
 
         private void Check_UpsellHasBeenEnabled(Product product)
         {
-            var settings = ProductService.GetUpsellSettings(product.ID);
+            var settings = _prodService.GetUpsellSettings(product.ID);
 
             Assert.IsTrue(settings.IsUpsellsEnabled);
-            Assert.AreEqual(Config.UPSELL_INTERVAL, settings.Interval);
-            Assert.AreEqual(Config.GetUpsellPageURI(), settings.RedirectUri);
+            Assert.AreEqual(GetInterval(), settings.Interval);
+            Assert.AreEqual(GetLanding(), settings.RedirectUri);
         }
 
         private void Check_UpsellHasBeenDisabled(Product product)
         {
-            var settings = ProductService.GetUpsellSettings(product.ID);
+            var settings = _prodService.GetUpsellSettings(product.ID);
             Assert.IsFalse(settings.IsUpsellsEnabled);
         }
 
         private void Check_UpsellReferenceHasBeenCreated(Product product, Product upsell)
         {
-            var settings = ProductService.GetUpsellSettings(product.ID);
+            var settings = _prodService.GetUpsellSettings(product.ID);
             Assert.IsTrue(settings.HasProductUpsells);
         }
 
         private void Check_UpsellReferenceHasBeenRemoved(Product product, Product upsell)
         {
-            var settings = ProductService.GetUpsellSettings(product.ID);
+            var settings = _prodService.GetUpsellSettings(product.ID);
             Assert.IsFalse(settings.HasProductUpsells);
+        }
+
+        private int GetInterval()
+        {
+            int ret;
+            int.TryParse(ConfigurationManager.AppSettings["eautopay_upsell_interval"], out ret);
+            return ret > 0 ? ret : 20;
+        }
+
+        private string GetLanding()
+        {
+            return ConfigurationManager.AppSettings["eautopay_upsell_landing"] ?? "";
         }
     }
 }

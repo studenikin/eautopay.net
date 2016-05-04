@@ -6,9 +6,11 @@ namespace EAutopay
 {
     public class Crawler
     {
-        private ICache _cache;
+        readonly ICache _cache;
 
-        private string Token
+        readonly IConfiguration _config;
+
+        string Token
         {
             get
             {
@@ -24,7 +26,7 @@ namespace EAutopay
             }
         }
 
-        private CookieCollection Cookies
+        CookieCollection Cookies
         {
             get
             {
@@ -46,12 +48,14 @@ namespace EAutopay
             }
         }
 
-        public Crawler(): this(null)
+        public Crawler() : this(null, null)
         { }
 
-        public Crawler(ICache cache)
+        public Crawler(ICache cache, IConfiguration config)
         {
             _cache = cache ?? new HttpCache();
+
+            _config = config ?? new EAutopayConfig();
 
             if (string.IsNullOrEmpty(Token))
             {
@@ -61,7 +65,7 @@ namespace EAutopay
 
         private string RetrieveToken()
         {
-            using (var resp = HttpGet(Config.URI_LOGIN))
+            using (var resp = HttpGet(_config.LoginUri))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());

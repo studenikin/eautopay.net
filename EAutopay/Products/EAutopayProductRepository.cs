@@ -7,6 +7,16 @@ namespace EAutopay.Products
 {
     public class EAutopayProductRepository : IProductRepository
     {
+        IConfiguration _config;
+
+        public EAutopayProductRepository() : this(null)
+        { }
+
+        public EAutopayProductRepository(IConfiguration config)
+        {
+            _config = config ?? new EAutopayConfig();
+        }
+
         /// <summary>
         /// Returns product with specified ID.
         /// </summary>
@@ -25,7 +35,7 @@ namespace EAutopay.Products
         public List<Product> GetAll()
         {
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(Config.URI_PRODUCT_LIST))
+            using (var resp = crawler.HttpGet(_config.ProductListUri))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
@@ -64,7 +74,7 @@ namespace EAutopay.Products
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(Config.URI_DELETE_PRODUCT, paramz)) { }
+            using (var resp = crawler.HttpGet(_config.ProductDeleteUri, paramz)) { }
         }
 
         /// <summary>
@@ -84,7 +94,7 @@ namespace EAutopay.Products
                 {"product_id", p.ID.ToString().Equals("0") ? "" : p.ID.ToString()}
             };
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz))
+            using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz))
             {
                 if (p.IsNew)
                 {
@@ -110,7 +120,7 @@ namespace EAutopay.Products
                 {"price1", p.PriceInvariant}
             };
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(Config.URI_SAVE_PRODUCT, paramz)) { }
+            using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz)) { }
         }
     }
 }
