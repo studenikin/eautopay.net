@@ -21,7 +21,7 @@ namespace EAutopay
 
             if (string.IsNullOrWhiteSpace(_settings["eautopay_login"]))
             {
-                throw new ConfigurationErrorsException("Login is missing in the configuration file. Section name: eautopay_login");
+                throw new ConfigurationMissingException("eautopay_login");
             }
             _login = _settings["eautopay_login"];
         }
