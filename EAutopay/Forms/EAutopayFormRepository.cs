@@ -104,8 +104,14 @@ namespace EAutopay.Forms
             var crawler = new Crawler();
             using (var resp = crawler.HttpPost(_config.FormDeleteUri, paramz))
             {
-                form.ID = 0;
+                ResetFormValues(form);
             }
+        }
+
+        private void ResetFormValues(Form form)
+        {
+            form.ID = 0;
+            form.Name = string.Empty;
         }
     }
 

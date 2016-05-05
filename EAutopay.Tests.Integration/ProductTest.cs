@@ -46,8 +46,8 @@ namespace EAutopay.Tests.Integration
             var p2 = _repository.Get(p1.ID);
             Assert.IsNotNull(p2);
 
-            // check product has ID=0 after removal
-            p2.Delete();
+            // check product has ID = 0 after removal
+            _repository.Delete(p2);
             Assert.AreEqual(0, p2.ID);
 
             // check product has been removed from repository
@@ -60,7 +60,7 @@ namespace EAutopay.Tests.Integration
             var products = _repository.GetAll();
             foreach (var product in products.Where(p => p.Name == Common.TEST_PRODUCT_NAME))
             {
-                product.Delete();
+                _repository.Delete(product);
             }
         }
     }

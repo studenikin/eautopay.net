@@ -28,7 +28,7 @@ namespace EAutopay.Tests.Integration
         [TestCleanup]
         public void TearDown()
         {
-            _product.Delete();
+            _repository.Delete(_product);
 
             Common.Logout();
             HttpContext.Current = null;
@@ -48,7 +48,7 @@ namespace EAutopay.Tests.Integration
         public void Upsell_Remove()
         {
             var upsell = CreateUpsell(_product);
-            upsell.Delete();
+            _repository.Delete(upsell);
 
             Check_UpsellHasBeenRemoved(upsell);
             Check_UpsellHasBeenDisabled(_product);
@@ -60,7 +60,7 @@ namespace EAutopay.Tests.Integration
         {
             var upsell = CreateUpsell(_product);
 
-            _product.Delete();
+            _repository.Delete(_product);
 
             Assert.IsNull(_repository.Get(upsell.ID));
         }

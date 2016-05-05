@@ -47,7 +47,9 @@ namespace EAutopay.Tests.Integration
             var p = new Product();
             p.Name = TEST_PRODUCT_NAME;
             p.Price = 999.99;
-            p.Save();
+
+            var repo = new EAutopayProductRepository();
+            repo.Save(p);
             return p;
         }
 

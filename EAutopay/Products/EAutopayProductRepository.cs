@@ -66,7 +66,7 @@ namespace EAutopay.Products
         /// <summary>
         /// Removes product in E-Autopay.
         /// </summary>
-        public void Remove(Product p)
+        private void Remove(Product p)
         {
             var paramz = new NameValueCollection
             {
@@ -74,7 +74,10 @@ namespace EAutopay.Products
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.ProductDeleteUri, paramz)) { }
+            using (var resp = crawler.HttpGet(_config.ProductDeleteUri, paramz))
+            {
+                ResetProductValues(p);
+            }
         }
 
         /// <summary>
@@ -121,6 +124,62 @@ namespace EAutopay.Products
             };
             var crawler = new Crawler();
             using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz)) { }
+        }
+
+        /// <summary>
+        /// Removes product and corresponding upsell (if any) in E-Autopay.
+        /// </summary>
+        /// <param name="p">Product to be removed.</param>
+        public void Delete(Product p)
+        {
+            if (p.IsNew) return;
+
+            if (p.IsUpsell)
+            {
+                UnBindUpsell(p);
+            }
+            else
+            {
+                if (p.HasUpsell())
+                {
+                    RemoveUpsell(p);
+                }
+            }
+            Remove(p);
+        }
+
+        /// <summary>
+        /// Removes upsell of the specified product.
+        /// </summary>
+        /// <param name="p">Product to remove upsell from.</param>
+        private void RemoveUpsell(Product p)
+        {
+            var upsell = GetUpsell(p);
+            if (upsell != null)
+            {
+                Remove(upsell);
+            }
+        }
+
+        /// <summary>
+        /// Removes all references between specified upsell and its parent product.
+        /// </summary>
+        /// <param name="upsell">Upsell to unbind.</param>
+        private void UnBindUpsell(Product upsell)
+        {
+            var parent = GetByUpsell(upsell);
+            if (parent != null)
+            {
+                var service = new ProductService(_config);
+                service.DisableUpsells(parent);
+            }
+        }
+
+        private void ResetProductValues(Product p)
+        {
+            p.ID = 0;
+            p.Name = string.Empty;
+            p.Price = 0.0;
         }
     }
 }

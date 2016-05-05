@@ -51,10 +51,13 @@ namespace EAutopay.Products
             }
         }
 
-        internal bool IsNew
+        /// <summary>
+        /// Returns True if the product doesn't exist in E-Autopay. Otherwise - False.
+        /// </summary>
+        public bool IsNew
         {
             get { return ID == 0; }
-            set { ID = 0; }
+            internal set { ID = 0; }
         }
 
         public Product() : this(null, null)
@@ -114,62 +117,6 @@ namespace EAutopay.Products
 
             service.BindUpsell(this, upsell);
             return upsell;
-        }
-
-        /// <summary>
-        /// Removes product and corresponding upsell (if any).
-        /// </summary>
-        public void Delete()
-        {
-            if (IsNew) return;
-
-           if (IsUpsell)
-            {
-                UnBindUpsell(this);
-            }
-           else
-            {
-                if (HasUpsell())
-                {
-                    RemoveUpsell();
-                }
-            }
-            _repository.Remove(this);
-            IsNew = true;
-        }
-
-        /// <summary>
-        /// Removes upsell of the product.
-        /// </summary>
-        private void RemoveUpsell()
-        {
-            var upsell = _repository.GetUpsell(this);
-            if (upsell != null)
-            {
-                _repository.Remove(upsell);
-            }
-        }
-
-        /// <summary>
-        /// Removes all references between this upsell and its parent product.
-        /// </summary>
-        private void UnBindUpsell(Product upsell)
-        {
-            var parent = _repository.GetByUpsell(upsell);
-            if (parent != null)
-            {
-                var service = new ProductService(_config);
-                service.DisableUpsells(parent);
-            }
-        }
-
-        /// <summary>
-        /// Updates product or creates new one if ID equals zero.
-        /// </summary>
-        /// <returns>Product ID.</returns>
-        public int Save()
-        {
-            return _repository.Save(this);
         }
 
         /// <summary>
