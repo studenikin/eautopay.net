@@ -3,6 +3,7 @@ using System.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using EAutopay.Products;
+using EAutopay.Upsells;
 
 namespace EAutopay.Tests.Integration
 {
@@ -10,109 +11,222 @@ namespace EAutopay.Tests.Integration
     [TestClass]
     public class UpsellTest
     {
-        Product _product;
+        const string SUCCESS_PAGE_URI = "http://domain.com/success";
 
         readonly ProductService _prodService = new ProductService();
 
-        readonly IProductRepository _repository = new EAutopayProductRepository();
+        readonly IUpsellRepository _upsellRepo = new EAutopayUpsellRepository();
 
         [TestInitialize]
         public void SetUp()
         {
             HttpContext.Current = Common.GetHttpContext();
             Common.Login();
-
-            _product = Common.CreateTestProduct();
         }
 
         [TestCleanup]
         public void TearDown()
         {
-            _repository.Delete(_product);
-
+            Common.RemoveAllTestProducts();
             Common.Logout();
             HttpContext.Current = null;
         }
 
         [TestMethod]
-        public void Upsell_Add()
+        public void Upsell_Is_Saved_Correctly()
         {
-            var upsell = CreateUpsell(_product);
+            var p = Common.CreateTestProduct();
+            var u = CreateAndSaveUpsell(p);
 
-            Check_UpsellHasBeenCreated(upsell);
-            Check_UpsellHasBeenEnabled(_product);
-            Check_UpsellReferenceHasBeenCreated(_product, upsell);
+            var u2 = _upsellRepo.Get(u.ID, u.ParentID);
+
+            Assert.IsNotNull(u2);
+            Assert.IsTrue(u2.ID > 0);
+            Assert.IsTrue(u2.OriginID > 0);
+            Assert.AreEqual(u2.ParentID, p.ID);
+            Assert.AreEqual(u2.SuccessUri, SUCCESS_PAGE_URI);
+            Assert.AreEqual(u2.PriceInvariant, u.PriceInvariant);
+            Assert.IsTrue(u2.Title.ToUpper().Contains("UPSELL"));
         }
 
         [TestMethod]
-        public void Upsell_Remove()
+        public void Upsell_Is_Updated_Correctly()
         {
-            var upsell = CreateUpsell(_product);
-            _repository.Delete(upsell);
+            var p = Common.CreateTestProduct();
+            var u = CreateAndSaveUpsell(p);
 
-            Check_UpsellHasBeenRemoved(upsell);
-            Check_UpsellHasBeenDisabled(_product);
-            Check_UpsellReferenceHasBeenRemoved(_product, upsell);
+            var p2 = Common.CreateTestProduct();
+            var u2 = _upsellRepo.Get(u.ID, u.ParentID);
+            int id = u2.ID;
+            string title = u2.Title;
+
+            u2.OriginID = p2.ID;
+            u2.Price = 1234.00;
+            u2.SuccessUri = "http://some_uri.com";
+            _upsellRepo.Save(u2, p.ID);
+            
+            Assert.IsNotNull(u2);
+            Assert.AreEqual(u2.ID, id);
+            Assert.IsTrue(u2.ID > 0);
+            Assert.AreEqual(u2.OriginID, p2.ID);
+            Assert.AreEqual(u2.ParentID, p.ID);
+            Assert.AreEqual(u2.SuccessUri, "http://some_uri.com");
+            Assert.AreEqual(u2.Price, 1234.00);
+            Assert.AreEqual(u2.Title, title);
         }
 
         [TestMethod]
-        public void Upsell_IsRemovedAfterMainProductRemoval()
+        public void Upsell_Should_Not_Exist_After_Removal()
         {
-            var upsell = CreateUpsell(_product);
+            var p = Common.CreateTestProduct();
+            var u = CreateAndSaveUpsell(p);
 
-            _repository.Delete(_product);
+            int id = u.ID;
+            _upsellRepo.Delete(u);
 
-            Assert.IsNull(_repository.Get(upsell.ID));
+            var u2 = _upsellRepo.Get(id, p.ID);
+            Assert.IsNull(u2);
         }
 
-        private Product CreateUpsell(Product mainProduct)
+        [TestMethod]
+        public void Upsell_Empty_Product_Has_No_Upsells()
         {
-            if (_product.ID == 0)
-            {
-                _product = Common.CreateTestProduct();
-            }
-            double newPrice = _product.Price / 2;
-            return mainProduct.AddUpsell(newPrice);
+            var p = Common.CreateTestProduct();
+            Assert.IsFalse(_upsellRepo.HasUpsell(p));
         }
 
-        private void Check_UpsellHasBeenCreated(Product upsell)
+        [TestMethod]
+        public void Upsell_Should_Product_Have_Upsell_After_Adding()
         {
-            var p = _repository.Get(upsell.ID);
-            Assert.IsNotNull(p);
-            Assert.AreEqual(upsell.Name, p.Name);
-            Assert.AreEqual(upsell.PriceInvariant, p.PriceInvariant);
+            var p = Common.CreateTestProduct();
+            var upsell = CreateAndSaveUpsell(p);
+
+            Assert.IsTrue(_upsellRepo.HasUpsell(p));
         }
 
-        private void Check_UpsellHasBeenRemoved(Product upsell)
+        [TestMethod]
+        public void Upsell_Is_Upsell_Amount_Increased_After_Saving()
         {
-            var p = _repository.Get(upsell.ID);
-            Assert.IsNull(p);
+            var p = Common.CreateTestProduct();
+
+            int count = _upsellRepo.GetByProduct(p.ID).Count;
+            Assert.AreEqual(0, count);
+
+            var upsell = CreateAndSaveUpsell(p);
+
+            count = _upsellRepo.GetByProduct(p.ID).Count;
+            Assert.AreEqual(1, count);
         }
 
-        private void Check_UpsellHasBeenEnabled(Product product)
+        [TestMethod]
+        public void Upsell_Is_Upsell_Amount_Decreased_After_Removal()
         {
-            var settings = _prodService.GetUpsellSettings(product.ID);
+            var p = Common.CreateTestProduct();
+            var upsell = CreateAndSaveUpsell(p);
+
+            _upsellRepo.Delete(upsell);
+
+            int count = _upsellRepo.GetByProduct(p.ID).Count;
+            Assert.AreEqual(0, count);
+        }
+
+        [TestMethod]
+        public void Upsell_Add_2_Upsells_Then_Remove_Should_Product_Have_No_Upsells()
+        {
+            var p = Common.CreateTestProduct();
+            var upsell = CreateAndSaveUpsell(p);
+            var upsell2 = CreateAndSaveUpsell(p);
+
+            _upsellRepo.Delete(upsell);
+
+            Assert.IsTrue(_upsellRepo.HasUpsell(p));
+
+            _upsellRepo.Delete(upsell2);
+
+            Assert.IsFalse(_upsellRepo.HasUpsell(p));
+        }
+
+        [TestMethod]
+        public void Upsell_Delete_By_Product_Should_Remove_All_Upsells()
+        {
+            var p = Common.CreateTestProduct();
+            var upsell = CreateAndSaveUpsell(p);
+            var upsell2 = CreateAndSaveUpsell(p);
+
+            _upsellRepo.DeleteByProduct(p);
+
+            Assert.IsFalse(_upsellRepo.HasUpsell(p));
+        }
+
+        [TestMethod]
+        public void Upsell_Add_2_Upsells_Then_Remove_Should_Disable_Checkbox()
+        {
+            var p = Common.CreateTestProduct();
+
+            var upSettings = _prodService.GetUpsellSettings(p.ID);
+            Assert.IsFalse(upSettings.IsUpsellsEnabled);
+
+            var upsell = CreateAndSaveUpsell(p);
+
+            upSettings = _prodService.GetUpsellSettings(p.ID);
+            Assert.IsTrue(upSettings.IsUpsellsEnabled);
+
+            var upsell2 = CreateAndSaveUpsell(p);
+
+            upSettings = _prodService.GetUpsellSettings(p.ID);
+            Assert.IsTrue(upSettings.IsUpsellsEnabled);
+
+            _upsellRepo.Delete(upsell);
+
+            upSettings = _prodService.GetUpsellSettings(p.ID);
+            Assert.IsTrue(upSettings.IsUpsellsEnabled);
+
+            _upsellRepo.Delete(upsell2);
+
+            upSettings = _prodService.GetUpsellSettings(p.ID);
+            Assert.IsFalse(upSettings.IsUpsellsEnabled);
+        }
+
+        [TestMethod]
+        public void Upsell_Get_Upsells_By_Product()
+        {
+            var p = Common.CreateTestProduct();
+            var u = CreateAndSaveUpsell(p);
+
+            int count = _upsellRepo.GetByProduct(p.ID).Count;
+            Assert.AreEqual(1, count);
+
+            var u2 = CreateAndSaveUpsell(p);
+            count = _upsellRepo.GetByProduct(p.ID).Count;
+
+            Assert.AreEqual(2, count);
+        }
+
+        [TestMethod]
+        public void Upsell_Are_Upsell_Settings_OK_After_Adding()
+        {
+            var p = Common.CreateTestProduct();
+            var u = CreateAndSaveUpsell(p);
+
+            var settings = _prodService.GetUpsellSettings(p.ID);
 
             Assert.IsTrue(settings.IsUpsellsEnabled);
+            Assert.IsTrue(settings.HasProductUpsells);
             Assert.AreEqual(GetInterval(), settings.Interval);
             Assert.AreEqual(GetLanding(), settings.RedirectUri);
         }
 
-        private void Check_UpsellHasBeenDisabled(Product product)
+        [TestMethod]
+        public void Upsell_Are_Upsell_Settings_OK_After_Removal()
         {
-            var settings = _prodService.GetUpsellSettings(product.ID);
+            var p = Common.CreateTestProduct();
+            var u = CreateAndSaveUpsell(p);
+
+            _upsellRepo.Delete(u);
+
+            var settings = _prodService.GetUpsellSettings(p.ID);
+
             Assert.IsFalse(settings.IsUpsellsEnabled);
-        }
-
-        private void Check_UpsellReferenceHasBeenCreated(Product product, Product upsell)
-        {
-            var settings = _prodService.GetUpsellSettings(product.ID);
-            Assert.IsTrue(settings.HasProductUpsells);
-        }
-
-        private void Check_UpsellReferenceHasBeenRemoved(Product product, Product upsell)
-        {
-            var settings = _prodService.GetUpsellSettings(product.ID);
             Assert.IsFalse(settings.HasProductUpsells);
         }
 
@@ -126,6 +240,19 @@ namespace EAutopay.Tests.Integration
         private string GetLanding()
         {
             return ConfigurationManager.AppSettings["eautopay_upsell_landing"] ?? "";
+        }
+
+        private Upsell CreateAndSaveUpsell(Product mainProduct)
+        {
+            var upsellProduct = Common.CreateTestProduct(Common.TEST_UPSELL_NAME);
+
+            var upsell = new Upsell();
+            upsell.OriginID = upsellProduct.ID;
+            upsell.Price = 199.00;
+            upsell.SuccessUri = SUCCESS_PAGE_URI;
+
+            _upsellRepo.Save(upsell, mainProduct.ID);
+            return upsell;
         }
     }
 }

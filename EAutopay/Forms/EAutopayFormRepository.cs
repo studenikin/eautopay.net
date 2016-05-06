@@ -7,7 +7,7 @@ using System.Collections.Specialized;
 namespace EAutopay.Forms
 {
     /// <summary>
-    /// Provides CRUD operations for Form entity.
+    /// Provides CRUD operations for forms in E-Autopay.
     /// </summary>
     public class EAutopayFormRepository : IFormRepository
     {

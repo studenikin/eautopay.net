@@ -7,8 +7,8 @@
     <ProjectGuid>{3A37F964-D48B-4E4F-BBB6-71884ED9EB75}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EAutopay.NET</RootNamespace>
-    <AssemblyName>EAutopay.NET</AssemblyName>
+    <RootNamespace>EAutopay</RootNamespace>
+    <AssemblyName>EAutopay</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -50,6 +50,8 @@
     <Compile Include="Forms\IFormRepository.cs" />
     <Compile Include="IConfiguration.cs" />
     <Compile Include="Products\IProductRepository.cs" />
+    <Compile Include="Upsells\EAutopayUpsellRepository.cs" />
+    <Compile Include="Upsells\IUpsellRepository.cs" />
     <Compile Include="Security\Auth.cs" />
     <Compile Include="Security\AuthResult.cs" />
     <Compile Include="EAutopayConfig.cs" />
@@ -63,7 +65,8 @@
     <Compile Include="Products\EAutopayProductRepository.cs" />
     <Compile Include="Products\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Products\UpsellSettings.cs" />
+    <Compile Include="Upsells\Upsell.cs" />
+    <Compile Include="Upsells\UpsellSettings.cs" />
     <Compile Include="UriDetector.cs" />
   </ItemGroup>
   <ItemGroup>

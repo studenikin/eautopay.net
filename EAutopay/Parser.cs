@@ -4,6 +4,7 @@ using System.Web.Helpers;
 
 using EAutopay.Forms;
 using EAutopay.Products;
+using EAutopay.Upsells;
 
 using HtmlAgilityPack;
 
@@ -136,6 +137,54 @@ namespace EAutopay
             ret.HasProductUpsells = root.InnerHtml.IndexOf("&tovar_id=") > -1;
 
             return ret;
+        }
+
+        /// <summary>
+        /// Parses page and returns list of upsells for specified product.
+        /// </summary>
+        /// <param name="productId">Product to get upsells for.</param>
+        /// <returns>List of upsells.</returns>
+        public List<Upsell> GetUpsells(int productId)
+        {
+            var ret = new List<Upsell>();
+
+            var root = GetRootNode(_html);
+            var table = root.SelectSingleNode("//div[@id='upsell-form-list']");
+            if (table != null)
+            {
+                var rows = table.SelectNodes("div[@class='tr upsell-rest-deleted']");
+                if (rows != null)
+                {
+                    foreach (var row in rows)
+                    {
+                        var upsell = new Upsell();
+                        upsell.ParentID = productId;
+                        FillUpsellDataRow(upsell, row);
+                        ret.Add(upsell);
+                    }
+                }
+            }
+            return ret;
+        }
+
+        private void FillUpsellDataRow(Upsell upsell, HtmlNode tr)
+        {
+            var tds = tr.SelectNodes("span");
+
+            upsell.Title = tds[0].InnerText.Trim();
+            upsell.SuccessUri = tds[2].SelectSingleNode("a").InnerText.Trim();
+            upsell.ClientUri = tds[3].InnerText.Trim();
+
+            // price comes as: "999.00&nbsp;руб"
+            var price = tds[1].InnerText;
+            upsell.Price = double.Parse(price.Substring(0, price.IndexOf("&")).Trim(), CultureInfo.InvariantCulture);
+
+            // link comes as: "/adminka/product/233318/upsell/84604"
+            var actionLink = tds[5].SelectNodes("div/button")[1].Attributes["data-action"].Value;
+            upsell.ID = int.Parse(actionLink.Substring(actionLink.LastIndexOf("/") + 1));
+
+            //client uri comes as: "?order_id=<?php print $_GET['order_id'];?>&tovar_id=233339"
+            upsell.OriginID = int.Parse(upsell.ClientUri.Substring(upsell.ClientUri.LastIndexOf("=") + 1));
         }
     }
 

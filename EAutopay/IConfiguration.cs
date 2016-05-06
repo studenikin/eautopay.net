@@ -58,9 +58,10 @@
         /// <summary>
         /// Gets URI of the upsell page for specified product.
         /// </summary>
-        /// <param name="pid">Product ID.</param>
+        /// <param name="productId">Product ID.</param>
+        /// <param name="upsellId">Upsell ID.</param>
         /// <returns></returns>
-        string GetUpsellUri(int productId);
+        string GetUpsellUri(int productId, int upsellId);
 
         /// <summary>
         /// Gets URI of the send settings page for specified product.

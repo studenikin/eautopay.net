@@ -21,7 +21,7 @@ namespace EAutopay.Tests.Integration
         [TestCleanup]
         public void TearDown()
         {
-            RemoveAllTestProducts();
+            Common.RemoveAllTestProducts();
             Common.Logout();
             HttpContext.Current = null;
         }
@@ -53,15 +53,6 @@ namespace EAutopay.Tests.Integration
             // check product has been removed from repository
             var p3 = _repository.Get(p1.ID);
             Assert.IsNull(p3);
-        }
-
-        private void RemoveAllTestProducts()
-        {
-            var products = _repository.GetAll();
-            foreach (var product in products.Where(p => p.Name == Common.TEST_PRODUCT_NAME))
-            {
-                _repository.Delete(product);
-            }
         }
     }
 }
