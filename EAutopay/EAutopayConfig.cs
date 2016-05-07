@@ -137,14 +137,6 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// Gets URI of the upsell success page - a page to be redirected after making an order with upsell.
-        /// </summary>
-        public string UpsellSuccessPage
-        {
-            get { return _settings["eautopay_upsell_success"] ?? ""; }
-        }
-
-        /// <summary>
         /// Get interval of time (in minutes) while upsell offer is available.
         /// </summary>
         public int UpsellInterval
