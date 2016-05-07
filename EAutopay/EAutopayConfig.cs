@@ -109,11 +109,13 @@ namespace EAutopay
         /// <summary>
         /// Gets URI of the upsell page for specified product.
         /// </summary>
-        /// <param name="pid">Product ID.</param>
+        /// <param name="productId">Product ID.</param>
+        /// <param name="upsellId">Upsell ID.</param>
         /// <returns></returns>
-        public string GetUpsellUri(int productId)
+        public string GetUpsellUri(int productId, int upsellId)
         {
-             return string.Format("https://{0}.e-autopay.com/adminka/product/{1}/upsell", _login, productId);
+            string upsell = upsellId > 0 ? upsellId.ToString() : "";
+            return string.Format("https://{0}.e-autopay.com/adminka/product/{1}/upsell/{2}", _login, productId, upsell);
         }
 
         /// <summary>
@@ -132,14 +134,6 @@ namespace EAutopay
         public string UpsellLandingPage
         {
             get { return _settings["eautopay_upsell_landing"] ?? ""; }
-        }
-
-        /// <summary>
-        /// Gets URI of the upsell success page - a page to be redirected after making an order with upsell.
-        /// </summary>
-        public string UpsellSuccessPage
-        {
-            get { return _settings["eautopay_upsell_success"] ?? ""; }
         }
 
         /// <summary>

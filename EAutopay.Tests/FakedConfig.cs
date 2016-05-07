@@ -52,7 +52,7 @@
             get { return "http://tempuri.org"; }
         }
 
-        public string GetUpsellUri(int productId)
+        public string GetUpsellUri(int productId, int upsellId)
         {
             return "http://tempuri.org";
         }

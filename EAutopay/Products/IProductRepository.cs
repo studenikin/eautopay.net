@@ -14,6 +14,6 @@ namespace EAutopay.Products
 
         int Save(Product p);
 
-        void Remove(Product p);
+        void Delete(Product p);
     }
 }

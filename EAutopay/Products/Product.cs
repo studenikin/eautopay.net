@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Globalization;
 
+using EAutopay.Upsells;
+
 namespace EAutopay.Products
 {
-    public class Product : ICloneable
+    public class Product
     {
         const string UPSELL_SUFFIX = "UPSELL";
-
-        readonly IConfiguration _config;
-
-        readonly IProductRepository _repository;
 
         /// <summary>
         /// Product ID.
@@ -51,19 +49,13 @@ namespace EAutopay.Products
             }
         }
 
-        internal bool IsNew
+        /// <summary>
+        /// Returns True if the product doesn't exist in E-Autopay. Otherwise - False.
+        /// </summary>
+        public bool IsNew
         {
             get { return ID == 0; }
-            set { ID = 0; }
-        }
-
-        public Product() : this(null, null)
-        {}
-
-        public Product(IConfiguration config, IProductRepository repository)
-        {
-            _config = config ?? new EAutopayConfig();
-            _repository = repository ?? new EAutopayProductRepository();
+            internal set { ID = 0; }
         }
 
         private string GetNameForUpsell()
@@ -85,100 +77,6 @@ namespace EAutopay.Products
         internal bool IsChildOf(Product product)
         {
             return IsUpsell && Name.Equals(product.GetNameForUpsell());
-        }
-
-        /// <summary>
-        /// Returns True if the product has at least one upsell. Otherwise - False.
-        /// </summary>
-        /// <returns></returns>
-        public bool HasUpsell()
-        {
-            return _repository.GetUpsell(this) != null;
-        }
-
-        /// <summary>
-        /// Adds upsell to the product.
-        /// </summary>
-        /// <param name="price">Upsell price.</param>
-        /// <returns>Reference to the upsell created.</returns>
-        public Product AddUpsell(double price)
-        {
-            var service = new ProductService(_config);
-            service.EnableUpsells(this);
-
-            Product upsell = (Product)this.Clone();
-            upsell.IsNew = true;
-            upsell.Name = GetNameForUpsell();
-            upsell.Price = price;
-            _repository.Save(upsell);
-
-            service.BindUpsell(this, upsell);
-            return upsell;
-        }
-
-        /// <summary>
-        /// Removes product and corresponding upsell (if any).
-        /// </summary>
-        public void Delete()
-        {
-            if (IsNew) return;
-
-           if (IsUpsell)
-            {
-                UnBindUpsell(this);
-            }
-           else
-            {
-                if (HasUpsell())
-                {
-                    RemoveUpsell();
-                }
-            }
-            _repository.Remove(this);
-            IsNew = true;
-        }
-
-        /// <summary>
-        /// Removes upsell of the product.
-        /// </summary>
-        private void RemoveUpsell()
-        {
-            var upsell = _repository.GetUpsell(this);
-            if (upsell != null)
-            {
-                _repository.Remove(upsell);
-            }
-        }
-
-        /// <summary>
-        /// Removes all references between this upsell and its parent product.
-        /// </summary>
-        private void UnBindUpsell(Product upsell)
-        {
-            var parent = _repository.GetByUpsell(upsell);
-            if (parent != null)
-            {
-                var service = new ProductService(_config);
-                service.DisableUpsells(parent);
-            }
-        }
-
-        /// <summary>
-        /// Updates product or creates new one if ID equals zero.
-        /// </summary>
-        /// <returns>Product ID.</returns>
-        public int Save()
-        {
-            return _repository.Save(this);
-        }
-
-        /// <summary>
-        /// Creates a copy of the product.
-        /// </summary>
-        /// <returns>Object type of Product.</returns>
-        public object Clone()
-        {
-            return this.MemberwiseClone();
         }
     }
 }

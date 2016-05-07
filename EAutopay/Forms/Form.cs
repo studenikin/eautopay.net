@@ -16,12 +16,12 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// Returns True if the form hasn't been saved in E-Autopay yet. Otherwise - False.
+        /// Returns True if the form doesn't exist in E-Autopay. Otherwise - False.
         /// </summary>
         public bool IsNew
         {
-            get { return ID == 0;}
-            set { ID = 0; }
+            get { return ID == 0; }
+            internal set { ID = 0; }
         }
     }
 }

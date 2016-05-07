@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
+using EAutopay.Upsells;
+
 namespace EAutopay.Products
 {
     public class EAutopayProductRepository : IProductRepository
@@ -64,20 +66,6 @@ namespace EAutopay.Products
         }
 
         /// <summary>
-        /// Removes product in E-Autopay.
-        /// </summary>
-        public void Remove(Product p)
-        {
-            var paramz = new NameValueCollection
-            {
-                {"id", p.ID.ToString()}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.ProductDeleteUri, paramz)) { }
-        }
-
-        /// <summary>
         /// Updates product or creates new one if ID equals zero.
         /// </summary>
         /// <returns>Product ID.</returns>
@@ -121,6 +109,36 @@ namespace EAutopay.Products
             };
             var crawler = new Crawler();
             using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz)) { }
+        }
+
+        /// <summary>
+        /// Removes product and corresponding upsell (if any) in E-Autopay.
+        /// </summary>
+        /// <param name="p">Product to be removed.</param>
+        public void Delete(Product p)
+        {
+            if (p.IsNew) return;
+
+            RemoveFromEAutopay(p);
+            ResetValues(p);
+        }
+
+        private void RemoveFromEAutopay(Product p)
+        {
+            var paramz = new NameValueCollection
+            {
+                {"id", p.ID.ToString()}
+            };
+
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(_config.ProductDeleteUri, paramz)) { }
+        }
+
+        private void ResetValues(Product p)
+        {
+            p.ID = 0;
+            p.Name = string.Empty;
+            p.Price = 0.0;
         }
     }
 }

@@ -6,8 +6,8 @@
     <ProjectGuid>{548D84FF-BE2C-4690-97DB-E9A2D7C2709F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EAutopay.NET_Tests</RootNamespace>
-    <AssemblyName>EAutopay.NET Tests</AssemblyName>
+    <RootNamespace>EAutopay.Tests.Integration</RootNamespace>
+    <AssemblyName>EAutopay.Tests.Integration</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

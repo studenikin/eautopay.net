@@ -58,9 +58,10 @@
         /// <summary>
         /// Gets URI of the upsell page for specified product.
         /// </summary>
-        /// <param name="pid">Product ID.</param>
+        /// <param name="productId">Product ID.</param>
+        /// <param name="upsellId">Upsell ID.</param>
         /// <returns></returns>
-        string GetUpsellUri(int productId);
+        string GetUpsellUri(int productId, int upsellId);
 
         /// <summary>
         /// Gets URI of the send settings page for specified product.
@@ -73,11 +74,6 @@
         /// Gets URI of the landing page for upsell.
         /// </summary>
         string UpsellLandingPage { get; }
-
-        /// <summary>
-        /// Gets URI of the upsell success page - a page to be redirected after making an order with upsell.
-        /// </summary>
-        string UpsellSuccessPage { get; }
 
         /// <summary>
         /// Get interval of time (in minutes) while upsell offer is available.

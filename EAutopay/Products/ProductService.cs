@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Collections.Specialized;
 
+using EAutopay.Upsells;
+
 namespace EAutopay.Products
 {
     /// <summary>
@@ -16,72 +18,6 @@ namespace EAutopay.Products
         public ProductService(IConfiguration config)
         {
             _config = config ?? new EAutopayConfig();
-        }
-
-        /// <summary>
-        /// Tells E-Autopay that the product can have upsells.
-        /// </summary>
-        /// <param name="p">Product to enable upsells for.</param>
-        public void EnableUpsells(Product p)
-        {
-            ToggleUpsells(p, true);
-        }
-
-        /// <summary>
-        /// Tells E-Autopay that the product is disabled for upsells.
-        /// </summary>
-        /// <param name="p">Product to disable upsells for.</param>
-        public void DisableUpsells(Product p)
-        {
-            ToggleUpsells(p, false);
-        }
-
-        /// <summary>
-        /// Toggles ability to have upsells.
-        /// </summary>
-        /// <param name="enable">True if product can have upsells. False - otherwise.</param>
-        private void ToggleUpsells(Product p, bool enable)
-        {
-            var paramz = new NameValueCollection
-            {
-                {"tovar_type", "1"},
-                {"edit[]", "sendsettings"},
-                {"pay_nal", "0"},
-                {"confirm_required", "0"},
-                {"nal_pdt_url", ""},
-                {"nal_ok_url", ""},
-                {"nal_countries[]", "Россия"},
-                {"additional_tovar_offer", enable ? "1" : "0"},
-                {"time_for_add", _config.UpsellInterval.ToString()},
-                {"no_multi_upsells", "0"},
-                {"upsell_error_url", ""},
-                {"additional_tovar_page_offer", _config.UpsellLandingPage},
-                {"product_id", p.ID.ToString()}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz)) { }
-        }
-
-        /// <summary>
-        /// Adds upsell to the list of upsells of specified product.
-        /// </summary>
-        public void BindUpsell(Product product, Product upsell)
-        {
-            var paramz = new NameValueCollection
-            {
-                {"tovar_type", "0"},
-                {"action", "create"},
-                {"commission[0][commission]", "0"},
-                {"commission[0][currency]", "руб"},
-                {"not_pay_commission", "0"},
-                {"additional_tovar_id", upsell.ID.ToString()},
-                {"additional_tovar_price", upsell.PriceInvariant},
-                {"success_page", _config.UpsellSuccessPage}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.GetUpsellUri(product.ID), paramz)) { }
         }
 
         /// <summary>
