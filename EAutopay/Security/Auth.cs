@@ -2,6 +2,9 @@
 
 namespace EAutopay.Security
 {
+    /// <summary>
+    /// Encapsulates authentication procedures in E-Autopay.
+    /// </summary>
     public class Auth
     {
         string _login;
@@ -13,15 +16,28 @@ namespace EAutopay.Security
         readonly IConfiguration _config;
 
         /// <summary>
-        /// Initializes empty instance of the class.
+        /// Initializes a new instance of the <see cref="Auth"/> class.
         /// Use this ctor for performing Logout and IsLogged operations.
         /// </summary>
         public Auth() : this(null, null, null, null)
         {}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Auth"/> class.
+        /// </summary>
+        /// <param name="login">Login in E-Autopay.</param>
+        /// <param name="password">Password in E-Autopay.</param>
+        /// <param name="secret">Answer to secret question in E-Autopay.</param>
         public Auth(string login, string password, string secret) : this(login, password, secret, null)
         {}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Auth"/> class.
+        /// </summary>
+        /// <param name="login">Login in E-Autopay.</param>
+        /// <param name="password">Password in E-Autopay.</param>
+        /// <param name="secret">Answer to secret question in E-Autopay.</param>
+        /// <param name="config">General E-Autopay settings.</param>
         public Auth(string login, string password, string secret, IConfiguration config)
         {
             _login = login;
@@ -30,6 +46,10 @@ namespace EAutopay.Security
             _config = config ?? new EAutopayConfig();
         }
 
+        /// <summary>
+        /// Attempts to login in E-Autopay.
+        /// </summary>
+        /// <returns>Result of the login operation.</returns>
         public AuthResult Login()
         {
             AuthResult result = PostLoginData();
@@ -41,12 +61,19 @@ namespace EAutopay.Security
             return result;
         }
 
+        /// <summary>
+        /// Logout from E-Autopay.
+        /// </summary>
         public void Logout()
         {
             var crawler = new Crawler();
             using (var resp = crawler.HttpGet(_config.LogoutUri)) { }
         }
 
+        /// <summary>
+        /// Returns a value indicating whether a user is logged in E-Autopay.
+        /// </summary>
+        /// <returns>true if the user is logged in; otherwise, false.</returns>
         public bool IsLogged()
         {
             var crawler = new Crawler();

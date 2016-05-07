@@ -2,12 +2,15 @@
 
 namespace EAutopay.Security
 {
+    /// <summary>
+    /// Provides information about authentication result.
+    /// </summary>
     public class AuthResult
     {
         private AuthStatus _status;
 
         /// <summary>
-        /// Initializes a new instance of the EAutopay.Security.AuthResult class.
+        /// Initializes a new instance of the <see cref="AuthResult"/> class.
         /// </summary>
         public AuthResult()
         {
@@ -15,10 +18,14 @@ namespace EAutopay.Security
         }
 
         /// <summary>
-        /// Gets results of the authentication.
+        /// Gets result of the authentication.
         /// </summary>
         public AuthStatus Status { get { return _status; } }
 
+        /// <summary>
+        /// Sets authentication status based on response received on posting credentials.
+        /// </summary>
+        /// <param name="resp">Response object received on posting credentials.</param>
         internal void SetStatusFromLoginResponse(HttpWebResponse resp)
         {
             var ud = new UriDetector(resp.ResponseUri);
@@ -37,6 +44,10 @@ namespace EAutopay.Security
             }
         }
 
+        /// <summary>
+        /// Sets authentication status based on response received on posting secret answer.
+        /// </summary>
+        /// <param name="resp">Response object received on posting secret answer.</param>
         internal void SetStatusFromSecretResponse(HttpWebResponse resp)
         {
             var ud = new UriDetector(resp.ResponseUri);

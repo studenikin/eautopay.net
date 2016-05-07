@@ -13,19 +13,26 @@ namespace EAutopay.Forms
     {
         readonly IConfiguration _config;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EAutopayFormRepository"/> class.
+        /// </summary>
         public EAutopayFormRepository() : this(null)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EAutopayFormRepository"/> class.
+        /// </summary>
+        /// <param name="config">General E-Autopay settings.</param>
         public EAutopayFormRepository(IConfiguration config)
         {
             _config = config ?? new EAutopayConfig();
         }
 
         /// <summary>
-        /// Returns form object with specified ID.
+        /// Gets the form in E-Autopay for the specified ID.
         /// </summary>
-        /// <param name="id">ID of the form to be returned.</param>
-        /// <returns>Form with specified ID.</returns>
+        /// <param name="id">The ID of the form.</param>
+        /// <returns>A <see cref="Form"/></returns>
         public Form Get(int id)
         {
             var forms = GetAll();
@@ -33,9 +40,9 @@ namespace EAutopay.Forms
         }
 
         /// <summary>
-        /// Returns all forms existing in E-Autopay.
+        /// Gets all forms in E-Autopay.
         /// </summary>
-        /// <returns>List of forms.</returns>
+        /// <returns>The list of <see cref="Form"/>.</returns>
         public List<Form> GetAll()
         {
             var forms = new List<Form>();
@@ -50,9 +57,9 @@ namespace EAutopay.Forms
         }
 
         /// <summary>
-        /// Returns latest created form.
+        /// Returns latest created form in E-Autopay.
         /// </summary>
-        /// <returns>Form object.</returns>
+        /// <returns>A <see cref="Form"/></returns>
         public Form GetNewest() 
         {
             var forms = GetAll();
@@ -60,9 +67,9 @@ namespace EAutopay.Forms
         }
 
         /// <summary>
-        /// Creates new form in E-Autopay. Or updates existing one.
+        /// Creates a new form in E-Autopay; or updates existing one.
         /// </summary>
-        /// <param name="form">Form to be updated/created.</param>
+        /// <param name="form"><see cref="Form"/> to be updated/created.</param>
         /// <returns>Form ID.</returns>
         public int Save(Form form)
         {
@@ -89,9 +96,9 @@ namespace EAutopay.Forms
         }
 
         /// <summary>
-        /// Deletes specified form in E-Autopay.
+        /// Deletes the specified form in E-Autopay.
         /// </summary>
-        /// <param name="form">Form to be deleted.</param>
+        /// <param name="form"><see cref="Form"/> to be deleted.</param>
         public void Delete(Form form)
         {
             if (form.IsNew) return;
