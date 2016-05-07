@@ -34,7 +34,7 @@ namespace EAutopay.Security
         {
             AuthResult result = PostLoginData();
 
-            if (result.Status == AuthResult.Statuses.Need_Secret)
+            if (result.Status == AuthStatus.Need_Secret)
             {
                 result = PostSecretAnswer();
             }

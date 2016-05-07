@@ -50,6 +50,7 @@
     <Compile Include="Forms\IFormRepository.cs" />
     <Compile Include="IConfiguration.cs" />
     <Compile Include="Products\IProductRepository.cs" />
+    <Compile Include="Security\AuthStatus.cs" />
     <Compile Include="Upsells\EAutopayUpsellRepository.cs" />
     <Compile Include="Upsells\IUpsellRepository.cs" />
     <Compile Include="Security\Auth.cs" />

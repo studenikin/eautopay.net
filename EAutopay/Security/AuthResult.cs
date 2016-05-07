@@ -1,26 +1,23 @@
 ﻿using System.Net;
 
-
 namespace EAutopay.Security
 {
     public class AuthResult
     {
-        private Statuses _status;
+        private AuthStatus _status;
 
-        public enum Statuses
-        {
-            Ok = 1,
-            Login_Failed = 2,
-            Need_Secret = 3,
-            Secret_Failed = 4
-        }
-
-        public Statuses Status { get { return _status; } }
-
+        /// <summary>
+        /// Initializes a new instance of the EAutopay.Security.AuthResult class.
+        /// </summary>
         public AuthResult()
         {
-            _status = Statuses.Login_Failed;
+            _status = AuthStatus.Login_Failed;
         }
+
+        /// <summary>
+        /// Gets results of the authentication.
+        /// </summary>
+        public AuthStatus Status { get { return _status; } }
 
         internal void SetStatusFromLoginResponse(HttpWebResponse resp)
         {
@@ -28,15 +25,15 @@ namespace EAutopay.Security
 
             if (ud.IsMainURI())
             {
-               _status = Statuses.Ok;
+               _status = AuthStatus.Ok;
             }
             else if (ud.IsSecretAnswerURI())
             {
-                _status = Statuses.Need_Secret;
+                _status = AuthStatus.Need_Secret;
             }
             else
             {
-                _status = Statuses.Login_Failed;
+                _status = AuthStatus.Login_Failed;
             }
         }
 
@@ -46,11 +43,11 @@ namespace EAutopay.Security
 
             if (ud.IsMainURI())
             {
-                _status = Statuses.Ok;
+                _status = AuthStatus.Ok;
             }
             else if (ud.IsLoginURI())
             {
-                _status = Statuses.Secret_Failed;
+                _status = AuthStatus.Secret_Failed;
             }
         }
     }

@@ -32,7 +32,7 @@ namespace EAutopay.Tests.Integration
         public static void Login()
         {
             var authResult = LoginAndGetResult();
-            if (authResult.Status != AuthResult.Statuses.Ok)
+            if (authResult.Status != AuthStatus.Ok)
             {
                 throw new Exception("Cannot login! Login status is: " + authResult.Status);
             }
