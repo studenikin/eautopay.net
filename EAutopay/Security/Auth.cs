@@ -41,6 +41,22 @@ namespace EAutopay.Security
             return result;
         }
 
+        public void Logout()
+        {
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(_config.LogoutUri)) { }
+        }
+
+        public bool IsLogged()
+        {
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpGet(_config.MainUri))
+            {
+                var ud = new UriDetector(resp.ResponseUri);
+                return ud.IsMainURI();
+            }
+        }
+
         private AuthResult PostLoginData()
         {
             var paramz = new NameValueCollection();
@@ -62,27 +78,11 @@ namespace EAutopay.Security
             paramz["secret_answer"] = _secret;
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.SecretUri, paramz)) 
+            using (var resp = crawler.HttpPost(_config.SecretUri, paramz))
             {
                 var result = new AuthResult();
                 result.SetStatusFromSecretResponse(resp);
                 return result;
-            }
-        }
-
-        public void Logout()
-        {
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.LogoutUri)) { }
-        }
-
-        public bool IsLogged()
-        {
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.MainUri))
-            {
-                var ud = new UriDetector(resp.ResponseUri);
-                return ud.IsMainURI();
             }
         }
     }

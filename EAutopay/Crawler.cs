@@ -10,44 +10,6 @@ namespace EAutopay
 
         readonly IConfiguration _config;
 
-        string Token
-        {
-            get
-            {
-                if (_cache.Get("eautopay_token") == null)
-                {
-                    Token = RetrieveToken();
-                }
-                return (string)_cache.Get("eautopay_token");
-            }
-            set
-            {
-                _cache.Set("eautopay_token", value);
-            }
-        }
-
-        CookieCollection Cookies
-        {
-            get
-            {
-                if (_cache.Get("eautopay_cookies") != null)
-                {
-                    return (CookieCollection)_cache.Get("eautopay_cookies");
-                }
-                return new CookieCollection();
-            }
-            set
-            {
-                var cookies = new CookieCollection();
-                if (_cache.Get("eautopay_cookies") != null)
-                {
-                    cookies = (CookieCollection)_cache.Get("eautopay_cookies");
-                }
-                cookies.Add(value);
-                _cache.Set("eautopay_cookies", cookies);
-            }
-        }
-
         public Crawler() : this(null, null)
         { }
 
@@ -60,16 +22,6 @@ namespace EAutopay
             if (string.IsNullOrEmpty(Token))
             {
                 Token = RetrieveToken();
-            }
-        }
-
-        private string RetrieveToken()
-        {
-            using (var resp = HttpGet(_config.LoginUri))
-            {
-                var reader = new StreamReader(resp.GetResponseStream());
-                var parser = new Parser(reader.ReadToEnd());
-                return parser.GetToken();
             }
         }
 
@@ -102,7 +54,7 @@ namespace EAutopay
         public HttpWebResponse HttpGet(string uri, NameValueCollection paramz)
         {
 
-            string uriWithParams = GetUriWithParams(uri, paramz);
+            string uriWithParams = CombineUriWithParams(uri, paramz);
 
             var request = (HttpWebRequest)WebRequest.Create(uriWithParams);
             request.CookieContainer = new CookieContainer();
@@ -111,6 +63,41 @@ namespace EAutopay
             var resp = (HttpWebResponse)request.GetResponse();
             Cookies = resp.Cookies;
             return resp;
+        }
+
+        private string Token
+        {
+            get
+            {
+                if (_cache.Get("eautopay_token") == null)
+                {
+                    Token = RetrieveToken();
+                }
+                return (string)_cache.Get("eautopay_token");
+            }
+            set { _cache.Set("eautopay_token", value); }
+        }
+
+        private CookieCollection Cookies
+        {
+            get
+            {
+                if (_cache.Get("eautopay_cookies") != null)
+                {
+                    return (CookieCollection)_cache.Get("eautopay_cookies");
+                }
+                return new CookieCollection();
+            }
+            set
+            {
+                var cookies = new CookieCollection();
+                if (_cache.Get("eautopay_cookies") != null)
+                {
+                    cookies = (CookieCollection)_cache.Get("eautopay_cookies");
+                }
+                cookies.Add(value);
+                _cache.Set("eautopay_cookies", cookies);
+            }
         }
 
         private void WritePostData(HttpWebRequest request, NameValueCollection paramz)
@@ -130,7 +117,7 @@ namespace EAutopay
             }
         }
 
-        private string GetUriWithParams(string uri, NameValueCollection paramz)
+        private string CombineUriWithParams(string uri, NameValueCollection paramz)
         {
             if (paramz != null)
             {
@@ -142,6 +129,16 @@ namespace EAutopay
                 uri = uri.Trim('&');
             }
             return uri;
+        }
+
+        private string RetrieveToken()
+        {
+            using (var resp = HttpGet(_config.LoginUri))
+            {
+                var reader = new StreamReader(resp.GetResponseStream());
+                var parser = new Parser(reader.ReadToEnd());
+                return parser.GetToken();
+            }
         }
     }
 }

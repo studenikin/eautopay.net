@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Collections.Specialized;
 
 using EAutopay.Upsells;
 

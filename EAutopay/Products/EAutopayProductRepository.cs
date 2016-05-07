@@ -3,8 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-using EAutopay.Upsells;
-
 namespace EAutopay.Products
 {
     public class EAutopayProductRepository : IProductRepository
@@ -95,6 +93,18 @@ namespace EAutopay.Products
             }
         }
 
+        /// <summary>
+        /// Removes product and corresponding upsell (if any) in E-Autopay.
+        /// </summary>
+        /// <param name="p">Product to be removed.</param>
+        public void Delete(Product p)
+        {
+            if (p.IsNew) return;
+
+            RemoveFromEAutopay(p);
+            ResetValues(p);
+        }
+
         private void SetPrice(Product p)
         {
             var paramz = new NameValueCollection
@@ -109,18 +119,6 @@ namespace EAutopay.Products
             };
             var crawler = new Crawler();
             using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz)) { }
-        }
-
-        /// <summary>
-        /// Removes product and corresponding upsell (if any) in E-Autopay.
-        /// </summary>
-        /// <param name="p">Product to be removed.</param>
-        public void Delete(Product p)
-        {
-            if (p.IsNew) return;
-
-            RemoveFromEAutopay(p);
-            ResetValues(p);
         }
 
         private void RemoveFromEAutopay(Product p)

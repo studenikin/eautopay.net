@@ -1,10 +1,10 @@
-﻿using System;
-using System.Globalization;
-
-using EAutopay.Upsells;
+﻿using System.Globalization;
 
 namespace EAutopay.Products
 {
+    /// <summary>
+    /// Encapsulates product in E-Autopay.
+    /// </summary>
     public class Product
     {
         const string UPSELL_SUFFIX = "UPSELL";
@@ -58,11 +58,6 @@ namespace EAutopay.Products
             internal set { ID = 0; }
         }
 
-        private string GetNameForUpsell()
-        {
-            return string.Format("{0}_{1}_{2}", Name, UPSELL_SUFFIX, ID);
-        }
-
         /// <summary>
         /// Returns True if the product is a parent for specified product.
         /// </summary>
@@ -77,6 +72,11 @@ namespace EAutopay.Products
         internal bool IsChildOf(Product product)
         {
             return IsUpsell && Name.Equals(product.GetNameForUpsell());
+        }
+
+        private string GetNameForUpsell()
+        {
+            return string.Format("{0}_{1}_{2}", Name, UPSELL_SUFFIX, ID);
         }
     }
 }

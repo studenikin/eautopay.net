@@ -12,12 +12,13 @@ namespace EAutopay
 {
     internal class Parser
     {
-        private string _html;
+        string _html;
 
         public Parser(string html)
         {
             _html = html;
         }
+
         /// <summary>
         /// Retrieves product id from the json source.
         /// Just after the product has been created and gets redirected to the "Save Price" page.
@@ -64,18 +65,6 @@ namespace EAutopay
             return products;
         }
 
-        private void FillProductDataRow(Product p, HtmlNode tr)
-        {
-            var tds = tr.SelectNodes("td");
-
-            p.ID = int.Parse(tds[1].InnerText.Trim());
-            p.Name = tds[2].InnerText.Trim();
-
-            // price comes as: "999.00 руб."
-			var  price = tds[3].InnerHtml;
-            p.Price = double.Parse(price.Substring(0, price.IndexOf(" ")).Trim(), CultureInfo.InvariantCulture);
-        }
-
         public List<Form> GetForms()
         {
             var forms = new List<Form>();
@@ -97,20 +86,6 @@ namespace EAutopay
                 }
             }
             return forms;
-        }
-
-        private void FillFormDataRow(Form form, HtmlNode tr)
-        {
-            var tds = tr.SelectNodes("td");
-            form.ID = int.Parse(tds[0].InnerText.Trim());
-            form.Name = tds[2].InnerText.Trim();
-        }
-
-        private HtmlNode GetRootNode(string html)
-        {
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(html);
-            return htmlDoc.DocumentNode;
         }
 
         /// <summary>
@@ -165,6 +140,32 @@ namespace EAutopay
                 }
             }
             return ret;
+        }
+
+        private void FillProductDataRow(Product p, HtmlNode tr)
+        {
+            var tds = tr.SelectNodes("td");
+
+            p.ID = int.Parse(tds[1].InnerText.Trim());
+            p.Name = tds[2].InnerText.Trim();
+
+            // price comes as: "999.00 руб."
+            var price = tds[3].InnerHtml;
+            p.Price = double.Parse(price.Substring(0, price.IndexOf(" ")).Trim(), CultureInfo.InvariantCulture);
+        }
+
+        private void FillFormDataRow(Form form, HtmlNode tr)
+        {
+            var tds = tr.SelectNodes("td");
+            form.ID = int.Parse(tds[0].InnerText.Trim());
+            form.Name = tds[2].InnerText.Trim();
+        }
+
+        private HtmlNode GetRootNode(string html)
+        {
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(html);
+            return htmlDoc.DocumentNode;
         }
 
         private void FillUpsellDataRow(Upsell upsell, HtmlNode tr)

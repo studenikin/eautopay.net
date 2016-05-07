@@ -24,11 +24,5 @@
         /// True if product has upsells in E-Autopay. Otherwise - false.
         /// </summary>
         public bool HasProductUpsells{ get; set; }
-
-        /// <summary>
-        /// Initializes instance of the class.
-        /// </summary>
-        public UpsellSettings()
-        { }
     }
 }

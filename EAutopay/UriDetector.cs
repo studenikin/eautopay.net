@@ -4,9 +4,7 @@ namespace EAutopay
 {
     internal class UriDetector
     {
-        private Uri _uri;
-
-        public Uri URI { get;}
+        Uri _uri;
 
         public UriDetector(Uri uri)
         {

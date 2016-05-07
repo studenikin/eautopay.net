@@ -5,6 +5,8 @@ namespace EAutopay.Security
 {
     public class AuthResult
     {
+        private Statuses _status;
+
         public enum Statuses
         {
             Ok = 1,
@@ -12,8 +14,6 @@ namespace EAutopay.Security
             Need_Secret = 3,
             Secret_Failed = 4
         }
-
-        private Statuses _status;
 
         public Statuses Status { get { return _status; } }
 
