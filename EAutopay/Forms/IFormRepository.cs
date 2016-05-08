@@ -34,7 +34,7 @@ namespace EAutopay.Forms
         int Save(Form form);
 
         /// <summary>
-        /// Deletes the specified form in E-Autopay.
+        /// Deletes the specified form from E-Autopay.
         /// </summary>
         /// <param name="form"><see cref="Form"/> to be deleted.</param>
         void Delete(Form form);

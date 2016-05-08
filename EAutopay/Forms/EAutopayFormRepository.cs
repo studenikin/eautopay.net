@@ -70,7 +70,7 @@ namespace EAutopay.Forms
         /// Creates a new form in E-Autopay; or updates existing one.
         /// </summary>
         /// <param name="form"><see cref="Form"/> to be updated/created.</param>
-        /// <returns>Form ID.</returns>
+        /// <returns><see cref="Form"/> ID.</returns>
         public int Save(Form form)
         {
             var paramz = new NameValueCollection
@@ -96,7 +96,7 @@ namespace EAutopay.Forms
         }
 
         /// <summary>
-        /// Deletes the specified form in E-Autopay.
+        /// Deletes the specified form from E-Autopay.
         /// </summary>
         /// <param name="form"><see cref="Form"/> to be deleted.</param>
         public void Delete(Form form)

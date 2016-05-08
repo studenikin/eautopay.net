@@ -52,7 +52,7 @@ namespace EAutopay.Upsells
         }
 
         /// <summary>
-        /// Gets formatted price based in invariant regional settings.
+        /// Gets culture-independent value of the price.
         /// </summary>
         public string PriceInvariant
         {

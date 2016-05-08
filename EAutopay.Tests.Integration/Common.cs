@@ -45,17 +45,17 @@ namespace EAutopay.Tests.Integration
 
         public static Product CreateTestProduct()
         {
-            return CreateTestProduct(TEST_PRODUCT_NAME);
+            return CreateTestProduct(TEST_PRODUCT_NAME, false);
         }
 
-        public static Product CreateTestProduct(string name)
+        public static Product CreateTestProduct(string name, bool isForUpsell)
         {
             var p = new Product();
             p.Name = name;
             p.Price = 999.99;
 
             var repo = new EAutopayProductRepository();
-            repo.Save(p);
+            repo.Save(p, isForUpsell);
             return p;
         }
 

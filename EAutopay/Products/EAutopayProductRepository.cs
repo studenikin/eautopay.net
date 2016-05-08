@@ -5,23 +5,33 @@ using System.Collections.Specialized;
 
 namespace EAutopay.Products
 {
+    /// <summary>
+    /// Provides CRUD operations for products in E-Autopay.
+    /// </summary>
     public class EAutopayProductRepository : IProductRepository
     {
         readonly IConfiguration _config;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EAutopayProductRepository"/> class.
+        /// </summary>
         public EAutopayProductRepository() : this(null)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EAutopayProductRepository"/> class.
+        /// </summary>
+        /// <param name="config">General E-Autopay settings.</param>
         public EAutopayProductRepository(IConfiguration config)
         {
             _config = config ?? new EAutopayConfig();
         }
 
         /// <summary>
-        /// Returns product with specified ID.
+        /// Gets the product in E-Autopay for the specified ID.
         /// </summary>
-        /// <param name="id">Product ID.</param>
-        /// <returns>Product object.</returns>
+        /// <param name="id">The ID of the product.</param>
+        /// <returns>A <see cref="Product"/></returns>
         public Product Get(int id)
         {
             var allProducts = GetAll();
@@ -29,9 +39,9 @@ namespace EAutopay.Products
         }
 
         /// <summary>
-        /// Returns all products existing in E-Autopay for specified account.
+        /// Gets all products in E-Autopay.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The list of <see cref="Product"/>.</returns>
         public List<Product> GetAll()
         {
             var crawler = new Crawler();
@@ -44,30 +54,12 @@ namespace EAutopay.Products
         }
 
         /// <summary>
-        /// Gets upsell of specified product.
+        /// Creates a new product in E-Autopay; or updates existing one.
         /// </summary>
-        /// <param name="product">Product object to get upsell for.</param>
-        /// <returns>Product object representing upsell.</returns>
-        public Product GetUpsell(Product product)
-        {
-            var allProducts = GetAll();
-            return allProducts.Where(upsell => upsell.IsChildOf(product)).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Returns parent product for specified upsell.
-        /// </summary>
-        public Product GetByUpsell(Product upsell)
-        {
-            var allProducts = GetAll();
-            return allProducts.Where(p => p.IsParentFor(upsell)).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Updates product or creates new one if ID equals zero.
-        /// </summary>
-        /// <returns>Product ID.</returns>
-        public int Save(Product p)
+        /// <param name="p"><see cref="Product"/> to be updated/created.</param>
+        /// <param name="isForUpsell">Indicates whether a specified product is an upsell.</param>
+        /// <returns><see cref="Product"/> ID.</returns>
+        public int Save(Product p, bool isForUpsell)
         {
             var paramz = new NameValueCollection
             {
@@ -76,7 +68,7 @@ namespace EAutopay.Products
                 {"category_id", "0"},
                 {"site_url", ""},
                 {"author_fio", ""},
-                {"name", p.Name},
+                {"name", isForUpsell ? GetNameForUpsell(p.Name) : p.Name},
                 {"product_id", p.ID.ToString().Equals("0") ? "" : p.ID.ToString()}
             };
             var crawler = new Crawler();
@@ -94,9 +86,9 @@ namespace EAutopay.Products
         }
 
         /// <summary>
-        /// Removes product and corresponding upsell (if any) in E-Autopay.
+        /// Deletes the specified product from E-Autopay.
         /// </summary>
-        /// <param name="p">Product to be removed.</param>
+        /// <param name="p"><see cref="Product"/> to be removed.</param>
         public void Delete(Product p)
         {
             if (p.IsNew) return;
@@ -137,6 +129,11 @@ namespace EAutopay.Products
             p.ID = 0;
             p.Name = string.Empty;
             p.Price = 0.0;
+        }
+
+        private string GetNameForUpsell(string name)
+        {
+            return string.Format("{0}_{1}", name, Product.UPSELL_SUFFIX);
         }
     }
 }
