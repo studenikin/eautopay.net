@@ -10,45 +10,45 @@ namespace EAutopay.Upsells
     public interface IUpsellRepository
     {
         /// <summary>
-        /// Gets upsell from E-Autopay by id.
+        /// Gets the specified upsell for the specified product.
         /// </summary>
-        /// <param name="id">ID of the upsell to get.</param>
-        /// <param name="id">ID of the product which the upsell belongs to.</param>
-        /// <returns>Upsell object.</returns>
+        /// <param name="id"><see cref="Upsell"/> ID.</param>
+        /// <param name="productId"><see cref="Product"/> ID.</param>
+        /// <returns>An <see cref="Upsell"/>.</returns>
         Upsell Get(int id, int productId);
 
         /// <summary>
-        /// Checks whether specified product has upsells.
+        /// Determines whether the specified product has an upsell(s) in E-Autopay.
         /// </summary>
-        /// <param name="p">Product to check.</param>
-        /// <returns>True if the product has at least one upsell. Otherwise - False.</returns>
+        /// <param name="p">The <see cref="Product"/> to be checked.</param>
+        /// <returns>true if the product doesn't have an upsell(s); otherwise, false.</returns>
         bool HasUpsell(Product p);
 
         /// <summary>
-        /// Updates upsell or creates new one in E-Autopay.
+        /// Creates a new upsell in E-Autopay; or updates existing one.
         /// </summary>
-        /// <param name="upsell">Upsell to be updated/created.</param>
-        /// <param name="productId">ID of the product to bind upsell to.</param>
-        /// <returns>ID of the upsell created.</returns>
+        /// <param name="upsell"><see cref="Upsell"/> to be created/updated.</param>
+        /// <param name="productId"><see cref="Product"/> ID.</param>
+        /// <returns><see cref="Upsell"/> ID.</returns>
         int Save(Upsell upsell, int productId);
 
         /// <summary>
-        /// Gets upsells for specified product.
+        /// Gets upsells for the specified product in E-Autopay.
         /// </summary>
-        /// <param name="productId">ID of the product to get upsell for.</param>
-        /// <returns>List of upsells belonging to specified product.</returns>
+        /// <param name="productId"><see cref="Product"/> ID.</param>
+        /// <returns>The list of <see cref="Upsell"/>.</returns>
         List<Upsell> GetByProduct(int productId);
 
         /// <summary>
-        /// Removes upsell from E-Autopay.
+        /// Deletes the specified upsell from E-Autopay.
         /// </summary>
-        /// <param name="upsell">Upsell to be deleted.</param>
+        /// <param name="upsell"><see cref="Upsell"/> to be deleted.</param>
         void Delete(Upsell upsell);
 
         /// <summary>
-        /// Removes all product upsells from E-Autopay.
+        /// Deletes all upsells for the specified product.
         /// </summary>
-        /// <param name="p">Product to remove upsells from.</param>
+        /// <param name="p"><see cref="Upsell"/> to remove upsells from.</param>
         void DeleteByProduct(Product p);
     }
 }

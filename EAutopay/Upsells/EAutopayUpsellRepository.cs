@@ -7,23 +7,43 @@ using EAutopay.Products;
 
 namespace EAutopay.Upsells
 {
+    /// <summary>
+    /// Provides CRUD operations for upsells in E-Autopay.
+    /// </summary>
     public class EAutopayUpsellRepository : IUpsellRepository
     {
         readonly IConfiguration _config;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EAutopayUpsellRepository"/> class.
+        /// </summary>
         public EAutopayUpsellRepository() : this(null)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EAutopayUpsellRepository"/> class.
+        /// </summary>
+        /// <param name="config">General E-Autopay settings.</param>
         public EAutopayUpsellRepository(IConfiguration config)
         {
             _config = config ?? new EAutopayConfig();
         }
 
+        /// <summary>
+        /// Determines whether the specified product has an upsell(s) in E-Autopay.
+        /// </summary>
+        /// <param name="p">The <see cref="Product"/> to be checked.</param>
+        /// <returns>true if the product doesn't have an upsell(s); otherwise, false.</returns>
         public bool HasUpsell(Product p)
         {
             return GetByProduct(p.ID).Count > 0;
         }
 
+        /// <summary>
+        /// Gets upsells for the specified product in E-Autopay.
+        /// </summary>
+        /// <param name="productId"><see cref="Product"/> ID.</param>
+        /// <returns>The list of <see cref="Upsell"/>.</returns>
         public List<Upsell> GetByProduct(int productId)
         {
             var crawler = new Crawler();
@@ -35,11 +55,23 @@ namespace EAutopay.Upsells
             }
         }
 
+        /// <summary>
+        /// Gets the specified upsell for the specified product.
+        /// </summary>
+        /// <param name="id"><see cref="Upsell"/> ID.</param>
+        /// <param name="productId"><see cref="Product"/> ID.</param>
+        /// <returns>An <see cref="Upsell"/>.</returns>
         public Upsell Get(int id, int productId)
         {
             return GetByProduct(productId).Where(u => u.ID == id).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Creates a new upsell in E-Autopay; or updates existing one.
+        /// </summary>
+        /// <param name="upsell"><see cref="Upsell"/> to be created/updated.</param>
+        /// <param name="productId"><see cref="Product"/> ID.</param>
+        /// <returns><see cref="Upsell"/> ID.</returns>
         public int Save(Upsell upsell, int productId)
         {
             BindUpsell(upsell, productId);
@@ -57,9 +89,9 @@ namespace EAutopay.Upsells
         }
 
         /// <summary>
-        /// Removes upsell from E-Autopay.
+        /// Deletes the specified upsell from E-Autopay.
         /// </summary>
-        /// <param name="upsell">Upsell to be deleted.</param>
+        /// <param name="upsell"><see cref="Upsell"/> to be deleted.</param>
         public void Delete(Upsell upsell)
         {
             if (upsell.IsNew) return;
@@ -72,9 +104,9 @@ namespace EAutopay.Upsells
         }
 
         /// <summary>
-        /// Removes all product upsells from E-Autopay.
+        /// Deletes all upsells for the specified product.
         /// </summary>
-        /// <param name="p">Product to remove upsells from.</param>
+        /// <param name="p"><see cref="Upsell"/> to remove upsells from.</param>
         public void DeleteByProduct(Product p)
         {
             var upsells = GetByProduct(p.ID);
