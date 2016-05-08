@@ -7,23 +7,43 @@ using EAutopay.Products;
 
 namespace EAutopay.Upsells
 {
+    /// <summary>
+    /// Provides CRUD operations for upsells in E-Autopay.
+    /// </summary>
     public class EAutopayUpsellRepository : IUpsellRepository
     {
         readonly IConfiguration _config;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EAutopayUpsellRepository"/> class.
+        /// </summary>
         public EAutopayUpsellRepository() : this(null)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EAutopayUpsellRepository"/> class.
+        /// </summary>
+        /// <param name="config">General E-Autopay settings.</param>
         public EAutopayUpsellRepository(IConfiguration config)
         {
             _config = config ?? new EAutopayConfig();
         }
 
+        /// <summary>
+        /// Determines whether the specified product has an upsell(s) in E-Autopay.
+        /// </summary>
+        /// <param name="p">The <see cref="Product"/> to be checked.</param>
+        /// <returns>true if the product doesn't have an upsell(s); otherwise, false.</returns>
         public bool HasUpsell(Product p)
         {
             return GetByProduct(p.ID).Count > 0;
         }
 
+        /// <summary>
+        /// Gets upsells for the specified product in E-Autopay.
+        /// </summary>
+        /// <param name="productId"><see cref="Product"/> ID.</param>
+        /// <returns>The list of <see cref="Upsell"/>.</returns>
         public List<Upsell> GetByProduct(int productId)
         {
             var crawler = new Crawler();
@@ -35,11 +55,23 @@ namespace EAutopay.Upsells
             }
         }
 
+        /// <summary>
+        /// Gets the specified upsell for the specified product.
+        /// </summary>
+        /// <param name="id"><see cref="Upsell"/> ID.</param>
+        /// <param name="productId"><see cref="Product"/> ID.</param>
+        /// <returns>An <see cref="Upsell"/>.</returns>
         public Upsell Get(int id, int productId)
         {
             return GetByProduct(productId).Where(u => u.ID == id).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Creates a new upsell in E-Autopay; or updates existing one.
+        /// </summary>
+        /// <param name="upsell"><see cref="Upsell"/> to be created/updated.</param>
+        /// <param name="productId"><see cref="Product"/> ID.</param>
+        /// <returns><see cref="Upsell"/> ID.</returns>
         public int Save(Upsell upsell, int productId)
         {
             BindUpsell(upsell, productId);
@@ -54,6 +86,34 @@ namespace EAutopay.Upsells
 
             upsell.ParentID = productId;
             return upsell.ID;
+        }
+
+        /// <summary>
+        /// Deletes the specified upsell from E-Autopay.
+        /// </summary>
+        /// <param name="upsell"><see cref="Upsell"/> to be deleted.</param>
+        public void Delete(Upsell upsell)
+        {
+            if (upsell.IsNew) return;
+
+            RemoveFromEAutopay(upsell);
+
+            DisableIfNoProductLeft(upsell.ParentID);
+
+            ResetValues(upsell);
+        }
+
+        /// <summary>
+        /// Deletes all upsells for the specified product.
+        /// </summary>
+        /// <param name="p"><see cref="Upsell"/> to remove upsells from.</param>
+        public void DeleteByProduct(Product p)
+        {
+            var upsells = GetByProduct(p.ID);
+            foreach (var upsell in upsells)
+            {
+                Delete(upsell);
+            }
         }
 
         /// <summary>
@@ -84,80 +144,6 @@ namespace EAutopay.Upsells
 
             var crawler = new Crawler();
             using (var resp = crawler.HttpPost(_config.GetUpsellUri(productId, 0), paramz)) { }
-        }
-
-        /// <summary>
-        /// Removes upsell from E-Autopay.
-        /// </summary>
-        /// <param name="upsell">Upsell to be deleted.</param>
-        public void Delete(Upsell upsell)
-        {
-            if (upsell.IsNew) return;
-
-            RemoveFromEAutopay(upsell);
-
-            DisableIfNoProductLeft(upsell.ParentID);
-
-            ResetValues(upsell);
-        }
-
-        /// <summary>
-        /// Disables the "can have upsells" checkbox if the product has no upsells left.
-        /// </summary>
-        private void DisableIfNoProductLeft(int productId)
-        {
-            var leftUpsells = GetByProduct(productId);
-            if (leftUpsells.Count == 0)
-            {
-                DisableUpsells(productId);
-            }
-        }
-
-        /// <summary>
-        /// Removes all product upsells from E-Autopay.
-        /// </summary>
-        /// <param name="p">Product to remove upsells from.</param>
-        public void DeleteByProduct(Product p)
-        {
-            var upsells = GetByProduct(p.ID);
-            foreach (var upsell in upsells)
-            {
-                Delete(upsell);
-            }
-        }
-
-        /// <summary>
-        /// Removes all references between specified upsell and its parent product.
-        /// </summary>
-        /// <param name="upsell">Upsell to unbind.</param>
-        private void UnBindUpsell(Upsell upsell)
-        {
-            //var parent = GetByUpsell(upsell);
-            //if (parent != null)
-            //{
-            //    DisableUpsells(parent.ID);
-            //}
-        }
-
-        private void RemoveFromEAutopay(Upsell upsell)
-        {
-            var paramz = new NameValueCollection
-            {
-                {"_method", "DELETE"}
-            };
-
-            var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.GetUpsellUri(upsell.ParentID, upsell.ID), paramz)) { }
-        }
-
-        private void ResetValues(Upsell upsell)
-        {
-            upsell.ID = 0;
-            upsell.ParentID = 0;
-            upsell.OriginID = 0;
-            upsell.Price = 0.0;
-            upsell.SuccessUri = string.Empty;
-            upsell.ClientUri = string.Empty;
         }
 
         /// <summary>
@@ -204,6 +190,39 @@ namespace EAutopay.Upsells
 
             var crawler = new Crawler();
             using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz)) { }
+        }
+
+        /// <summary>
+        /// Disables the "can have upsells" checkbox if the product has no upsells left.
+        /// </summary>
+        private void DisableIfNoProductLeft(int productId)
+        {
+            var leftUpsells = GetByProduct(productId);
+            if (leftUpsells.Count == 0)
+            {
+                DisableUpsells(productId);
+            }
+        }
+
+        private void RemoveFromEAutopay(Upsell upsell)
+        {
+            var paramz = new NameValueCollection
+            {
+                {"_method", "DELETE"}
+            };
+
+            var crawler = new Crawler();
+            using (var resp = crawler.HttpPost(_config.GetUpsellUri(upsell.ParentID, upsell.ID), paramz)) { }
+        }
+
+        private void ResetValues(Upsell upsell)
+        {
+            upsell.ID = 0;
+            upsell.ParentID = 0;
+            upsell.OriginID = 0;
+            upsell.Price = 0.0;
+            upsell.SuccessUri = string.Empty;
+            upsell.ClientUri = string.Empty;
         }
     }
 }

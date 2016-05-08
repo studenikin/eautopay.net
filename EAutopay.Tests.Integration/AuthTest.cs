@@ -30,7 +30,7 @@ namespace EAutopay.Tests.Integration
         {
             var result = Common.LoginAndGetResult();
 
-            Assert.AreEqual(AuthResult.Statuses.Ok, result.Status);
+            Assert.AreEqual(AuthStatus.Ok, result.Status);
         }
 
 
@@ -43,7 +43,7 @@ namespace EAutopay.Tests.Integration
 
             var result = auth.Login();
 
-            Assert.AreEqual(AuthResult.Statuses.Login_Failed, result.Status);
+            Assert.AreEqual(AuthStatus.Login_Failed, result.Status);
         }
 
 
@@ -57,7 +57,7 @@ namespace EAutopay.Tests.Integration
 
             var result = auth.Login();
 
-            Assert.AreEqual(AuthResult.Statuses.Secret_Failed, result.Status);
+            Assert.AreEqual(AuthStatus.Secret_Failed, result.Status);
         }
 
 

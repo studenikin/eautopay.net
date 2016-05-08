@@ -6,29 +6,23 @@
     public class UpsellSettings
     {
         /// <summary>
-        /// True if the "Allow Upsells" checkbox is enabled in E-Autopay. Otherwise - false.
+        /// Gets the value indicating that the "Allow Upsells" checkbox is enabled in E-Autopay.
         /// </summary>
         public bool IsUpsellsEnabled { get; set; }
 
         /// <summary>
-        /// Represents the "Upsell Interval" property in E-Autopay.
+        /// Gets the "Upsell Interval" property in E-Autopay.
         /// </summary>
         public int Interval { get; set; }
 
         /// <summary>
-        /// URI to redirect to after ordering an upsell.
+        /// Gets the URI to redirect to after ordering an upsell.
         /// </summary>
         public string RedirectUri { get; set; }
 
         /// <summary>
-        /// True if product has upsells in E-Autopay. Otherwise - false.
+        /// Determines whether the specified product has an upsell(s) in E-Autopay.
         /// </summary>
         public bool HasProductUpsells{ get; set; }
-
-        /// <summary>
-        /// Initializes instance of the class.
-        /// </summary>
-        public UpsellSettings()
-        { }
     }
 }

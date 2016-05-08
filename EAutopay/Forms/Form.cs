@@ -16,7 +16,7 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// Returns True if the form doesn't exist in E-Autopay. Otherwise - False.
+        /// Returns True if the form doesn't exist in E-Autopay; otherwise - False.
         /// </summary>
         public bool IsNew
         {

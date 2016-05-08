@@ -1,56 +1,64 @@
 ﻿using System.Net;
 
-
 namespace EAutopay.Security
 {
+    /// <summary>
+    /// Provides information about authentication result.
+    /// </summary>
     public class AuthResult
     {
-        public enum Statuses
-        {
-            Ok = 1,
-            Login_Failed = 2,
-            Need_Secret = 3,
-            Secret_Failed = 4
-        }
+        private AuthStatus _status;
 
-        private Statuses _status;
-
-        public Statuses Status { get { return _status; } }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthResult"/> class.
+        /// </summary>
         public AuthResult()
         {
-            _status = Statuses.Login_Failed;
+            _status = AuthStatus.Login_Failed;
         }
 
+        /// <summary>
+        /// Gets result of the authentication.
+        /// </summary>
+        public AuthStatus Status { get { return _status; } }
+
+        /// <summary>
+        /// Sets authentication status based on response received on posting credentials.
+        /// </summary>
+        /// <param name="resp">Response object received on posting credentials.</param>
         internal void SetStatusFromLoginResponse(HttpWebResponse resp)
         {
             var ud = new UriDetector(resp.ResponseUri);
 
-            if (ud.IsMainURI())
+            if (ud.IsMainURI)
             {
-               _status = Statuses.Ok;
+               _status = AuthStatus.Ok;
             }
-            else if (ud.IsSecretAnswerURI())
+            else if (ud.IsSecretAnswerURI)
             {
-                _status = Statuses.Need_Secret;
+                _status = AuthStatus.Need_Secret;
             }
             else
             {
-                _status = Statuses.Login_Failed;
+                _status = AuthStatus.Login_Failed;
             }
         }
 
+        /// <summary>
+        /// Sets authentication status based on response received on posting secret answer.
+        /// </summary>
+        /// <param name="resp">Response object received on posting secret answer.</param>
         internal void SetStatusFromSecretResponse(HttpWebResponse resp)
         {
             var ud = new UriDetector(resp.ResponseUri);
 
-            if (ud.IsMainURI())
+            if (ud.IsMainURI)
             {
-                _status = Statuses.Ok;
+                _status = AuthStatus.Ok;
             }
-            else if (ud.IsLoginURI())
+            else if (ud.IsLoginURI)
             {
-                _status = Statuses.Secret_Failed;
+                _status = AuthStatus.Secret_Failed;
             }
         }
     }

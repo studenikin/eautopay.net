@@ -13,7 +13,7 @@ namespace EAutopay
         NameValueCollection _settings;
 
         /// <summary>
-        /// Initializes instance of the class.
+        /// Initializes a new instance of the <see cref="EAutopayConfig"/> class.
         /// </summary>
         public EAutopayConfig()
         {
@@ -27,7 +27,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the login page.
+        /// Gets the URI of the login page.
         /// </summary>
         public string LoginUri
         {
@@ -35,7 +35,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the logout page.
+        /// Gets the URI of the logout page.
         /// </summary>
         public string LogoutUri
         {
@@ -43,7 +43,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the secret page. Where secret answer is provided.
+        /// Gets the URI of the secret page. Where secret answer is provided.
         /// </summary>
         public string SecretUri
         {
@@ -51,7 +51,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the main page. Where user is redirected after logging in.
+        /// Gets URI of the main page. Where user is redirected after logging in.
         /// </summary>
         public string MainUri
         {
@@ -59,7 +59,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the product list page.
+        /// Gets URI of the product list page.
         /// </summary>
         public string ProductListUri
         {
@@ -67,7 +67,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the product save page.
+        /// Gets URI of the product save page.
         /// </summary>
         public string ProductSaveUri
         {
@@ -75,7 +75,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the product delete page.
+        /// Gets URI of the product delete page.
         /// </summary>
         public string ProductDeleteUri
         {
@@ -83,7 +83,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the form list page.
+        /// Gets URI of the form list page.
         /// </summary>
         public string FormListUri
         {
@@ -91,7 +91,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the form save page.
+        /// Gets URI of the form save page.
         /// </summary>
         public string FormSaveUri
         {
@@ -99,7 +99,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// URI of the form delete page.
+        /// Gets URI of the form delete page.
         /// </summary>
         public string FormDeleteUri
         {
@@ -107,7 +107,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// Gets URI of the upsell page for specified product.
+        /// Gets Gets URI of the upsell page for specified product.
         /// </summary>
         /// <param name="productId">Product ID.</param>
         /// <param name="upsellId">Upsell ID.</param>
@@ -137,7 +137,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// Get interval of time (in minutes) while upsell offer is available.
+        /// Gets interval of time (in minutes) while upsell offer is available.
         /// </summary>
         public int UpsellInterval
         {
