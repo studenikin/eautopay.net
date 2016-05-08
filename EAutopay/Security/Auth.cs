@@ -80,7 +80,7 @@ namespace EAutopay.Security
             using (var resp = crawler.HttpGet(_config.MainUri))
             {
                 var ud = new UriDetector(resp.ResponseUri);
-                return ud.IsMainURI();
+                return ud.IsMainURI;
             }
         }
 

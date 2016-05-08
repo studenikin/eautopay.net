@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Web.Helpers;
 using System.Globalization;
-using System.Web.Helpers;
+using System.Collections.Generic;
 
 using EAutopay.Forms;
 using EAutopay.Products;
@@ -10,20 +10,27 @@ using HtmlAgilityPack;
 
 namespace EAutopay
 {
+    /// <summary>
+    /// Retrieves useful data from E-Autopay by parsing response data.
+    /// </summary>
     internal class Parser
     {
         string _html;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Parser"/> class.
+        /// </summary>
+        /// <param name="html">HTML (or JSON) to be parsed.</param>
         public Parser(string html)
         {
             _html = html;
         }
 
         /// <summary>
-        /// Retrieves product id from the json source.
+        /// Retrieves product ID from the JSON data.
         /// Just after the product has been created and gets redirected to the "Save Price" page.
         /// </summary>
-        /// <returns>Product ID as integer.</returns>
+        /// <returns>ID of the product in E-Autopay.</returns>
         public int GetProductID()
         {
             var json = Json.Decode(_html);
@@ -43,6 +50,10 @@ namespace EAutopay
             return token != null ? token.Attributes["value"].Value : "";
         }
 
+        /// <summary>
+        /// Gets the list of products on the "products" page in E-Autopay
+        /// </summary>
+        /// <returns>The list of <see cref="Product"/>.</returns>
         public List<Product> GetProducts()
         {
             var products = new List<Product>();
@@ -65,6 +76,10 @@ namespace EAutopay
             return products;
         }
 
+        /// <summary>
+        /// Gets the list of forms on the "forms" page in E-Autopay
+        /// </summary>
+        /// <returns>The list of <see cref="Form"/>.</returns>
         public List<Form> GetForms()
         {
             var forms = new List<Form>();
@@ -91,7 +106,7 @@ namespace EAutopay
         /// <summary>
         /// Gets upsell settings of particular product in E-Autopay. 
         /// </summary>
-        /// <returns>UpsellSettings object.</returns>
+        /// <returns>A <see cref="UpsellSettings"/>.</returns>
         public UpsellSettings GetUpsellSettings()
         {
             var ret = new UpsellSettings();
@@ -115,10 +130,10 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// Parses page and returns list of upsells for specified product.
+        /// Gets the list of upsells for the specified product on the "edit product" page in E-Autopay.
         /// </summary>
         /// <param name="productId">Product to get upsells for.</param>
-        /// <returns>List of upsells.</returns>
+        /// <returns>The list of <see cref="Upsell"/>.</returns>
         public List<Upsell> GetUpsells(int productId)
         {
             var ret = new List<Upsell>();

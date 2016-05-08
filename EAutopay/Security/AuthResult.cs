@@ -30,11 +30,11 @@ namespace EAutopay.Security
         {
             var ud = new UriDetector(resp.ResponseUri);
 
-            if (ud.IsMainURI())
+            if (ud.IsMainURI)
             {
                _status = AuthStatus.Ok;
             }
-            else if (ud.IsSecretAnswerURI())
+            else if (ud.IsSecretAnswerURI)
             {
                 _status = AuthStatus.Need_Secret;
             }
@@ -52,11 +52,11 @@ namespace EAutopay.Security
         {
             var ud = new UriDetector(resp.ResponseUri);
 
-            if (ud.IsMainURI())
+            if (ud.IsMainURI)
             {
                 _status = AuthStatus.Ok;
             }
-            else if (ud.IsLoginURI())
+            else if (ud.IsLoginURI)
             {
                 _status = AuthStatus.Secret_Failed;
             }
