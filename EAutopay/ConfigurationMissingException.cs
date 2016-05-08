@@ -8,14 +8,14 @@ namespace EAutopay
     public class ConfigurationMissingException : ConfigurationErrorsException
     {
         /// <summary>
-        /// Name of the missing element in the configuration file.
+        /// The name of the missing element in the configuration file.
         /// </summary>
         public string MissingElement { get; private set; }
 
         /// <summary>
-        /// Initializes instance of the object.
+        /// Initializes a new instance of the <see cref="ConfigurationMissingException"/> class.
         /// </summary>
-        /// <param name="missingElement">Missing element name.</param>
+        /// <param name="missingElement">The name of the missing element.</param>
         public ConfigurationMissingException(string missingElement) : base(missingElement)
         {
             MissingElement = missingElement;

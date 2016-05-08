@@ -4,15 +4,26 @@ using System.Collections.Specialized;
 
 namespace EAutopay
 {
+    /// <summary>
+    /// Provides an easy way to post/get http request from/to E-Autopay.
+    /// </summary>
     public class Crawler
     {
         readonly ICache _cache;
 
         readonly IConfiguration _config;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Crawler"/> class.
+        /// </summary>
         public Crawler() : this(null, null)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Crawler"/> class.
+        /// </summary>
+        /// <param name="cache"><see cref="ICache"/> for caching Cookies, etc.</param>
+        /// <param name="config">General E-Autopay settings.</param>
         public Crawler(ICache cache, IConfiguration config)
         {
             _cache = cache ?? new HttpCache();
@@ -25,6 +36,12 @@ namespace EAutopay
             }
         }
 
+        /// <summary>
+        /// Posts data and gets a response from the specified URI in E-Autopay.
+        /// </summary>
+        /// <param name="uri">The URI of the page in E-Autopay.</param>
+        /// <param name="paramz">The data to send to the page.</param>
+        /// <returns>A <see cref="HttpWebResponse"/> that contains the response from the URI.</returns>
         public HttpWebResponse HttpPost(string uri, NameValueCollection paramz)
         {
             var request = (HttpWebRequest)WebRequest.Create(uri);
@@ -51,9 +68,14 @@ namespace EAutopay
             return HttpGet(uri, null);
         }
 
+        /// <summary>
+        /// Gets a response from the specified URI in E-Autopay.
+        /// </summary>
+        /// <param name="uri">The URI of the page in E-Autopay.</param>
+        /// <param name="paramz">The data to send to the page.</param>
+        /// <returns>A <see cref="HttpWebResponse"/> that contains the response from the URI.</returns>
         public HttpWebResponse HttpGet(string uri, NameValueCollection paramz)
         {
-
             string uriWithParams = CombineUriWithParams(uri, paramz);
 
             var request = (HttpWebRequest)WebRequest.Create(uriWithParams);
