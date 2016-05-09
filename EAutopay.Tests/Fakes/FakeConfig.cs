@@ -1,6 +1,6 @@
-﻿namespace EAutopay.Tests
+﻿namespace EAutopay.Tests.Fakes
 {
-    public class FakedConfig : IConfiguration
+    public class FakeConfig : IConfiguration
     {
         public string Login
         {

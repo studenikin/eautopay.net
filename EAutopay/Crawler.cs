@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Net;
 using System.Collections.Specialized;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("EAutopay.Tests")]
 namespace EAutopay
 {
     /// <summary>

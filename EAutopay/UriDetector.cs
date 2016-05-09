@@ -23,7 +23,7 @@ namespace EAutopay
         /// </summary>
         public bool IsSecretAnswerURI
         {
-            get { return _uri.ToString().IndexOf("identify") > -1; }
+            get { return _uri.ToString().IndexOf("adminka/identify") > -1; }
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace EAutopay
         /// </summary>
         public bool IsLoginURI
         {
-            get { return _uri.ToString().IndexOf("login") > -1; }
+            get { return _uri.ToString().IndexOf("adminka/login") > -1; }
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace EAutopay
         /// </summary>
         public bool IsMainURI
         {
-            get { return _uri.ToString().IndexOf("main") > -1; }
+            get { return _uri.ToString().IndexOf("adminka/main") > -1; }
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace EAutopay
         /// </summary>
         public bool IsProdutListURI
         {
-            get { return _uri.ToString().IndexOf("list_tovars") > -1; }
+            get { return _uri.ToString().IndexOf("adminka/tovars/list_tovars") > -1; }
         }
     }
 }
