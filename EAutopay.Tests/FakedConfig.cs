@@ -2,6 +2,11 @@
 {
     public class FakedConfig : IConfiguration
     {
+        public string Login
+        {
+            get { return ""; }
+        }
+
         public string LoginUri
         {
             get { return "http://tempuri.org"; }

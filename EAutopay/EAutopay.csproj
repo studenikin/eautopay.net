@@ -55,7 +55,7 @@
     <Compile Include="Upsells\IUpsellRepository.cs" />
     <Compile Include="Security\Auth.cs" />
     <Compile Include="Security\AuthResult.cs" />
-    <Compile Include="EAutopayConfig.cs" />
+    <Compile Include="AppConfig.cs" />
     <Compile Include="Forms\Form.cs" />
     <Compile Include="Forms\EAutopayFormRepository.cs" />
     <Compile Include="HttpCache.cs" />
@@ -69,6 +69,7 @@
     <Compile Include="Upsells\Upsell.cs" />
     <Compile Include="Upsells\UpsellSettings.cs" />
     <Compile Include="UriDetector.cs" />
+    <Compile Include="UriProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

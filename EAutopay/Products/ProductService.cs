@@ -23,7 +23,7 @@ namespace EAutopay.Products
         /// <param name="config">General E-Autopay settings.</param>
         public ProductService(IConfiguration config)
         {
-            _config = config ?? new EAutopayConfig();
+            _config = config ?? new AppConfig();
         }
 
         /// <summary>
@@ -34,7 +34,9 @@ namespace EAutopay.Products
         public UpsellSettings GetUpsellSettings(int productId)
         {
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.GetSendSettingsUri(productId)))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpGet(up.GetSendSettingsUri(productId)))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
