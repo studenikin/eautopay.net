@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace EAutopay.Tests
+namespace EAutopay.Tests.Fakes
 {
-    class FackedCache : ICache
+    class FakeCache : ICache
     {
         private Dictionary<string, object> _cache;
 
-        public FackedCache()
+        public FakeCache()
         {
             _cache = new Dictionary<string, object>();
         }

@@ -15,9 +15,16 @@ namespace EAutopay
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayConfig"/> class.
         /// </summary>
-        public AppConfig()
+        public AppConfig() :this (ConfigurationManager.AppSettings)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EAutopayConfig"/> class.
+        /// </summary>
+        /// <param name="settings">The list of settings. Default value is AppSettings.</param>
+        public AppConfig(NameValueCollection settings)
         {
-            _settings = ConfigurationManager.AppSettings;
+            _settings = settings;
 
             if (string.IsNullOrWhiteSpace(_settings["eautopay_login"]))
             {
