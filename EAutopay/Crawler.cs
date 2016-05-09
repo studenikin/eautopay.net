@@ -43,8 +43,8 @@ namespace EAutopay
         /// </summary>
         /// <param name="uri">The URI of the page in E-Autopay.</param>
         /// <param name="paramz">The data to send to the page.</param>
-        /// <returns>A <see cref="HttpWebResponse"/> that contains the response from the URI.</returns>
-        public HttpWebResponse HttpPost(string uri, NameValueCollection paramz)
+        /// <returns>A <see cref="EAutopayResponse"/> that contains the response from the URI.</returns>
+        public EAutopayResponse Post(string uri, NameValueCollection paramz)
         {
             var request = (HttpWebRequest)WebRequest.Create(uri);
             request.Method = "POST";
@@ -60,14 +60,16 @@ namespace EAutopay
 
             WritePostData(request, paramz);
 
-            var resp = (HttpWebResponse)request.GetResponse();
-            Cookies = resp.Cookies;
-            return resp;
+            using (var resp = (HttpWebResponse)request.GetResponse())
+            {
+                Cookies = resp.Cookies;
+                return GetEAutopayResponse(resp);
+            }
         }
 
-        public HttpWebResponse HttpGet(string uri)
+        public EAutopayResponse Get(string uri)
         {
-            return HttpGet(uri, null);
+            return Get(uri, null);
         }
 
         /// <summary>
@@ -75,8 +77,8 @@ namespace EAutopay
         /// </summary>
         /// <param name="uri">The URI of the page in E-Autopay.</param>
         /// <param name="paramz">The data to send to the page.</param>
-        /// <returns>A <see cref="HttpWebResponse"/> that contains the response from the URI.</returns>
-        public HttpWebResponse HttpGet(string uri, NameValueCollection paramz)
+        /// <returns>A <see cref="EAutopayResponse"/> that contains the response from the URI.</returns>
+        public EAutopayResponse Get(string uri, NameValueCollection paramz)
         {
             string uriWithParams = CombineUriWithParams(uri, paramz);
 
@@ -84,9 +86,11 @@ namespace EAutopay
             request.CookieContainer = new CookieContainer();
             request.CookieContainer.Add(Cookies);
 
-            var resp = (HttpWebResponse)request.GetResponse();
-            Cookies = resp.Cookies;
-            return resp;
+            using (var resp = (HttpWebResponse)request.GetResponse())
+            {
+                Cookies = resp.Cookies;
+                return GetEAutopayResponse(resp);
+            }
         }
 
         private string Token
@@ -158,12 +162,25 @@ namespace EAutopay
         private string RetrieveToken()
         {
             var up = new UriProvider(_config.Login);
-            using (var resp = HttpGet(up.LoginUri))
+            var resp = Get(up.LoginUri);
+
+            var parser = new Parser(resp.Data);
+            return parser.GetToken();
+        }
+
+        private EAutopayResponse GetEAutopayResponse(HttpWebResponse httpResp)
+        {
+            var ret = new EAutopayResponse();
+
+            ret.Uri = httpResp.ResponseUri;
+            ret.StatusCode = httpResp.StatusCode;
+
+            using (var stream = httpResp.GetResponseStream())
             {
-                var reader = new StreamReader(resp.GetResponseStream());
-                var parser = new Parser(reader.ReadToEnd());
-                return parser.GetToken();
+                var reader = new StreamReader(httpResp.GetResponseStream());
+                ret.Data = reader.ReadToEnd();
             }
+            return ret;
         }
     }
 }

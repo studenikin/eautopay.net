@@ -68,7 +68,7 @@ namespace EAutopay.Security
         {
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            using (var resp = crawler.HttpGet(up.LogoutUri)) { }
+            crawler.Get(up.LogoutUri);
         }
 
         /// <summary>
@@ -80,11 +80,10 @@ namespace EAutopay.Security
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            using (var resp = crawler.HttpGet(up.MainUri))
-            {
-                var ud = new UriDetector(resp.ResponseUri);
-                return ud.IsMainURI;
-            }
+            var resp = crawler.Get(up.MainUri);
+
+            var ud = new UriDetector(resp.Uri);
+            return ud.IsMainURI;
         }
 
         private AuthResult PostLoginData()
@@ -96,12 +95,11 @@ namespace EAutopay.Security
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            using (var resp = crawler.HttpPost(up.LoginUri, paramz))
-            {
-                var result = new AuthResult();
-                result.SetStatusFromLoginResponse(resp);
-                return result;
-            }
+            var resp = crawler.Post(up.LoginUri, paramz);
+
+            var result = new AuthResult();
+            result.SetStatusFromLoginResponse(resp);
+            return result;
         }
 
         private AuthResult PostSecretAnswer()
@@ -112,12 +110,11 @@ namespace EAutopay.Security
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            using (var resp = crawler.HttpPost(up.SecretUri, paramz))
-            {
-                var result = new AuthResult();
-                result.SetStatusFromSecretResponse(resp);
-                return result;
-            }
+            var resp = crawler.Post(up.SecretUri, paramz);
+
+            var result = new AuthResult();
+            result.SetStatusFromSecretResponse(resp);
+            return result;
         }
     }
 }

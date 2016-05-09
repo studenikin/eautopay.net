@@ -49,12 +49,10 @@ namespace EAutopay.Upsells
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            using (var resp = crawler.HttpGet(up.GetSendSettingsUri(productId)))
-            {
-                var reader = new StreamReader(resp.GetResponseStream());
-                var parser = new Parser(reader.ReadToEnd());
-                return parser.GetUpsells(productId);
-            }
+            var resp = crawler.Get(up.GetSendSettingsUri(productId));
+            
+            var parser = new Parser(resp.Data);
+            return parser.GetUpsells(productId);
         }
 
         /// <summary>
@@ -146,7 +144,7 @@ namespace EAutopay.Upsells
 
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            using (var resp = crawler.HttpPost(up.GetUpsellUri(productId, 0), paramz)) { }
+            crawler.Post(up.GetUpsellUri(productId, 0), paramz);
         }
 
         /// <summary>
@@ -193,7 +191,7 @@ namespace EAutopay.Upsells
 
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            using (var resp = crawler.HttpPost(up.ProductSaveUri, paramz)) { }
+            crawler.Post(up.ProductSaveUri, paramz);
         }
 
         /// <summary>
@@ -217,7 +215,7 @@ namespace EAutopay.Upsells
 
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            using (var resp = crawler.HttpPost(up.GetUpsellUri(upsell.ParentID, upsell.ID), paramz)) { }
+            crawler.Post(up.GetUpsellUri(upsell.ParentID, upsell.ID), paramz);
         }
 
         private void ResetValues(Upsell upsell)
