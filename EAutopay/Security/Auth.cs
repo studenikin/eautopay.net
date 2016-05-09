@@ -43,7 +43,7 @@ namespace EAutopay.Security
             _login = login;
             _password = password;
             _secret = secret;
-            _config = config ?? new EAutopayConfig();
+            _config = config ?? new AppConfig();
         }
 
         /// <summary>
@@ -67,7 +67,8 @@ namespace EAutopay.Security
         public void Logout()
         {
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.LogoutUri)) { }
+            var up = new UriProvider(_config.Login);
+            using (var resp = crawler.HttpGet(up.LogoutUri)) { }
         }
 
         /// <summary>
@@ -77,7 +78,9 @@ namespace EAutopay.Security
         public bool IsLogged()
         {
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.MainUri))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpGet(up.MainUri))
             {
                 var ud = new UriDetector(resp.ResponseUri);
                 return ud.IsMainURI;
@@ -91,7 +94,9 @@ namespace EAutopay.Security
             paramz["password"] = _password;
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.LoginUri, paramz))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpPost(up.LoginUri, paramz))
             {
                 var result = new AuthResult();
                 result.SetStatusFromLoginResponse(resp);
@@ -105,7 +110,9 @@ namespace EAutopay.Security
             paramz["secret_answer"] = _secret;
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.SecretUri, paramz))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpPost(up.SecretUri, paramz))
             {
                 var result = new AuthResult();
                 result.SetStatusFromSecretResponse(resp);

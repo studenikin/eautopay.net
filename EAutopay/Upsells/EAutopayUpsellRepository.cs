@@ -26,7 +26,7 @@ namespace EAutopay.Upsells
         /// <param name="config">General E-Autopay settings.</param>
         public EAutopayUpsellRepository(IConfiguration config)
         {
-            _config = config ?? new EAutopayConfig();
+            _config = config ?? new AppConfig();
         }
 
         /// <summary>
@@ -47,7 +47,9 @@ namespace EAutopay.Upsells
         public List<Upsell> GetByProduct(int productId)
         {
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.GetSendSettingsUri(productId)))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpGet(up.GetSendSettingsUri(productId)))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
@@ -143,7 +145,8 @@ namespace EAutopay.Upsells
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.GetUpsellUri(productId, 0), paramz)) { }
+            var up = new UriProvider(_config.Login);
+            using (var resp = crawler.HttpPost(up.GetUpsellUri(productId, 0), paramz)) { }
         }
 
         /// <summary>
@@ -189,7 +192,8 @@ namespace EAutopay.Upsells
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz)) { }
+            var up = new UriProvider(_config.Login);
+            using (var resp = crawler.HttpPost(up.ProductSaveUri, paramz)) { }
         }
 
         /// <summary>
@@ -212,7 +216,8 @@ namespace EAutopay.Upsells
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.GetUpsellUri(upsell.ParentID, upsell.ID), paramz)) { }
+            var up = new UriProvider(_config.Login);
+            using (var resp = crawler.HttpPost(up.GetUpsellUri(upsell.ParentID, upsell.ID), paramz)) { }
         }
 
         private void ResetValues(Upsell upsell)

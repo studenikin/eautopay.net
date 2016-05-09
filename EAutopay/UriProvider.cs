@@ -1,29 +1,19 @@
-﻿using System.Configuration;
-using System.Collections.Specialized;
-
-namespace EAutopay
+﻿namespace EAutopay
 {
     /// <summary>
-    /// Provides E-Autopay settings based on configuration file (AppSettings).
+    /// Provides URIs for the E-Autopay pages.
     /// </summary>
-    public class EAutopayConfig : IConfiguration
+    internal class UriProvider
     {
-        string _login;
-
-        NameValueCollection _settings;
+        readonly string _login;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EAutopayConfig"/> class.
+        /// Initializes a new instance of the <see cref="UriProvider"/> class.
         /// </summary>
-        public EAutopayConfig()
+        /// <param name="login">The E-Autopay login.</param>
+        public UriProvider(string login)
         {
-            _settings = ConfigurationManager.AppSettings;
-
-            if (string.IsNullOrWhiteSpace(_settings["eautopay_login"]))
-            {
-                throw new ConfigurationMissingException("eautopay_login");
-            }
-            _login = _settings["eautopay_login"];
+            _login = login;
         }
 
         /// <summary>
@@ -31,7 +21,7 @@ namespace EAutopay
         /// </summary>
         public string LoginUri
         {
-            get { return string.Format("https://{0}.e-autopay.com/adminka/login", _login);}
+            get { return string.Format("https://{0}.e-autopay.com/adminka/login", _login); }
         }
 
         /// <summary>
@@ -126,27 +116,6 @@ namespace EAutopay
         public string GetSendSettingsUri(int productId)
         {
             return string.Format("https://{0}.e-autopay.com/adminka/product/edit/{1}/sendsettings", _login, productId);
-        }
-
-        /// <summary>
-        /// Gets URI of the landing page for upsell.
-        /// </summary>
-        public string UpsellLandingPage
-        {
-            get { return _settings["eautopay_upsell_landing"] ?? ""; }
-        }
-
-        /// <summary>
-        /// Gets interval of time (in minutes) while upsell offer is available.
-        /// </summary>
-        public int UpsellInterval
-        {
-            get
-            {
-                int ret;
-                int.TryParse(_settings["eautopay_upsell_interval"], out ret);
-                return ret > 0 ? ret : 20;
-            }
         }
     }
 }

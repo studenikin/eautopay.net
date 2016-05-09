@@ -25,7 +25,7 @@ namespace EAutopay.Forms
         /// <param name="config">General E-Autopay settings.</param>
         public EAutopayFormRepository(IConfiguration config)
         {
-            _config = config ?? new EAutopayConfig();
+            _config = config ?? new AppConfig();
         }
 
         /// <summary>
@@ -46,9 +46,10 @@ namespace EAutopay.Forms
         public List<Form> GetAll()
         {
             var forms = new List<Form>();
-
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.FormListUri))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpGet(up.FormListUri))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
@@ -81,7 +82,9 @@ namespace EAutopay.Forms
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.FormSaveUri, paramz))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpPost(up.FormSaveUri, paramz))
             {
                 if (form.IsNew)
                 {
@@ -109,7 +112,9 @@ namespace EAutopay.Forms
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.FormDeleteUri, paramz))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpPost(up.FormDeleteUri, paramz))
             {
                 ResetFormValues(form);
             }

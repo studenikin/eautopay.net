@@ -5,6 +5,7 @@
     /// </summary>
     public interface  IConfiguration
     {
+        /*
         /// <summary>
         /// Gets URI of the login page.
         /// </summary>
@@ -69,6 +70,14 @@
         /// <param name="productId">ID of the product to get settings for.</param>
         /// <returns></returns>
         string GetSendSettingsUri(int productId);
+
+        */
+
+        
+        /// <summary>
+        /// Gets the E-Autopay login.
+        /// </summary>
+        string Login { get; }
 
         /// <summary>
         /// Gets URI of the landing page for upsell.

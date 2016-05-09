@@ -24,7 +24,7 @@ namespace EAutopay.Products
         /// <param name="config">General E-Autopay settings.</param>
         public EAutopayProductRepository(IConfiguration config)
         {
-            _config = config ?? new EAutopayConfig();
+            _config = config ?? new AppConfig();
         }
 
         /// <summary>
@@ -45,7 +45,9 @@ namespace EAutopay.Products
         public List<Product> GetAll()
         {
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.ProductListUri))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpGet(up.ProductListUri))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
@@ -72,7 +74,9 @@ namespace EAutopay.Products
                 {"product_id", p.ID.ToString().Equals("0") ? "" : p.ID.ToString()}
             };
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz))
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpPost(up.ProductSaveUri, paramz))
             {
                 if (p.IsNew)
                 {
@@ -110,7 +114,9 @@ namespace EAutopay.Products
                 {"price1", p.PriceInvariant}
             };
             var crawler = new Crawler();
-            using (var resp = crawler.HttpPost(_config.ProductSaveUri, paramz)) { }
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpPost(up.ProductSaveUri, paramz)) { }
         }
 
         private void RemoveFromEAutopay(Product p)
@@ -121,7 +127,9 @@ namespace EAutopay.Products
             };
 
             var crawler = new Crawler();
-            using (var resp = crawler.HttpGet(_config.ProductDeleteUri, paramz)) { }
+            var up = new UriProvider(_config.Login);
+
+            using (var resp = crawler.HttpGet(up.ProductDeleteUri, paramz)) { }
         }
 
         private void ResetValues(Product p)

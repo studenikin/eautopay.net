@@ -28,7 +28,7 @@ namespace EAutopay
         {
             _cache = cache ?? new HttpCache();
 
-            _config = config ?? new EAutopayConfig();
+            _config = config ?? new AppConfig();
 
             if (string.IsNullOrEmpty(Token))
             {
@@ -155,7 +155,8 @@ namespace EAutopay
 
         private string RetrieveToken()
         {
-            using (var resp = HttpGet(_config.LoginUri))
+            var up = new UriProvider(_config.Login);
+            using (var resp = HttpGet(up.LoginUri))
             {
                 var reader = new StreamReader(resp.GetResponseStream());
                 var parser = new Parser(reader.ReadToEnd());
