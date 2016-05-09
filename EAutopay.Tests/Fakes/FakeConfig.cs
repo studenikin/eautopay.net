@@ -1,85 +1,49 @@
-﻿namespace EAutopay.Tests.Fakes
+﻿using System.Collections.Specialized;
+
+namespace EAutopay.Tests.Fakes
 {
     public class FakeConfig : IConfiguration
     {
+        private NameValueCollection _settings;
+
+        public FakeConfig()
+        {
+            _settings = new NameValueCollection();
+        }
+
+        public void SetLogin(string value)
+        {
+            _settings["eautopay_login"] = value;
+        }
+
+        public void SetUpsellLandingPage(string value)
+        {
+            _settings["eautopay_upsell_landing"] = value;
+        }
+
+        public void SetUpsellInterval(string value)
+        {
+            _settings["eautopay_upsell_interval"] = value;
+        }
+
         public string Login
         {
-            get { return ""; }
-        }
-
-        public string LoginUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string LogoutUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string SecretUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string MainUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string ProductListUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string ProductSaveUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string ProductDeleteUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string FormListUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string FormSaveUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string FormDeleteUri
-        {
-            get { return "http://tempuri.org"; }
-        }
-
-        public string GetUpsellUri(int productId, int upsellId)
-        {
-            return "http://tempuri.org";
-        }
-
-        public string GetSendSettingsUri(int productId)
-        {
-            return "http://tempuri.org";
+            get { return (string)_settings["eautopay_login"]; }
         }
 
         public int UpsellInterval
         {
-            get { return 240; }
+            get { return int.Parse(_settings["eautopay_upsell_interval"]); }
         }
 
         public string UpsellLandingPage
         {
-            get { return ""; }
+            get { return _settings["eautopay_upsell_landing"]; }
         }
 
-        public string UpsellSuccessPage
+        public NameValueCollection Settings
         {
-            get { return ""; }
+            get { return _settings; }
         }
     }
 }

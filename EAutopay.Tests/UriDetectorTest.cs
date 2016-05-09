@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using EAutopay;
-
 namespace EAutopay.Tests
 {
     [TestClass]
