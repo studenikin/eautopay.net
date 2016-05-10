@@ -80,10 +80,8 @@ namespace EAutopay.Forms
                 {"name_form", form.Name}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-
-            crawler.Post(up.FormSaveUri, paramz);
+            _crawler.Post(up.FormSaveUri, paramz);
 
             if (form.IsNew)
             {
@@ -94,27 +92,6 @@ namespace EAutopay.Forms
                 }
             }
             return form.ID;
-
-            //var paramz = new NameValueCollection
-            //{
-            //    {"action", "new"},
-            //    {"extra_settings", "{}"},
-            //    {"name_form", form.Name}
-            //};
-
-            //var up = new UriProvider(_config.Login);
-
-            //_crawler.Post(up.FormSaveUri, paramz);
-
-            //if (form.IsNew)
-            //{
-            //    var lastForm = GetNewest();
-            //    if (lastForm != null)
-            //    {
-            //        form.ID = lastForm.ID;
-            //    }
-            //}
-            //return form.ID;
         }
 
         /// <summary>
@@ -130,10 +107,9 @@ namespace EAutopay.Forms
                 {"id", form.ID.ToString()}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
+            _crawler.Post(up.FormDeleteUri, paramz);
 
-            crawler.Post(up.FormDeleteUri, paramz);
             ResetFormValues(form);
         }
 
