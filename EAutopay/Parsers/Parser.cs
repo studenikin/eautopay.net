@@ -1,13 +1,11 @@
-﻿using System.Web.Helpers;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Collections.Generic;
 
-using EAutopay.Products;
 using EAutopay.Upsells;
 
 using HtmlAgilityPack;
 
-namespace EAutopay
+namespace EAutopay.Parsers
 {
     /// <summary>
     /// Retrieves useful data from E-Autopay by parsing response data.
@@ -26,19 +24,6 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// Retrieves product ID from the JSON data.
-        /// Just after the product has been created and gets redirected to the "Save Price" page.
-        /// </summary>
-        /// <returns>ID of the product in E-Autopay.</returns>
-        public int GetProductID()
-        {
-            var json = Json.Decode(_html);
-            var uri = json.redirect.to; // comes as: "/adminka/product/edit/231455/name"
-
-            return int.Parse(uri.Replace("/adminka/product/edit/", "").Replace("/name", ""));
-        }
-
-        /// <summary>
         /// Gets secure token residing on the Login page.
         /// </summary>
         /// <returns>Secure token as string.</returns>
@@ -47,32 +32,6 @@ namespace EAutopay
             var root = GetRootNode(_html);
             var token = root.SelectSingleNode("//input[@name='_token']");
             return token != null ? token.Attributes["value"].Value : "";
-        }
-
-        /// <summary>
-        /// Gets the list of products on the "products" page in E-Autopay
-        /// </summary>
-        /// <returns>The list of <see cref="Product"/>.</returns>
-        public List<Product> GetProducts()
-        {
-            var products = new List<Product>();
-
-            var root = GetRootNode(_html);
-            var table = root.SelectSingleNode("//table");
-            if (table !=null)
-            {
-                var rows = table.SelectNodes("tr[@id]"); // takes TRs without header
-                if (rows != null)
-                {
-                    foreach (var row in rows)
-                    {
-                        var p = new Product();
-                        FillProductDataRow(p, row);
-                        products.Add(p);
-                    }
-                }
-            }
-            return products;
         }
 
         /// <summary>
@@ -127,18 +86,6 @@ namespace EAutopay
                 }
             }
             return ret;
-        }
-
-        private void FillProductDataRow(Product p, HtmlNode tr)
-        {
-            var tds = tr.SelectNodes("td");
-
-            p.ID = int.Parse(tds[1].InnerText.Trim());
-            p.Name = tds[2].InnerText.Trim();
-
-            // price comes as: "999.00 руб."
-            var price = tds[3].InnerHtml;
-            p.Price = double.Parse(price.Substring(0, price.IndexOf(" ")).Trim(), CultureInfo.InvariantCulture);
         }
 
         private HtmlNode GetRootNode(string html)

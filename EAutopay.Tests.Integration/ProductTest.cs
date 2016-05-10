@@ -9,13 +9,14 @@ namespace EAutopay.Tests.Integration
     [TestClass]
     public class ProductTest
     {
-        IProductRepository _repository = new EAutopayProductRepository();
+        IProductRepository _repository;
 
         [TestInitialize]
         public void SetUp()
         {
             HttpContext.Current = Common.GetHttpContext();
             Common.Login();
+            _repository =  new EAutopayProductRepository();
         }
 
         [TestCleanup]
@@ -24,6 +25,7 @@ namespace EAutopay.Tests.Integration
             Common.RemoveAllTestProducts();
             Common.Logout();
             HttpContext.Current = null;
+            _repository = null;
         }
 
         [TestMethod]
