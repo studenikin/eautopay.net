@@ -14,19 +14,25 @@ namespace EAutopay.Upsells
     {
         readonly IConfiguration _config;
 
+        readonly ICrawler _crawler;
+
+        readonly IUpsellParser _parser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayUpsellRepository"/> class.
         /// </summary>
-        public EAutopayUpsellRepository() : this(null)
+        public EAutopayUpsellRepository() : this(null, null, null)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayUpsellRepository"/> class.
         /// </summary>
         /// <param name="config">General E-Autopay settings.</param>
-        public EAutopayUpsellRepository(IConfiguration config)
+        public EAutopayUpsellRepository(IConfiguration config, ICrawler crawler, IUpsellParser parser)
         {
             _config = config ?? new AppConfig();
+            _crawler = crawler ?? new Crawler();
+            _parser = parser ?? new EAutopayUpsellParser();
         }
 
         /// <summary>
@@ -46,13 +52,9 @@ namespace EAutopay.Upsells
         /// <returns>The list of <see cref="Upsell"/>.</returns>
         public List<Upsell> GetByProduct(int productId)
         {
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-
-            var resp = crawler.Get(up.GetSendSettingsUri(productId));
-            
-            var parser = new Parser(resp.Data);
-            return parser.GetUpsells(productId);
+            var resp = _crawler.Get(up.GetSendSettingsUri(productId));
+            return _parser.ExtractUpsells(productId, resp.Data);
         }
 
         /// <summary>
@@ -142,9 +144,8 @@ namespace EAutopay.Upsells
                 {"success_page", upsell.SuccessUri}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            crawler.Post(up.GetUpsellUri(productId, 0), paramz);
+            _crawler.Post(up.GetUpsellUri(productId, 0), paramz);
         }
 
         /// <summary>
@@ -189,9 +190,8 @@ namespace EAutopay.Upsells
                 {"product_id", productId.ToString()}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            crawler.Post(up.ProductSaveUri, paramz);
+            _crawler.Post(up.ProductSaveUri, paramz);
         }
 
         /// <summary>
@@ -213,9 +213,8 @@ namespace EAutopay.Upsells
                 {"_method", "DELETE"}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            crawler.Post(up.GetUpsellUri(upsell.ParentID, upsell.ID), paramz);
+            _crawler.Post(up.GetUpsellUri(upsell.ParentID, upsell.ID), paramz);
         }
 
         private void ResetValues(Upsell upsell)

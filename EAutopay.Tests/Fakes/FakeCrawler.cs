@@ -7,6 +7,11 @@ namespace EAutopay.Tests.Fakes
     {
         bool _wasCalled;
 
+        public EAutopayResponse Get(string uri)
+        {
+            return Get(uri, null);
+        }
+
         public EAutopayResponse Get(string uri, NameValueCollection paramz)
         {
             _wasCalled = true;

@@ -13,15 +13,17 @@ namespace EAutopay.Tests.Integration
     {
         const string SUCCESS_PAGE_URI = "http://domain.com/success";
 
-        readonly ProductService _prodService = new ProductService();
+        ProductService _prodService;
 
-        readonly IUpsellRepository _upsellRepo = new EAutopayUpsellRepository();
+        IUpsellRepository _upsellRepo;
 
         [TestInitialize]
         public void SetUp()
         {
             HttpContext.Current = Common.GetHttpContext();
             Common.Login();
+            _prodService = new ProductService();
+            _upsellRepo = new EAutopayUpsellRepository();
         }
 
         [TestCleanup]
@@ -30,6 +32,8 @@ namespace EAutopay.Tests.Integration
             Common.RemoveAllTestProducts();
             Common.Logout();
             HttpContext.Current = null;
+            _prodService = null;
+            _upsellRepo = null;
         }
 
         [TestMethod]
