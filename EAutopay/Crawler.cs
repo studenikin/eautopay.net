@@ -3,6 +3,8 @@ using System.Net;
 using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 
+using EAutopay.Parsers;
+
 [assembly: InternalsVisibleTo("EAutopay.Tests")]
 namespace EAutopay
 {

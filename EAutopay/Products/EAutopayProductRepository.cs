@@ -1,7 +1,8 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+
+using EAutopay.Parsers;
 
 namespace EAutopay.Products
 {
@@ -12,19 +13,25 @@ namespace EAutopay.Products
     {
         readonly IConfiguration _config;
 
+        readonly IProductParser _parser;
+
+        readonly ICrawler _crawler;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayProductRepository"/> class.
         /// </summary>
-        public EAutopayProductRepository() : this(null)
+        public EAutopayProductRepository() : this(null, null, null)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayProductRepository"/> class.
         /// </summary>
         /// <param name="config">General E-Autopay settings.</param>
-        public EAutopayProductRepository(IConfiguration config)
+        public EAutopayProductRepository(IConfiguration config, ICrawler crawler, IProductParser parser)
         {
             _config = config ?? new AppConfig();
+            _crawler = crawler ?? new Crawler();
+            _parser = parser ?? new EAutopayProductParser();
         }
 
         /// <summary>
@@ -44,13 +51,9 @@ namespace EAutopay.Products
         /// <returns>The list of <see cref="Product"/>.</returns>
         public List<Product> GetAll()
         {
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-
-            var resp = crawler.Get(up.ProductListUri);
-            var parser = new Parser(resp.Data);
-
-            return parser.GetProducts();
+            var resp = _crawler.Get(up.ProductListUri, null);
+            return _parser.ExtractProducts(resp.Data);
         }
 
         /// <summary>
@@ -71,15 +74,12 @@ namespace EAutopay.Products
                 {"name", isForUpsell ? GetNameForUpsell(p.Name) : p.Name},
                 {"product_id", p.ID.ToString().Equals("0") ? "" : p.ID.ToString()}
             };
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-
-            var resp = crawler.Post(up.ProductSaveUri, paramz);
+            var resp = _crawler.Post(up.ProductSaveUri, paramz);
 
             if (p.IsNew)
             {
-                var parser = new Parser(resp.Data);
-                p.ID = parser.GetProductID();
+                p.ID = _parser.GetProductID(resp.Data);
             }
             SetPrice(p);
 
@@ -110,10 +110,8 @@ namespace EAutopay.Products
                 {"product_id", p.ID.ToString()},
                 {"price1", p.PriceInvariant}
             };
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-
-            crawler.Post(up.ProductSaveUri, paramz);
+            _crawler.Post(up.ProductSaveUri, paramz);
         }
 
         private void RemoveFromEAutopay(Product p)
@@ -122,11 +120,8 @@ namespace EAutopay.Products
             {
                 {"id", p.ID.ToString()}
             };
-
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-
-            crawler.Get(up.ProductDeleteUri, paramz);
+            _crawler.Get(up.ProductDeleteUri, paramz);
         }
 
         private void ResetValues(Product p)
