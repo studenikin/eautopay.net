@@ -26,9 +26,9 @@ namespace EAutopay.Security
         /// Sets authentication status based on response received on posting credentials.
         /// </summary>
         /// <param name="resp">Response object received on posting credentials.</param>
-        internal void SetStatusFromLoginResponse(HttpWebResponse resp)
+        internal void SetStatusFromLoginResponse(EAutopayResponse resp)
         {
-            var ud = new UriDetector(resp.ResponseUri);
+            var ud = new UriDetector(resp.Uri);
 
             if (ud.IsMainURI)
             {
@@ -48,9 +48,9 @@ namespace EAutopay.Security
         /// Sets authentication status based on response received on posting secret answer.
         /// </summary>
         /// <param name="resp">Response object received on posting secret answer.</param>
-        internal void SetStatusFromSecretResponse(HttpWebResponse resp)
+        internal void SetStatusFromSecretResponse(EAutopayResponse resp)
         {
-            var ud = new UriDetector(resp.ResponseUri);
+            var ud = new UriDetector(resp.Uri);
 
             if (ud.IsMainURI)
             {

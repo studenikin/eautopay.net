@@ -8,13 +8,14 @@ namespace EAutopay.Tests.Integration
     [TestClass]
     public class FormRepositoryTest
     {
-        IFormRepository _formRepository = new EAutopayFormRepository();
+        IFormRepository _formRepository;
 
         [TestInitialize]
         public void SetUp()
         {
             HttpContext.Current = Common.GetHttpContext();
             Common.Login();
+            _formRepository = new EAutopayFormRepository();
         }
 
         [TestCleanup]
@@ -24,6 +25,7 @@ namespace EAutopay.Tests.Integration
 
             Common.Logout();
             HttpContext.Current = null;
+            _formRepository = null;
         }
 
         [TestMethod]

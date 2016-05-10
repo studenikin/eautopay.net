@@ -51,8 +51,11 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AppConfigTest.cs" />
+    <Compile Include="EAutopayFormRepositoryTest.cs" />
     <Compile Include="Fakes\FakeCache.cs" />
     <Compile Include="Fakes\FakeConfig.cs" />
+    <Compile Include="Fakes\FakeCrawler.cs" />
+    <Compile Include="Fakes\FakeFormParser.cs" />
     <Compile Include="FormTest.cs" />
     <Compile Include="ProductTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

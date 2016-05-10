@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
+using EAutopay.Parsers;
 
 namespace EAutopay.Forms
 {
@@ -13,19 +13,25 @@ namespace EAutopay.Forms
     {
         readonly IConfiguration _config;
 
+        readonly ICrawler _crawler;
+
+        readonly IFormParser _parser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayFormRepository"/> class.
         /// </summary>
-        public EAutopayFormRepository() : this(null)
+        public EAutopayFormRepository() : this(null, null, null)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayFormRepository"/> class.
         /// </summary>
         /// <param name="config">General E-Autopay settings.</param>
-        public EAutopayFormRepository(IConfiguration config)
+        public EAutopayFormRepository(IConfiguration config, ICrawler crawler, IFormParser parser)
         {
             _config = config ?? new AppConfig();
+            _crawler = crawler ?? new Crawler();
+            _parser = parser ?? new EAutopayFormParser();
         }
 
         /// <summary>
@@ -45,16 +51,9 @@ namespace EAutopay.Forms
         /// <returns>The list of <see cref="Form"/>.</returns>
         public List<Form> GetAll()
         {
-            var forms = new List<Form>();
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-
-            using (var resp = crawler.HttpGet(up.FormListUri))
-            {
-                var reader = new StreamReader(resp.GetResponseStream());
-                var parser = new Parser(reader.ReadToEnd());
-                return parser.GetForms();
-            }
+            var resp = _crawler.Get(up.FormListUri, null);
+            return _parser.ExtractForms(resp.Data);
         }
 
         /// <summary>
@@ -81,21 +80,18 @@ namespace EAutopay.Forms
                 {"name_form", form.Name}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
+            _crawler.Post(up.FormSaveUri, paramz);
 
-            using (var resp = crawler.HttpPost(up.FormSaveUri, paramz))
+            if (form.IsNew)
             {
-                if (form.IsNew)
+                var lastForm = GetNewest();
+                if (lastForm != null)
                 {
-                    var lastForm = GetNewest();
-                    if (lastForm != null)
-                    {
-                        form.ID = lastForm.ID;
-                    }
+                    form.ID = lastForm.ID;
                 }
-                return form.ID;
             }
+            return form.ID;
         }
 
         /// <summary>
@@ -111,13 +107,10 @@ namespace EAutopay.Forms
                 {"id", form.ID.ToString()}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
+            _crawler.Post(up.FormDeleteUri, paramz);
 
-            using (var resp = crawler.HttpPost(up.FormDeleteUri, paramz))
-            {
-                ResetFormValues(form);
-            }
+            ResetFormValues(form);
         }
 
         private void ResetFormValues(Form form)

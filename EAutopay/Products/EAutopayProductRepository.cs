@@ -47,12 +47,10 @@ namespace EAutopay.Products
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            using (var resp = crawler.HttpGet(up.ProductListUri))
-            {
-                var reader = new StreamReader(resp.GetResponseStream());
-                var parser = new Parser(reader.ReadToEnd());
-                return parser.GetProducts();
-            }
+            var resp = crawler.Get(up.ProductListUri);
+            var parser = new Parser(resp.Data);
+
+            return parser.GetProducts();
         }
 
         /// <summary>
@@ -76,17 +74,16 @@ namespace EAutopay.Products
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            using (var resp = crawler.HttpPost(up.ProductSaveUri, paramz))
+            var resp = crawler.Post(up.ProductSaveUri, paramz);
+
+            if (p.IsNew)
             {
-                if (p.IsNew)
-                {
-                    var reader = new StreamReader(resp.GetResponseStream());
-                    var parser = new Parser(reader.ReadToEnd());
-                    p.ID = parser.GetProductID();
-                }
-                SetPrice(p);
-                return p.ID;
+                var parser = new Parser(resp.Data);
+                p.ID = parser.GetProductID();
             }
+            SetPrice(p);
+
+            return p.ID;
         }
 
         /// <summary>
@@ -116,7 +113,7 @@ namespace EAutopay.Products
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            using (var resp = crawler.HttpPost(up.ProductSaveUri, paramz)) { }
+            crawler.Post(up.ProductSaveUri, paramz);
         }
 
         private void RemoveFromEAutopay(Product p)
@@ -129,7 +126,7 @@ namespace EAutopay.Products
             var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            using (var resp = crawler.HttpGet(up.ProductDeleteUri, paramz)) { }
+            crawler.Get(up.ProductDeleteUri, paramz);
         }
 
         private void ResetValues(Product p)

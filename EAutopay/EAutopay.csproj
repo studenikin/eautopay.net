@@ -47,8 +47,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationMissingException.cs" />
+    <Compile Include="Parsers\EAutopayFormParser.cs" />
     <Compile Include="Forms\IFormRepository.cs" />
     <Compile Include="IConfiguration.cs" />
+    <Compile Include="ICrawler.cs" />
+    <Compile Include="EAutopayResponse.cs" />
+    <Compile Include="Parsers\IFormParser.cs" />
     <Compile Include="Products\IProductRepository.cs" />
     <Compile Include="Security\AuthStatus.cs" />
     <Compile Include="Upsells\EAutopayUpsellRepository.cs" />
@@ -60,7 +64,7 @@
     <Compile Include="Forms\EAutopayFormRepository.cs" />
     <Compile Include="HttpCache.cs" />
     <Compile Include="ICache.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="Parsers\Parser.cs" />
     <Compile Include="Crawler.cs" />
     <Compile Include="Products\Product.cs" />
     <Compile Include="Products\EAutopayProductRepository.cs" />
