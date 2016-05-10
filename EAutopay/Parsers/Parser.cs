@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Collections.Generic;
 
-using EAutopay.Forms;
 using EAutopay.Products;
 using EAutopay.Upsells;
 
@@ -77,33 +76,6 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// Gets the list of forms on the "forms" page in E-Autopay
-        /// </summary>
-        /// <returns>The list of <see cref="Form"/>.</returns>
-        public List<Form> GetForms()
-        {
-            var forms = new List<Form>();
-
-            var root = GetRootNode(_html);
-            var table = root.SelectSingleNode("//table[@id='table_group_0']");
-            if (table != null)
-            {
-                var rows = table.SelectNodes("tr[@id]");
-
-                if (rows != null)
-                {
-                    foreach (var tr in rows)
-                    {
-                        var form = new Form();
-                        FillFormDataRow(form, tr);
-                        forms.Add(form);
-                    }
-                }
-            }
-            return forms;
-        }
-
-        /// <summary>
         /// Gets upsell settings of particular product in E-Autopay. 
         /// </summary>
         /// <returns>A <see cref="UpsellSettings"/>.</returns>
@@ -167,13 +139,6 @@ namespace EAutopay
             // price comes as: "999.00 руб."
             var price = tds[3].InnerHtml;
             p.Price = double.Parse(price.Substring(0, price.IndexOf(" ")).Trim(), CultureInfo.InvariantCulture);
-        }
-
-        private void FillFormDataRow(Form form, HtmlNode tr)
-        {
-            var tds = tr.SelectNodes("td");
-            form.ID = int.Parse(tds[0].InnerText.Trim());
-            form.Name = tds[2].InnerText.Trim();
         }
 
         private HtmlNode GetRootNode(string html)

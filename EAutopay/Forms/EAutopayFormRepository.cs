@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
+using EAutopay.Parsers;
 
 namespace EAutopay.Forms
 {
@@ -15,19 +15,23 @@ namespace EAutopay.Forms
 
         readonly ICrawler _crawler;
 
+        readonly IFormParser _parser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayFormRepository"/> class.
         /// </summary>
-        public EAutopayFormRepository() : this(null)
+        public EAutopayFormRepository() : this(null, null, null)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayFormRepository"/> class.
         /// </summary>
         /// <param name="config">General E-Autopay settings.</param>
-        public EAutopayFormRepository(IConfiguration config)
+        public EAutopayFormRepository(IConfiguration config, ICrawler crawler, IFormParser parser)
         {
             _config = config ?? new AppConfig();
+            _crawler = crawler ?? new Crawler();
+            _parser = parser ?? new EAutopayFormParser();
         }
 
         /// <summary>
@@ -47,13 +51,9 @@ namespace EAutopay.Forms
         /// <returns>The list of <see cref="Form"/>.</returns>
         public List<Form> GetAll()
         {
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-
-            var resp = crawler.Get(up.FormListUri);
-            var parser = new Parser(resp.Data);
-
-            return parser.GetForms();
+            var resp = _crawler.Get(up.FormListUri, null);
+            return _parser.ExtractForms(resp.Data);
         }
 
         /// <summary>

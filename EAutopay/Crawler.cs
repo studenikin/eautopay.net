@@ -9,7 +9,7 @@ namespace EAutopay
     /// <summary>
     /// Provides an easy way to post/get http request from/to E-Autopay.
     /// </summary>
-    public class Crawler
+    public class Crawler : ICrawler
     {
         readonly ICache _cache;
 
