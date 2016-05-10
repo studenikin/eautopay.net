@@ -27,7 +27,7 @@ namespace EAutopay.Products
         /// Initializes a new instance of the <see cref="EAutopayProductRepository"/> class.
         /// </summary>
         /// <param name="config">General E-Autopay settings.</param>
-        public EAutopayProductRepository(IConfiguration config, IProductParser parser, ICrawler crawler)
+        public EAutopayProductRepository(IConfiguration config, ICrawler crawler, IProductParser parser)
         {
             _config = config ?? new AppConfig();
             _crawler = crawler ?? new Crawler();
