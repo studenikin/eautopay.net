@@ -41,7 +41,7 @@ namespace EAutopay.Tests
             var p = new Product();
 
             _repo.Save(p, false);
-            Assert.AreEqual(10, p.ID);
+            Assert.AreEqual(2, p.ID);
         }
 
         [TestMethod]

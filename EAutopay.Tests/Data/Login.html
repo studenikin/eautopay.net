@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Вход в E-Autopay
+    </title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/eautopay2/css/user.css">
+</head>
+
+<body id="tech_body_background">
+    <div class="login-card">
+        <img src="/assets/imgs/logo_blue.png" class="profile-img-card">
+        <p class="profile-name-card"> </p>
+        <form method="POST" action="https://demo.e-autopay.com/adminka/login" accept-charset="UTF-8" class="form-signin">
+            <input name="_token" type="hidden" value="kjxJJ5T05H9CkyljvYvKWnwImLPgja3dE1oEciL7">
+
+            <span class="reauth-email">Вход в аккаунт администратора</span>
+            <input class="form-control" id="inputEmail" tabindex="1" autofocus="autofocus" required="required" placeholder="Введите логин" name="login" type="text">
+            <input class="form-control" id="inputPassword" tabindex="2" required="required" placeholder="Введите пароль" name="password" type="password" value="">
+            <input class="btn btn-success btn-block btn-lg btn-signin" type="submit" value="Войти">
+        </form>
+        <a class="forgot-password" href="/adminka/forgot_password.php">Забыли пароль?</a>
+    </div>
+    <div id="footer">
+        <p>© 2009 - 2016 <a href="http://e-autopay.com/" target="_blank">e-AutoPay.com</a>. Все права защищены.</p>
+    </div>
+    <script src="/assets/jquery/jquery-2.1.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

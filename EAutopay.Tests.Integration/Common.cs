@@ -13,7 +13,6 @@ namespace EAutopay.Tests.Integration
     {
         internal const string TEST_PRODUCT_NAME = "#_TEST_PRODUCT_#";
         internal const string TEST_FORM_NAME = "#_TEST_FORM_#";
-        internal const string TEST_UPSELL_NAME = "#_TEST_UPSELL_#";
 
         public static HttpContext GetHttpContext()
         {
@@ -83,7 +82,7 @@ namespace EAutopay.Tests.Integration
         {
             var repo = new EAutopayProductRepository();
             var products = repo.GetAll();
-            foreach (var product in products.Where(p => p.Name == TEST_PRODUCT_NAME || p.Name == TEST_UPSELL_NAME))
+            foreach (var product in products.Where(p => p.Name == TEST_PRODUCT_NAME || p.Name.ToUpper().Contains("UPSELL")))
             {
                 repo.Delete(product);
             }

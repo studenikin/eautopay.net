@@ -52,6 +52,10 @@
   <ItemGroup>
     <Compile Include="AuthResultTest .cs" />
     <Compile Include="AppConfigTest.cs" />
+    <Compile Include="EAutopayProductParserTest.cs" />
+    <Compile Include="EAutopayUpsellParserTest.cs" />
+    <Compile Include="EAutopayFormParserTest.cs" />
+    <Compile Include="EAutopayTokenParserTest.cs" />
     <Compile Include="EAutopayUpsellRepositoryTest.cs" />
     <Compile Include="EAutopayProductRepositoryTest.cs" />
     <Compile Include="EAutopayFormRepositoryTest.cs" />
@@ -74,6 +78,12 @@
       <Project>{3a37f964-d48b-4e4f-bbb6-71884ed9eb75}</Project>
       <Name>EAutopay</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\Forms.html" />
+    <Content Include="Data\Products.html" />
+    <Content Include="Data\Upsells.html" />
+    <Content Include="Data\Login.html" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
