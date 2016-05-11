@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace EAutopay.Security
+﻿namespace EAutopay.Security
 {
     /// <summary>
     /// Provides information about authentication result.
