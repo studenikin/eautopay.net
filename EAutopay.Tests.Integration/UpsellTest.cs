@@ -248,7 +248,7 @@ namespace EAutopay.Tests.Integration
 
         private Upsell CreateAndSaveUpsell(Product mainProduct)
         {
-            var upsellProduct = Common.CreateTestProduct(Common.TEST_UPSELL_NAME, true);
+            var upsellProduct = Common.CreateTestProduct(mainProduct.Name, true);
 
             var upsell = new Upsell();
             upsell.OriginID = upsellProduct.ID;

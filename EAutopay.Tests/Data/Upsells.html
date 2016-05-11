@@ -1,0 +1,1055 @@
+﻿
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="csrf-token" content="7Ko5KkumTKY7uyww9iiV51aO1xTV49xOmzQ5lgqD" />
+    <title>
+        Редактирование наложенного платежа и курьерской доставки
+        Кабинет управления E-Autopay
+    </title>
+    <!-- CSS -->
+    <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/bootstrap/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link href="/assets/bootstrap/css/bootstrap-multiselect.css" rel="stylesheet">
+    <link href="/assets/select2-4/css/select2.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/select2-4/css/select2.treeresults.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/toastr/toastr.min.css" rel="stylesheet">
+    <link href="/assets/bootstrap/css/docs.min.css" rel="stylesheet">
+    <link href="/assets/daterange/daterangepicker.css" rel="stylesheet">
+    <link href="/assets/eautopay2/css/style.css" rel="stylesheet">
+    <link href="/assets/eautopay2/css/news_label.css" rel="stylesheet">
+    <link href="/assets/voip/css/voipbundle.css" rel="stylesheet">
+    <!-- JS -->
+    <script src="/assets/jquery/jquery-2.1.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap-toggle.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap-multiselect.js"></script>
+    <script src="/assets/select2-4/js/select2.min.js" type="text/javascript"></script>
+    <script src="/assets/select2-4/js/select2.treeresults.js" type="text/javascript"></script>
+    <script src="/assets/select2-4/js/jquery.treeview.js" type="text/javascript"></script>
+    <script src="/assets/toastr/toastr.min.js"></script>
+    <script src="/assets/daterange/moment.min.js"></script>
+    <script src="/assets/daterange/daterangepicker.js"></script>
+    <script src="/assets/eautopay2/js/root.js"></script>
+    <script src="/assets/eautopay2/js/owl.carousel.js"></script>
+    <script src="/assets/eautopay2/js/jquery.maskedinput.js"></script>
+    <script type="text/javascript" src="/assets/eautopay2/js/jquery.selectric.min.js"></script>
+    <script src="/assets/eautopay2/js/js_jquery.easing.1.3.js"></script>
+    <script src="/assets/eautopay2/js/jquery.bpopup.min.js"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/assets/api/js/html5shiv.min.js"></script>
+      <script src="/assets/api/js/respond.min.js"></script>
+      <script src="/assets/eautopay2/js/is.min.js"></script>
+
+    <![endif]-->
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container-fluid offset-0">
+            <div class="navbar-header">
+                <a class="btn btn-info navbar-toggle collapsed glyphicon glyphicon-align-justify" data-toggle="collapse" data-target="#topmenu"></a>
+                <a class="navbar-brand" href="/adminka/main.php"><img src="https://demo.e-autopay.com/assets/imgs/logo.png" alt=""></a>
+                <h1>
+                    Редактирование наложенного платежа и курьерской доставки
+                </h1>
+            </div>
+
+            <div class="profile">
+                <img src="https://secure.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?d=mm&s=50" alt="" class="profile_avatar" />
+                <div class="profile_set">
+                    <span class="profile_name">
+                        Иван
+                        <i class="account_arrow"></i>
+                    </span>
+                    <span class="profile_status">Администратор </span>
+                </div>
+                <div class="hide_profile">
+                    <ul class="hide_profile_list">
+                        <li>
+                            <b>Иван</b><br />
+                            Администратор
+                        </li>
+                        <li>
+                            <a href="/adminka/settings.php?account_settings" class="link_li">Редактировать профиль</a>
+                        </li>
+                        <li>
+                            <a href="/adminka/settings.php?account_settings#1" class="link_li">Настройка безопасности</a>
+                        </li>
+                        <li><a href="/adminka/logout" class="footer_exit link_li">Выход</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="account">
+                <div class="first_block">
+                    <span class="balans">Основной баланс:</span> <a href="#" class="show_tariff" data-target-block="hide_tariff">
+                        <b class="account_quantity">0.00</b><span class="account_currency">руб.</span>
+                        <i class="account_arrow"></i>
+                    </a>
+                    <a href="http://e-autopay.com/balance_pay.php?login=demo" target="_blank" class="account_refill">Пополнить</a>
+                </div>
+                <div class="hide_tariff">
+                    <ul class="hide_tariff_list">
+                        <li>
+                            Текущий тариф: <b>“Пробный”</b><br />
+                            Действителен по: 17.05.2016
+                            <br><a class="link" style="color: #78c2a5" href="/adminka/tariffs/">Выбрать тариф</a>
+                            <br>
+                        </li>
+                        <li>
+                            <a href="http://e-autopay.com/tariffs" target="_blank" class="link_li">Подробнее о всех тарифах</a>
+                        </li>
+                        <li>
+                            <a href="/adminka/balance/balance_report.php" class="link_li">Отчет о движении средств</a>
+                        </li>
+                    </ul>
+                </div>
+
+
+
+
+
+            </div>
+            <div class="sub_menu">
+                <ul class="dropdown-menu hide_menu" id="sub3">
+                    <li title="Список заказов">
+                        <a href="https://demo.e-autopay.com/logistics/">
+                            Список заказов
+                        </a>
+                    </li>
+                    <li title="Настройки">
+                        <a href="https://demo.e-autopay.com/logistics/settings.php">
+                            Настройки
+                        </a>
+                    </li>
+                    <li title="Поиск заказа">
+                        <a href="https://demo.e-autopay.com/logistics/find_rpo.php">
+                            Поиск заказа
+                        </a>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu hide_menu" id="sub5">
+                    <li title="Список клиентов">
+                        <a href="https://demo.e-autopay.com/adminka/clients/clients.php?all">
+                            Список клиентов
+                        </a>
+                    </li>
+                    <li title="Группы клиентов">
+                        <a href="https://demo.e-autopay.com/adminka/group">
+                            Группы клиентов
+                        </a>
+                    </li>
+                    <li title="Черный список">
+                        <a href="https://demo.e-autopay.com/adminka/clients/clients.php?all&amp;bl=1">
+                            Черный список
+                        </a>
+                    </li>
+                    <li title="Добавить клиента">
+                        <a href="https://demo.e-autopay.com/adminka/client/create">
+                            Добавить клиента
+                        </a>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu hide_menu" id="sub7">
+                    <li title="Переходы по целевым страницам">
+                        <a href="https://demo.e-autopay.com/adminka/stats_target/stats_target.php">
+                            Переходы по целевым страницам
+                        </a>
+                    </li>
+                    <li title="Переходы по реферерам">
+                        <a href="https://demo.e-autopay.com/adminka/stats_referer/stats_referer.php">
+                            Переходы по реферерам
+                        </a>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu hide_menu" id="sub8">
+                    <li title="Выплаты">
+                        <a href="https://demo.e-autopay.com/adminka/payouts.php">
+                            Выплаты
+                        </a>
+                    </li>
+                    <li title="История выплат" class="dropdown-submenu">
+                        <a href="https://demo.e-autopay.com/adminka/payouts_history.php">
+                            История выплат
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li title="Партнерам" class="dropdown-submenu item">
+                                <a href="https://demo.e-autopay.com/adminka/payouts_history.php">
+
+                                    Партнерам
+                                </a>
+                            </li>
+                            <li title="Совладельцам" class="dropdown-submenu item">
+                                <a href="https://demo.e-autopay.com/adminka/payouts_history_authors.php">
+
+                                    Совладельцам
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu hide_menu" id="sub10">
+                    <li title="Email сообщений" class="dropdown-submenu">
+                        <a href="https://demo.e-autopay.com/adminka/email/email_delivery.php">
+                            Email сообщений
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li title="Создать Email рассылку" class="dropdown-submenu item">
+                                <a href="https://demo.e-autopay.com/adminka/email/email_delivery">
+
+                                    Создать Email рассылку
+                                </a>
+                            </li>
+                            <li title="История Email рассылок" class="dropdown-submenu item">
+                                <a href="https://demo.e-autopay.com/adminka/email/email_history.php">
+
+                                    История Email рассылок
+                                </a>
+                            </li>
+                            <li title="История служебных писем" class="dropdown-submenu item">
+                                <a href="https://demo.e-autopay.com/adminka/email_history.php">
+
+                                    История служебных писем
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li title="Sms сообщений" class="dropdown-submenu">
+                        <a href="https://demo.e-autopay.com/adminka/sms/sms_delivery.php">
+                            Sms сообщений
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li title="Создать CMC рассылку" class="dropdown-submenu item">
+                                <a href="https://demo.e-autopay.com/adminka/sms/sms_delivery.php">
+
+                                    Создать CMC рассылку
+                                </a>
+                            </li>
+                            <li title="История CMC рассылок" class="dropdown-submenu item">
+                                <a href="https://demo.e-autopay.com/adminka/sms/sms_history.php">
+
+                                    История CMC рассылок
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu hide_menu" id="sub11">
+                    <li title="Настройки валют и способов оплаты">
+                        <a href="https://demo.e-autopay.com/adminka/settings/currencies_settings.php">
+                            Настройки валют и способов оплаты
+                        </a>
+                    </li>
+                    <li title="Товары для одиночной продажи">
+                        <a href="https://demo.e-autopay.com/adminka/tovars/list_tovars.php">
+                            Товары для одиночной продажи
+                        </a>
+                    </li>
+                    <li title="Конструктор форм">
+                        <a href="https://demo.e-autopay.com/adminka/form_generator/">
+                            Конструктор форм
+                        </a>
+                    </li>
+                    <li title="Настройки партнерской программы">
+                        <a href="https://demo.e-autopay.com/adminka/settings/affiliate_settings.php">
+                            Настройки партнерской программы
+                        </a>
+                    </li>
+                    <li title="Параметры отправки писем">
+                        <a href="https://demo.e-autopay.com/adminka/settings/emailsenders">
+                            Параметры отправки писем
+                        </a>
+                    </li>
+                    <li title="Стоимость доставки">
+                        <a href="https://demo.e-autopay.com/adminka/settings/delivery_settings.php">
+                            Стоимость доставки
+                        </a>
+                    </li>
+                    <li title="Апселы">
+                        <a href="https://demo.e-autopay.com/adminka/settings/upsells_setting.php">
+                            Апселы
+                        </a>
+                    </li>
+                    <li title="Совладельцы">
+                        <a href="https://demo.e-autopay.com/adminka/authors.php">
+                            Совладельцы
+                        </a>
+                    </li>
+                    <li title="Настройка сервисов рассылки">
+                        <a href="https://demo.e-autopay.com/adminka/settings/mailsservices">
+                            Настройка сервисов рассылки
+                        </a>
+                    </li>
+                    <li title="Настройки напоминаний о заказах">
+                        <a href="https://demo.e-autopay.com/adminka/settings/reminders.php">
+                            Настройки напоминаний о заказах
+                        </a>
+                    </li>
+                    <li title="Промоакции">
+                        <a href="https://demo.e-autopay.com/adminka/promoactions/promoactions.php">
+                            Промоакции
+                        </a>
+                    </li>
+                    <li title="Генератор почтовых бланков">
+                        <a href="https://demo.e-autopay.com/adminka/settings.php?blanks">
+                            Генератор почтовых бланков
+                        </a>
+                    </li>
+                    <li title="Импорт данных из других сервисов">
+                        <a href="https://demo.e-autopay.com/adminka/imports">
+                            Импорт данных из других сервисов
+                        </a>
+                    </li>
+                    <li title="Настройки магазина с корзиной заказа">
+                        <a href="https://demo.e-autopay.com/adminka/settings.php?shop">
+                            Настройки магазина с корзиной заказа
+                        </a>
+                    </li>
+                    <li title="Сотрудники">
+                        <a href="https://demo.e-autopay.com/adminka/settings.php?employee">
+                            Сотрудники
+                        </a>
+                    </li>
+                    <li title="Новости для партнеров">
+                        <a href="https://demo.e-autopay.com/adminka/settings.php?news">
+                            Новости для партнеров
+                        </a>
+                    </li>
+                    <li title="Настройки API">
+                        <a href="https://demo.e-autopay.com/adminka/settings/api_key.php">
+                            Настройки API
+                        </a>
+                    </li>
+                    <li title="Настройки телефонии">
+                        <a href="https://demo.e-autopay.com/adminka/settings/voip">
+                            Настройки телефонии
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="menu">
+        <div id="main_menu">
+            <div class="owl-carousel">
+                <li title="Главная" class="dropdown-submenu item">
+                    <a href="https://demo.e-autopay.com/adminka/main.php">
+
+                        <i class="demo-icon icon-home">&#xe80c;</i><span class='title-link'>Главная</span>
+                    </a>
+                </li>
+                <li title="Заказы" class="dropdown-submenu item">
+                    <a href="https://demo.e-autopay.com/adminka/orders.php">
+
+                        <i class="demo-icon icon-cubes">&#xe804;</i><span class='title-link'>Заказы</span>
+                    </a>
+                </li>
+                <li title="Логистика" class="item" rel="sub3">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="https://demo.e-autopay.com/logistics/">
+
+                        <i class="demo-icon icon-truck">&#xe809;</i><span class='title-link'>Логистика</span>
+                    </a>
+                </li>
+                <li title="Реклама" class="dropdown-submenu item">
+                    <a href="https://demo.e-autopay.com/adminka/campaigns/">
+
+                        <i class="demo-icon icon-chart-bar">&#xe800;</i><span class='title-link'>Реклама</span>
+                    </a>
+                </li>
+                <li title="Клиенты" class="item" rel="sub5">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="https://demo.e-autopay.com/adminka/clients/clients.php?all">
+
+                        <i class="demo-icon icon-user">&#xe801;</i><span class='title-link'>Клиенты</span>
+                    </a>
+                </li>
+                <li title="Партнеры" class="dropdown-submenu item">
+                    <a href="https://demo.e-autopay.com/adminka/users.php">
+
+                        <i class="demo-icon icon-users">&#xe80a;</i><span class='title-link'>Партнеры</span>
+                    </a>
+                </li>
+                <li title="Переходы" class="item" rel="sub7">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="https://demo.e-autopay.com/adminka/clicks.php">
+
+                        <i class="demo-icon icon-export">&#xe80b;</i><span class='title-link'>Переходы</span>
+                    </a>
+                </li>
+                <li title="Выплаты" class="item" rel="sub8">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="https://demo.e-autopay.com/adminka/payouts.php">
+
+                        <i class="demo-icon icon-credit-card">&#xe803;</i><span class='title-link'>Выплаты</span>
+                    </a>
+                </li>
+                <li title="Финансы" class="dropdown-submenu item">
+                    <a href="https://demo.e-autopay.com/adminka/finance/">
+
+                        <i class="demo-icon icon-database">&#xe805;</i><span class='title-link'>Финансы</span>
+                    </a>
+                </li>
+                <li title="Рассылки" class="item" rel="sub10">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="https://demo.e-autopay.com/adminka/email/email_delivery.php">
+
+                        <i class="demo-icon icon-paper-plane">&#xe802;</i><span class='title-link'>Рассылки</span>
+                    </a>
+                </li>
+                <li title="Настройки" class="item" rel="sub11">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="https://demo.e-autopay.com/adminka/settings.php">
+
+                        <i class="demo-icon icon-cog">&#xe808;</i><span class='title-link'>Настройки</span>
+                    </a>
+                </li>
+                <li title="Помощь" class="dropdown-submenu item">
+                    <a target="_blank" href="http://support.e-autopay.info/">
+
+                        <i class="demo-icon icon-help-circled">&#xe807;</i><span class='title-link'>Помощь</span>
+                    </a>
+                </li>
+                <li title="Выход" class="dropdown-submenu item">
+                    <a href="https://demo.e-autopay.com/adminka/logout">
+
+                        Выход
+                    </a>
+                </li>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid height">
+        <h3 class="main-h3">Редактирование товара - Товар 1</h3>
+        <div class="row width-max" id="product_exist_alert">
+            <div class="col-md-3" id="menu_left">
+                <div class="btn-group-vertical edit-menu" role="group" aria-label="...">
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/name">Название и описание</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/price">Стоимость и размеры комиссионных</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/downloads">Ссылки для скачивания</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/pincodes">Пин-коды</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/pageslink">Адреса страниц</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/mailtext">Тексты писем</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/notification">Уведомления</a>
+                    <a class="btn btn-primary btn-block text-left active" href="/adminka/product/edit/235043/sendsettings">Настройки наложенного платежа и курьерской доставки</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/upsell">Апселы</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/additionally">Дополнительно</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/instruction">Инструкция к товару</a>
+                    <a class="btn btn-primary btn-block text-left" href="/adminka/product/edit/235043/formcodes">Коды форм</a>
+                    <a href="/adminka/tovars/list_tovars.php#tr235043" class="btn btn-success btn-block"><span class="glyphicon glyphicon-align-justify"></span> К списку товаров</a>
+                </div>
+            </div>
+            <div class="col-md-9" id="bl_right">
+                <form method="POST" action="https://demo.e-autopay.com/adminka/product/save" accept-charset="UTF-8" class="form-self-save">
+                    <input name="_token" type="hidden" value="7Ko5KkumTKY7uyww9iiV51aO1xTV49xOmzQ5lgqD">            <input name="product_id" type="hidden" value="235043">            <input name="tovar_type" type="hidden" value="1">            <input name="edit[]" type="hidden" value="sendsettings">            <h3 class="item_main">Настройки наложенного платежа</h3>
+                    <div class="form-group">
+                        <label>
+                            Принимать заказы с оплатой наложенным платежом:
+                            <input name="pay_nal" type="hidden" value="0">                    <input class="field-toggle" checked="checked" name="pay_nal" type="checkbox" value="1">
+                        </label>
+                    </div>
+                    <div class="form-group select-style">
+                        <h4 class="list-group-item-heading mar-bot-10">Страны, в которые возможна отправка данного товара наложенным платежом:</h4>
+                        <select class="form-control field-multiselect form-field-nal_countries" name="nal_countries[]" multiple="multiple" data-max-select="99999">
+                            <option value="Россия" selected=&quot;selected&quot;>Россия</option>
+                            <option value="Украина">Украина</option>
+                            <option value="Азербайджан">Азербайджан</option>
+                            <option value="Армения">Армения</option>
+                            <option value="Беларусь">Беларусь</option>
+                            <option value="Грузия">Грузия</option>
+                            <option value="Казахстан">Казахстан</option>
+                            <option value="Киргизстан">Киргизстан</option>
+                            <option value="Латвия">Латвия</option>
+                            <option value="Литва">Литва</option>
+                            <option value="Молдова">Молдова</option>
+                            <option value="Таджикистан">Таджикистан</option>
+                            <option value="Туркменистан">Туркменистан</option>
+                            <option value="Узбекистан">Узбекистан</option>
+                            <option value="Эстония">Эстония</option>
+                            <option value="Германия">Германия</option>
+                            <option value="Израиль">Израиль</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Принимать заказ наложенным платежом только после его подтверждения клиентом по ссылке, высылаемой на емэйл:
+                            <input name="confirm_required" type="hidden" value="0">                    <input class="field-toggle" name="confirm_required" type="checkbox" value="1">
+                        </label>
+                    </div>
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey">
+                        <div class="form-group">
+                            <h4 class="list-group-item-heading mar-bot-10">URL страницы с просьбой подтвердить заказ по ссылке, высланной на емэйл</h4>
+                            <p class="text-muted">(полный адрес, начиная с http://)</p>
+                            <input class="form-control" name="nal_pdt_url" type="text" value="">                            <p class="text-muted">
+                                <i>
+                                    (если не указано, будет открываться <a href="/order/post_order_confirm" target="_blank">
+                                        эта
+                                        страница
+                                    </a>)
+                                </i>
+                            </p>
+                        </div>
+                        <div class="form-group mar-bot-none">
+                            <h4 class="list-group-item-heading mar-bot-10">URL страницы успешного приема заказа</h4>
+                            <p class="text-muted">(полный адрес, начиная с http://)</p>
+                            <input class="form-control" name="nal_ok_url" type="text" value="">                            <p class="text-muted">
+                                <i>
+                                    (если не указано, будет открываться <a href="/order/post_confirm_success" target="_blank">
+                                        эта
+                                        страница
+                                    </a>)
+                                </i>
+                            </p>
+                        </div>
+                    </div>
+                    <h3 class="item_main">Однокликовый апселл</h3>
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey mar-top-80 mar-bot-70">
+                        <h4 class="list-group-item-heading mar-bot-10">
+                            <a href="http://support.e-autopay.info/category/video/upsell" target="_blank">
+                                <span class="glyphicon glyphicon-film" aria-hidden="true"></span> СМОТРЕТЬ ВИДЕОУРОК ПО НАСТРОЙКЕ ДАННОЙ ОПЦИИ >>>
+                            </a>
+                        </h4>
+                        <div class="form-group">
+                            <label>
+                                Предлагать клиенту после совершения заказа наложенным платежом или курьером
+                                добавить к заказу дополнительный(ые) товар(ы) со скидкой:
+                                <input name="additional_tovar_offer" type="hidden" value="0">                    <input class="field-toggle" checked="checked" name="additional_tovar_offer" type="checkbox" value="1">
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="">URL страницы с предложением добавить к заказу дополнительный(ые) товар(ы)</label>                <p class="text-muted">(полный адрес, начиная с http://, эта страница должна иметь расширение ".php")</p>
+                            <input class="form-control" name="additional_tovar_page_offer" type="text" value="http://test-domain.com/upsell.php">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Интервал времени, в течение которого можно добавить к заказу дополнительный товар (в минутах):</label>
+                            <div class="input-group col-xs-2">
+                                <input size="8" class="form-control" name="time_for_add" type="text" value="8">                    <div class="input-group-addon">мин.</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Запрещать добавлять к заказу более одного дополнительного товара
+                                <input name="no_multi_upsells" type="hidden" value="0">                        <input class="field-toggle" name="no_multi_upsells" type="checkbox" value="1">
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="">URL страницы с сообщением об ошибке, открываемой в случае попытки добавления более одного товара</label>                    <p class="text-muted">(полный адрес, начиная с http://)</p>
+                            <input class="form-control" name="upsell_error_url" type="text" value="">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group text-center">
+                        <button type="submit" data-loading-text="&lt;span class=&quot;glyphicon glyphicon-refresh glyphicon-refresh-animate&quot;&gt;&lt;/span&gt; Сохранение..." class="btn btn-success">Сохранить изменения</button>
+                    </div>
+                </form>
+
+                <h4 class="item_main">Список товаров, которые будут предложены для добавления к основному заказу:</h4>
+                <div class="table" id="upsell-form-list" data-rest-url="/adminka/product/235043/upsell?tovar_type=0" data-rest-method="get">
+                    <div class="tr bg-primary">
+                        <span class="td">Товар</span>
+                        <span class="td">Цена&nbsp;<sup>1</sup></span>
+                        <span class="td width-min">URL&nbsp;<sup>3</sup></span>
+                        <span class="td">Код ссылки&nbsp;<sup>4</sup></span>
+                        <span class="td">Комиссионные&nbsp;<sup>2</sup></span>
+                        <span class="td" style="width: 90px">Действия</span>
+                    </div>
+
+                    <div class="tr upsell-rest-deleted">
+                        <span class="td">
+                            Апселл для Товара 1_UPSELL (физ.) - 700.00 руб
+                        </span>
+                        <span class="td">
+                            700.00&nbsp;руб
+                        </span>
+
+                        <span class="td url-width">
+                            <a href="http://test-domain.com/1.html" target="_blank">http://test-domain.com/1.html</a>
+                        </span>
+                        <span class="td">
+                            http://demo.e-autopay.com/ordering/add_to_order.php?order_id=&lt;?php print $_GET['order_id'];?&gt;&tovar_id=235045
+                        </span>
+
+                        <span class="td">
+                            Cтандартные
+                        </span>
+                        <span class="td">
+                            <div class="btn-group" role="group">
+                                <button type="button" title="Редактировать" data-action="/adminka/product/235043/upsell/85308/edit?tovar_type=0" data-method="GET" class="btn btn-success btn-sm glyphicon glyphicon-pencil upsell-rest-edit"></button>            <button type="button" title="Удалить" data-action="/adminka/product/235043/upsell/85308" data-method="DELETE" class="btn btn-danger btn-sm glyphicon glyphicon-remove-circle upsell-rest-delete"></button>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+
+                <form method="POST" action="https://demo.e-autopay.com/adminka/product/235043/upsell?tovar_type=0" accept-charset="UTF-8" id="upsell-form-create" data-update-url="/adminka/product/235043/upsell/create?tovar_type=0" class="tr form-self-save form-horizontal form-self-upsell">
+                    <input name="_token" type="hidden" value="7Ko5KkumTKY7uyww9iiV51aO1xTV49xOmzQ5lgqD"><div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Товар:</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" data-tag-help=".col-sm-10" name="additional_tovar_id"><option value="" selected="selected"> </option><option value="235044">Товар 2 (физ.) - 1400.00 руб</option></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Цена: <sup>1</sup></label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input size="4" class="form-control" data-tag-help=".col-sm-10" name="additional_tovar_price" type="text">            <div class="input-group-addon">руб</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">URL <sup>3</sup></label>
+                        <div class="col-sm-10">
+                            <input class="form-control" data-tag-help=".col-sm-10" name="success_page" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="radio">
+                                <label>
+                                    <input data-target="#tab-create-1" data-toggle="tab-checkbox" checked="checked" name="not_pay_commission" type="radio" value="0">                Cтандартные размеры комиссионных
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input data-target="#tab-create-2" data-toggle="tab-checkbox" name="not_pay_commission" type="radio" value="1">                Индивидуальные размеры комиссионных
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content">
+                        <div id="tab-create-1" class="tab-pane fade in active">
+
+                        </div>
+                        <div id="tab-create-2" class="tab-pane fade in">
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <table class="table">
+                                        <thead class="bg-primary">
+                                            <tr>
+                                                <td>Уровень</td>
+                                                <td>Размер комиссионных</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>0</td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input size="2" class="form-control input-sm" data-tag-error="td" name="commission[0][commission]" type="text" value="0">                                    <span class="input-group-btn">
+                                                            <select class="btn btn-default input-sm" data-tag-error="td" name="commission[0][currency]"><option value="руб" selected="selected">руб</option></select>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button name="action" value="create" type="submit" data-loading-text="Добавить" class="btn btn-success edit-create">Добавить</button>
+                        </div>
+                    </div>
+
+                    <p class="text-muted">
+                        <sup>1</sup> - Цена, по которой будет добавляться к основному заказу<br />
+                        <sup>2</sup> - Cтандартные размеры комиссионных за данный апсел - т.е. такие же комиссионные, как и в
+                        случае обычного заказа данного товара по полной стоимости. Индивидуальные размеры комиссионных
+                        устанавляиваются специально для продажи этого апсела по специальным условиям.<br />
+                        <sup>3</sup> - URL страницы успешного добавления данного товара к заказу: (полный адрес, начиная с http://)<br />
+                        <sup>4</sup> - Код ссылки, которую Вам необходимо разместить на странице с предложением апсела, нажав на которую,
+                        товар будет добавлен к заказу<br />
+                    </p>
+
+                </form>
+
+                <div class="modal fade" id="upsell-model-edit" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Редактирование апсела</h4>
+                            </div>
+                            <div class="modal-body">
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form method="POST" action="https://demo.e-autopay.com/adminka/product/save" accept-charset="UTF-8" class="form-self-save">
+                    <input name="_token" type="hidden" value="7Ko5KkumTKY7uyww9iiV51aO1xTV49xOmzQ5lgqD">    <input name="product_id" type="hidden" value="235043">    <input name="tovar_type" type="hidden" value="1">    <input name="edit[]" type="hidden" value="sendsettings_mails">
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey">
+                        <h4 class="list-group-item-heading mar-bot-10">Письмо, высылаемое клиенту для подтверждения заказа наложенным платежом</h4>
+
+                        <dl class="dl-horizontal well">
+                            <dt>%client_fam%</dt>
+                            <dd>фамилия клиента</dd>
+                            <dt>%client_name%</dt>
+                            <dd>имя клиента</dd>
+                            <dt>%client_otch%</dt>
+                            <dd>отчество клиента</dd>
+                            <dt>%client_phone%</dt>
+                            <dd>телефон клиента</dd>
+                            <dt>%country%</dt>
+                            <dd>страна</dd>
+                            <dt>%area%</dt>
+                            <dd>область</dd>
+                            <dt>%city%</dt>
+                            <dd>город</dd>
+                            <dt>%address%</dt>
+                            <dd>почтовый адрес</dd>
+                            <dt>%index%</dt>
+                            <dd>почтовый индекс</dd>
+                            <dt>%count%</dt>
+                            <dd>количество заказанного товара</dd>
+                            <dt>%order_summ%</dt>
+                            <dd>стоимость заказа</dd>
+                            <dt>%client_email%</dt>
+                            <dd>email-адрес клиента</dd>
+                            <dt>%comment%</dt>
+                            <dd>комментарии к заказу</dd>
+                            <dt>%confirm_link%</dt>
+                            <dd>ссылка для подтверждения заказа</dd>
+                            <dt>%delivery_cost%</dt>
+                            <dd>стоимость доставки</dd>
+                        </dl>
+
+                        <div class="form-group">
+                            <label for="">Тема сообщения</label>                <input class="form-control" name="nal1_client_subject" type="text" value="Подтверждение заказа">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Текст сообщения</label>                <textarea class="form-control" name="nal1_client_text" cols="50" rows="10">
+                                Вы сделали заказ товара &laquo;%tovar_name%&raquo; с оплатой наложенным платежом.
+
+                                Ваши данные:
+
+                                Фамилия: %client_fam%
+                                Имя: %client_name%
+                                Отчество: %client_otch%
+                                Страна: %country%
+                                Область: %area%
+                                Город: %city%
+                                Индекс: %index%
+                                Адрес: %address%
+                                Телефон: %client_phone%
+                                Количество: %count%
+
+                                Стоимость заказа: %order_summ%.
+                                На почте при получении товара вам будет необходимо оплатить эту сумму + почтовый сбор.
+
+                                Если Вы подтверждаете Ваш заказ и правильность указанной Вами информации,
+                                то кликните по этой ссылке:
+                                %confirm_link%
+
+                                С уважением,
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey">
+                        <h4 class="list-group-item-heading mar-bot-10">Письмо, высылаемое клиенту после подтверждения им заказа товара наложенным платежом</h4>
+                        <dl class="dl-horizontal well">
+                            <dt>%client_name%</dt>
+                            <dd>имя клиента</dd>
+                            <dt>%delivery_cost%</dt>
+                            <dd>стоимость доставки</dd>
+                        </dl>
+
+                        <div class="form-group">
+                            <label for="">Тема сообщения</label>                <input class="form-control" name="nal2_client_subject" type="text" value="Спасибо! Ваш заказ принят и поставлен в обработку.">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Текст сообщения</label>                <textarea class="form-control" name="nal2_client_text" cols="50" rows="10">
+                                Здравствуйте, %client_name%!
+
+                                Ваш заказ принят и поставлен в обработку.
+
+                                Товар &laquo;%tovar_name%&raquo; будет подготовлен и отправлен на указанный Вами адрес наложенным платежом в течение ближайших 48 часов.
+
+                                Обычно бандероль идет почтой 2-3 недели, но иногда и гораздо быстрее!
+
+                                Удачи Вам!!!
+
+                                С уважением,
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey">
+                        <h4 class="list-group-item-heading mar-bot-10">Письмо, высылаемое администратору после заказа товара наложенным платежом</h4>
+                        <dl class="dl-horizontal well">
+                            <dt>%client_fam%</dt>
+                            <dd>фамилия клиента</dd>
+                            <dt>%client_name%</dt>
+                            <dd>имя клиента</dd>
+                            <dt>%client_otch%</dt>
+                            <dd>отчество клиента</dd>
+                            <dt>%client_phone%</dt>
+                            <dd>телефон клиента</dd>
+                            <dt>%country%</dt>
+                            <dd>страна</dd>
+                            <dt>%area%</dt>
+                            <dd>область</dd>
+                            <dt>%city%</dt>
+                            <dd>город</dd>
+                            <dt>%address%</dt>
+                            <dd>почтовый адрес</dd>
+                            <dt>%index%</dt>
+                            <dd>почтовый индекс</dd>
+                            <dt>%count%</dt>
+                            <dd>количество заказанного товара</dd>
+                            <dt>%order_summ%</dt>
+                            <dd>стоимость заказа</dd>
+                            <dt>%client_email%</dt>
+                            <dd>email-адрес клиента</dd>
+                            <dt>%order_id%</dt>
+                            <dd>ID заказа</dd>
+                            <dt>%comment%</dt>
+                            <dd>комментарии к заказу</dd>
+                            <dt>%additional_info%</dt>
+                            <dd>информация из дополнительных полей в форме заказа</dd>
+                            <dt>%promocode%</dt>
+                            <dd>промокод, указазнный при оформлении заказа</dd>
+                            <dt>%delivery_cost%</dt>
+                            <dd>стоимость доставки</dd>
+                        </dl>
+                        <div class="form-group">
+                            <label for="">Тема сообщения</label>                <input class="form-control" name="nal_admin_subject" type="text" value="новый заказ наложенным платежом">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Текст сообщения</label>                <textarea class="form-control" name="nal_admin_text" cols="50" rows="10">
+                                Поступил новый заказ на товар &laquo;%tovar_name%&raquo; с оплатой наложенным платежом.
+
+                                Стоимость заказа, выставленная клиенту: %order_summ%
+
+                                Фамилия: %client_fam%
+                                Имя: %client_name%
+                                Отчество: %client_otch%
+                                Страна: %country%
+                                Область: %area%
+                                Город: %city%
+                                Адрес: %address%
+                                Индекс: %index%
+                                Email: %client_email%
+                                Телефон: %client_phone%
+
+                                Количество: %count%
+
+                                ID заказа: %order_id%
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey">
+                        <h4 class="list-group-item-heading mar-bot-10">Письмо, высылаемое партнеру после заказа товара клиентом наложенным платежом</h4>
+                        <dl class="dl-horizontal well">
+                            <dt>%partner_name%</dt>
+                            <dd>имя партнера</dd>
+                            <dt>%partner_summ%</dt>
+                            <dd>размер начисленных комиссионных</dd>
+                            <dt>%order_id%</dt>
+                            <dd>id заказа</dd>
+                        </dl>
+                        <div class="form-group">
+                            <label for="">Тема сообщения</label>                <input class="form-control" name="nal1_partner_subject" type="text" value="Новый заказ от привлеченного клиента">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Текст сообщения</label>                <textarea class="form-control" name="nal1_partner_text" cols="50" rows="10">
+                                Здравствуйте, %partner_name%!
+
+                                Поступил заказ на товар &laquo;%tovar_name%&raquo; от привлеченного Вами клиента с оплатой наложенным платежом.
+                                ID заказа: %order_id%.
+                                Вам будут начислены комиссионные в размере %partner_summ%, как только заказ будет оплачен.
+                                В случае отказа заказчика оплатить товар, заказ анулируется БЕЗ начисления комиссионных.
+
+                                С уважением,
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey">
+                        <h4 class="list-group-item-heading mar-bot-10">Письмо, высылаемое партнеру после получения оплаты за заказ наложенным платежом</h4>
+                        <dl class="dl-horizontal well">
+                            <dt>%partner_name%</dt>
+                            <dd>имя партнера</dd>
+                            <dt>%partner_summ%</dt>
+                            <dd>размер начисленных комиссионных</dd>
+                            <dt>%order_id%</dt>
+                            <dd>id заказа</dd>
+                        </dl>
+                        <div class="form-group">
+                            <label for="">Тема сообщения</label>                <input class="form-control" name="nal2_partner_subject" type="text" value="Вам начислены комиссионные">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Текст сообщения</label>                <textarea class="form-control" name="nal2_partner_text" cols="50" rows="10">
+                                Здравствуйте, %partner_name%!
+
+                                Поступила оплата за заказ товара &laquo;%tovar_name%&raquo; наложенным платежом от привлеченного Вами клиента.
+                                ID заказа: %order_id%.
+                                Вам начислены комиссионные в размере %partner_summ%.
+
+                                С уважением,
+                            </textarea>
+                        </div>
+
+                    </div>
+                    <h3 class="item_main mar-top-40">Настройки курьерской доставки</h3>
+                    <div class="form-group mar-bot-30 mar-top-60">
+                        <label>
+                            Принимать заказы с доставкой курьером:
+                            <input name="pay_curier" type="hidden" value="0">                    <input class="field-toggle" name="pay_curier" type="checkbox" value="1">
+                        </label>
+                    </div>
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey">
+                        <h4 class="list-group-item-heading mar-bot-10">Письмо, высылаемое администратору после заказа товара с курьерской доставкой</h4>
+                        <dl class="dl-horizontal well">
+                            <dt>%client_fam%</dt>
+                            <dd>фамилия клиента</dd>
+                            <dt>%client_name%</dt>
+                            <dd>имя клиента</dd>
+                            <dt>%client_otch%</dt>
+                            <dd>отчество клиента</dd>
+                            <dt>%client_phone%</dt>
+                            <dd>телефон клиента</dd>
+                            <dt>%country%</dt>
+                            <dd>страна</dd>
+                            <dt>%area%</dt>
+                            <dd>область</dd>
+                            <dt>%city%</dt>
+                            <dd>город</dd>
+                            <dt>%address%</dt>
+                            <dd>почтовый адрес</dd>
+                            <dt>%index%</dt>
+                            <dd>почтовый индекс</dd>
+                            <dt>%count%</dt>
+                            <dd>количество заказанного товара</dd>
+                            <dt>%client_email%</dt>
+                            <dd>email-адрес клиента</dd>
+                            <dt>%comment%</dt>
+                            <dd>комментарии к заказу</dd>
+                            <dt>%delivery_cost%</dt>
+                            <dd>стоимость доставки</dd>
+                        </dl>
+                        <div class="form-group">
+                            <label for="">Тема сообщения</label>                <input class="form-control" name="curier_admin_subject" type="text" value="новый заказ с курьерской доставкой">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Текст сообщения</label>                <textarea class="form-control" name="curier_admin_text" cols="50" rows="10">
+                                Товар: &laquo;%tovar_name%&raquo;
+
+                                Фамилия: %client_fam%
+                                Имя: %client_name%
+                                Отчество: %client_otch%
+                                Страна: %country%
+                                Область: %area%
+                                Город: %city%
+                                Адрес: %address%
+                                Индекс: %index%
+                                Email: %client_email%
+                                Телефон: %client_phone%
+                                Количество: %count%
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey">
+                        <h4 class="list-group-item-heading mar-bot-10">Письмо, высылаемое клиенту после заказа товара с курьерской доставкой</h4>
+                        <dl class="dl-horizontal well">
+                            <dt>%client_fam%</dt>
+                            <dd>фамилия клиента</dd>
+                            <dt>%client_name%</dt>
+                            <dd>имя клиента</dd>
+                            <dt>%client_otch%</dt>
+                            <dd>отчество клиента</dd>
+                            <dt>%client_phone%</dt>
+                            <dd>телефон клиента</dd>
+                            <dt>%country%</dt>
+                            <dd>страна</dd>
+                            <dt>%area%</dt>
+                            <dd>область</dd>
+                            <dt>%city%</dt>
+                            <dd>город</dd>
+                            <dt>%address%</dt>
+                            <dd>почтовый адрес</dd>
+                            <dt>%index%</dt>
+                            <dd>почтовый индекс</dd>
+                            <dt>%count%</dt>
+                            <dd>количество заказанного товара</dd>
+                            <dt>%client_email%</dt>
+                            <dd>email-адрес клиента</dd>
+                            <dt>%comment%</dt>
+                            <dd>комментарии к заказу</dd>
+                            <dt>%delivery_cost%</dt>
+                            <dd>стоимость доставки</dd>
+                        </dl>
+                        <div class="form-group">
+                            <label for="">Тема сообщения</label>                <input class="form-control" name="curier_client_subject" type="text" value="Ваш заказ принят!">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Текст сообщения</label>                <textarea class="form-control" name="curier_client_text" cols="50" rows="10">
+                                Здравствуйте, %client_name%!
+
+                                Ваш заказ успешно принят и поставлен в обработку.
+
+                                В самое ближайшее время я свяжусь с Вами и уточню удобное для Вас время доставки Вашего заказа.
+                            </textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Адрес страницы, на которую попадает клиент после заказа товара с курьерской доставкой</label>                <p class="text-muted">(полный адрес, начиная с http://)</p>
+                            <input class="form-control" name="curier_ok_url" type="text" value="">                <p class="text-muted">(если не указано, будет открываться <a href="/order/order_curier_ok" target="_blank">эта страница</a>)</p>
+                        </div>
+                    </div>
+
+                    <div class="bs-callout bs-callout-primary mar-none bg-grey">
+                        <h4 class="list-group-item-heading mar-bot-10">Письмо, высылаемое клиенту после подтверждения администратором факта получения оплаты в случае заказа товара наложенным платежом или курьером</h4>
+                        <dl class="dl-horizontal well">
+                            <dt>%client_name%</dt>
+                            <dd>имя клиента</dd>
+                            <dt>%pin_code%</dt>
+                            <dd>пин-код (если товар используется для продажи пин-кодов)</dd>
+                            <dt>%links%</dt>
+                            <dd>зашифрованные ссылки для скачивания файлов</dd>
+                            <dt>%order_id%</dt>
+                            <dd>id заказа</dd>
+                        </dl>
+                        <div class="form-group">
+                            <label for="">Тема сообщения</label>                <input class="form-control" name="oplata_nalozh_client_subject" type="text" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Текст сообщения</label>                <textarea class="form-control" name="oplata_nalozh_client_text" cols="50" rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div class="text-center mar-bot-40">
+                        <button type="submit" data-loading-text="&lt;span class=&quot;glyphicon glyphicon-refresh glyphicon-refresh-animate&quot;&gt;&lt;/span&gt; Сохранение..." class="btn btn-success">Сохранить изменения</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer class="footer" id="footer">
+        <p>
+            © 2009-2016
+            <a target="_blank" href="http://e-autopay.com">e-AutoPay.com</a>
+            . Все права защищены.
+            <a target="_blank" href="http://support.e-autopay.info/">Центр поддержки пользователей</a>
+        </p>
+        <input type="hidden" name="csrf_token" value="7Ko5KkumTKY7uyww9iiV51aO1xTV49xOmzQ5lgqD">
+        <script src="/assets/eautopay2/js/balance.js"></script>
+        <script src="/assets/eautopay2/js/fixedmenu.js"></script>
+        <script src="/assets/eautopay2/js/is.min.js"></script>
+        <script type="text/javascript" src="/assets/voip/js/voipinactivebundle.js"></script>
+    </footer>
+
+</body>
+</html>
