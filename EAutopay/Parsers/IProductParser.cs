@@ -6,8 +6,6 @@ namespace EAutopay.Parsers
 {
     public interface IProductParser
     {
-        int GetProductID(string source);
-
         List<Product> ExtractProducts(string source);
     }
 }

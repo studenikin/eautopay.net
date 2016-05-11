@@ -11,19 +11,6 @@ namespace EAutopay.Parsers
     internal class EAutopayProductParser : IProductParser
     {
         /// <summary>
-        /// Retrieves product ID from the JSON data.
-        /// Just after the product has been created and gets redirected to the "Save Price" page.
-        /// </summary>
-        /// <returns>ID of the product in E-Autopay.</returns>
-        public int GetProductID(string source)
-        {
-            var json = Json.Decode(source);
-            var uri = json.redirect.to; // comes as: "/adminka/product/edit/231455/name"
-
-            return int.Parse(uri.Replace("/adminka/product/edit/", "").Replace("/name", ""));
-        }
-
-        /// <summary>
         /// Gets the list of products on the "products" page in E-Autopay
         /// </summary>
         /// <returns>The list of <see cref="Product"/>.</returns>

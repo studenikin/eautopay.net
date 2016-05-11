@@ -75,11 +75,11 @@ namespace EAutopay.Products
                 {"product_id", p.ID.ToString().Equals("0") ? "" : p.ID.ToString()}
             };
             var up = new UriProvider(_config.Login);
-            var resp = _crawler.Post(up.ProductSaveUri, paramz);
+            _crawler.Post(up.ProductSaveUri, paramz);
 
             if (p.IsNew)
             {
-                p.ID = _parser.GetProductID(resp.Data);
+                p.ID = GetLatestProductID();
             }
             SetPrice(p);
 
@@ -134,6 +134,15 @@ namespace EAutopay.Products
         private string GetNameForUpsell(string name)
         {
             return string.Format("{0}_{1}", name, Product.UPSELL_SUFFIX);
+        }
+
+        private int GetLatestProductID()
+        {
+            var latest = GetAll()
+                .OrderByDescending(p => p.ID)
+                .FirstOrDefault();
+
+            return latest != null ? latest.ID : 0;
         }
     }
 }

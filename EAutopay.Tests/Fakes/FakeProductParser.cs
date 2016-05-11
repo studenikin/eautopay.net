@@ -7,11 +7,6 @@ namespace EAutopay.Tests.Fakes
 {
     public class FakeProductParser : IProductParser
     {
-        public int GetProductID(string source)
-        {
-            return 10;
-        }
-
         public List<Product> ExtractProducts(string source)
         {
             var ret = new List<Product>();
