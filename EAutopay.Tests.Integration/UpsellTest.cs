@@ -13,15 +13,17 @@ namespace EAutopay.Tests.Integration
     {
         const string SUCCESS_PAGE_URI = "http://domain.com/success";
 
-        readonly ProductService _prodService = new ProductService();
+        ProductService _prodService;
 
-        readonly IUpsellRepository _upsellRepo = new EAutopayUpsellRepository();
+        IUpsellRepository _upsellRepo;
 
         [TestInitialize]
         public void SetUp()
         {
             HttpContext.Current = Common.GetHttpContext();
             Common.Login();
+            _prodService = new ProductService();
+            _upsellRepo = new EAutopayUpsellRepository();
         }
 
         [TestCleanup]
@@ -30,6 +32,8 @@ namespace EAutopay.Tests.Integration
             Common.RemoveAllTestProducts();
             Common.Logout();
             HttpContext.Current = null;
+            _prodService = null;
+            _upsellRepo = null;
         }
 
         [TestMethod]
@@ -92,7 +96,7 @@ namespace EAutopay.Tests.Integration
         public void Upsell_Empty_Product_Has_No_Upsells()
         {
             var p = Common.CreateTestProduct();
-            Assert.IsFalse(_upsellRepo.HasUpsell(p));
+            Assert.IsFalse(_upsellRepo.HasUpsell(p.ID));
         }
 
         [TestMethod]
@@ -101,7 +105,7 @@ namespace EAutopay.Tests.Integration
             var p = Common.CreateTestProduct();
             var upsell = CreateAndSaveUpsell(p);
 
-            Assert.IsTrue(_upsellRepo.HasUpsell(p));
+            Assert.IsTrue(_upsellRepo.HasUpsell(p.ID));
         }
 
         [TestMethod]
@@ -139,11 +143,11 @@ namespace EAutopay.Tests.Integration
 
             _upsellRepo.Delete(upsell);
 
-            Assert.IsTrue(_upsellRepo.HasUpsell(p));
+            Assert.IsTrue(_upsellRepo.HasUpsell(p.ID));
 
             _upsellRepo.Delete(upsell2);
 
-            Assert.IsFalse(_upsellRepo.HasUpsell(p));
+            Assert.IsFalse(_upsellRepo.HasUpsell(p.ID));
         }
 
         [TestMethod]
@@ -153,9 +157,9 @@ namespace EAutopay.Tests.Integration
             var upsell = CreateAndSaveUpsell(p);
             var upsell2 = CreateAndSaveUpsell(p);
 
-            _upsellRepo.DeleteByProduct(p);
+            _upsellRepo.DeleteByProduct(p.ID);
 
-            Assert.IsFalse(_upsellRepo.HasUpsell(p));
+            Assert.IsFalse(_upsellRepo.HasUpsell(p.ID));
         }
 
         [TestMethod]

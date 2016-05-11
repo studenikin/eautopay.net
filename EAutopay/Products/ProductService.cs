@@ -10,19 +10,25 @@ namespace EAutopay.Products
     {
         readonly IConfiguration _config;
 
+        readonly IUpsellParser _upsellParser;
+
+        readonly ICrawler _crawler;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductService"/> class.
         /// </summary>
-        public ProductService() : this(null)
+        public ProductService() : this(null, null, null)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductService"/> class.
         /// </summary>
         /// <param name="config">General E-Autopay settings.</param>
-        public ProductService(IConfiguration config)
+        public ProductService(IConfiguration config, ICrawler crawler, IUpsellParser upsellParser)
         {
             _config = config ?? new AppConfig();
+            _crawler = crawler ?? new Crawler();
+            _upsellParser = upsellParser ?? new EAutopayUpsellParser();
         }
 
         /// <summary>
@@ -32,13 +38,10 @@ namespace EAutopay.Products
         /// <returns>A <see cref="UpsellSettings"/>.</returns>
         public UpsellSettings GetUpsellSettings(int productId)
         {
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
+            var resp = _crawler.Get(up.GetSendSettingsUri(productId));
 
-            var resp = crawler.Get(up.GetSendSettingsUri(productId));
-            var parser = new Parser(resp.Data);
-
-            return parser.GetUpsellSettings();
+            return _upsellParser.ExtractSettings(resp.Data);
         }
     }
 }

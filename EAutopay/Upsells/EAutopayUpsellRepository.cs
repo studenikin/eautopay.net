@@ -14,29 +14,35 @@ namespace EAutopay.Upsells
     {
         readonly IConfiguration _config;
 
+        readonly ICrawler _crawler;
+
+        readonly IUpsellParser _parser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayUpsellRepository"/> class.
         /// </summary>
-        public EAutopayUpsellRepository() : this(null)
+        public EAutopayUpsellRepository() : this(null, null, null)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayUpsellRepository"/> class.
         /// </summary>
         /// <param name="config">General E-Autopay settings.</param>
-        public EAutopayUpsellRepository(IConfiguration config)
+        public EAutopayUpsellRepository(IConfiguration config, ICrawler crawler, IUpsellParser parser)
         {
             _config = config ?? new AppConfig();
+            _crawler = crawler ?? new Crawler();
+            _parser = parser ?? new EAutopayUpsellParser();
         }
 
         /// <summary>
         /// Determines whether the specified product has an upsell(s) in E-Autopay.
         /// </summary>
-        /// <param name="p">The <see cref="Product"/> to be checked.</param>
+        /// <param name="productId">The ID of the product to be checked.</param>
         /// <returns>true if the product doesn't have an upsell(s); otherwise, false.</returns>
-        public bool HasUpsell(Product p)
+        public bool HasUpsell(int productId)
         {
-            return GetByProduct(p.ID).Count > 0;
+            return GetByProduct(productId).Count > 0;
         }
 
         /// <summary>
@@ -46,13 +52,9 @@ namespace EAutopay.Upsells
         /// <returns>The list of <see cref="Upsell"/>.</returns>
         public List<Upsell> GetByProduct(int productId)
         {
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-
-            var resp = crawler.Get(up.GetSendSettingsUri(productId));
-            
-            var parser = new Parser(resp.Data);
-            return parser.GetUpsells(productId);
+            var resp = _crawler.Get(up.GetSendSettingsUri(productId));
+            return _parser.ExtractUpsells(productId, resp.Data);
         }
 
         /// <summary>
@@ -106,10 +108,10 @@ namespace EAutopay.Upsells
         /// <summary>
         /// Deletes all upsells for the specified product.
         /// </summary>
-        /// <param name="p"><see cref="Upsell"/> to remove upsells from.</param>
-        public void DeleteByProduct(Product p)
+        /// <param name="productId">ID of the product to remove upsells from.</param>
+        public void DeleteByProduct(int productId)
         {
-            var upsells = GetByProduct(p.ID);
+            var upsells = GetByProduct(productId);
             foreach (var upsell in upsells)
             {
                 Delete(upsell);
@@ -142,16 +144,15 @@ namespace EAutopay.Upsells
                 {"success_page", upsell.SuccessUri}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            crawler.Post(up.GetUpsellUri(productId, 0), paramz);
+            _crawler.Post(up.GetUpsellUri(productId, 0), paramz);
         }
 
         /// <summary>
         /// Tells E-Autopay that the product can have upsells.
         /// </summary>
         /// <param name="productId">ID of the product to enable upsells for.</param>
-        private void EnableUpsells(int productId)
+        internal void EnableUpsells(int productId)
         {
             ToggleUpsells(productId, true);
         }
@@ -160,7 +161,7 @@ namespace EAutopay.Upsells
         /// Tells E-Autopay that the product is disabled for upsells.
         /// </summary>
         /// <param name="productId">ID of the product to disable upsells for.</param>
-        private void DisableUpsells(int productId)
+        internal void DisableUpsells(int productId)
         {
             ToggleUpsells(productId, false);
         }
@@ -182,16 +183,15 @@ namespace EAutopay.Upsells
                 {"nal_ok_url", ""},
                 {"nal_countries[]", "Россия"},
                 {"additional_tovar_offer", enable ? "1" : "0"},
-                {"time_for_add", _config.UpsellInterval.ToString()},
+                {"time_for_add", GetInterval()},
                 {"no_multi_upsells", "0"},
                 {"upsell_error_url", ""},
                 {"additional_tovar_page_offer", _config.UpsellLandingPage},
                 {"product_id", productId.ToString()}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            crawler.Post(up.ProductSaveUri, paramz);
+            _crawler.Post(up.ProductSaveUri, paramz);
         }
 
         /// <summary>
@@ -213,9 +213,8 @@ namespace EAutopay.Upsells
                 {"_method", "DELETE"}
             };
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            crawler.Post(up.GetUpsellUri(upsell.ParentID, upsell.ID), paramz);
+            _crawler.Post(up.GetUpsellUri(upsell.ParentID, upsell.ID), paramz);
         }
 
         private void ResetValues(Upsell upsell)
@@ -224,8 +223,16 @@ namespace EAutopay.Upsells
             upsell.ParentID = 0;
             upsell.OriginID = 0;
             upsell.Price = 0.0;
+            upsell.Title = string.Empty;
             upsell.SuccessUri = string.Empty;
             upsell.ClientUri = string.Empty;
+        }
+
+        private string GetInterval()
+        {
+            int ret;
+            int.TryParse(_config.UpsellInterval.ToString(), out ret);
+            return ret > 0 ? ret.ToString() : "20";
         }
     }
 }

@@ -56,13 +56,13 @@ namespace EAutopay.Tests
         }
 
         [TestMethod]
-        public void UpsellInterval_Returns_20_If_Not_Assigned()
+        public void UpsellInterval_Returns_0_If_Not_Assigned()
         {
             var fake = new FakeConfig();
             fake.SetLogin("test_login");
             var config = new AppConfig(fake.Settings);
 
-            Assert.AreEqual(20, config.UpsellInterval);
+            Assert.AreEqual(0, config.UpsellInterval);
         }
 
         [TestMethod]
@@ -77,14 +77,14 @@ namespace EAutopay.Tests
         }
 
         [TestMethod]
-        public void UpsellInterval_Returns_20_If_Incorrect_Int()
+        public void UpsellInterval_Returns_0_If_Incorrect_Int()
         {
             var fake = new FakeConfig();
             fake.SetLogin("test_login");
             fake.SetUpsellInterval("bad_integer_value");
             var config = new AppConfig(fake.Settings);
 
-            Assert.AreEqual(20, config.UpsellInterval);
+            Assert.AreEqual(0, config.UpsellInterval);
         }
     }
 }

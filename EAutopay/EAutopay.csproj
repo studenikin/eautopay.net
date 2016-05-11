@@ -52,7 +52,9 @@
     <Compile Include="IConfiguration.cs" />
     <Compile Include="ICrawler.cs" />
     <Compile Include="EAutopayResponse.cs" />
+    <Compile Include="Parsers\EAutopayUpsellParser.cs" />
     <Compile Include="Parsers\EAutopayProductParser.cs" />
+    <Compile Include="Parsers\IUpsellParser.cs" />
     <Compile Include="Parsers\IProductParser.cs" />
     <Compile Include="Parsers\IFormParser.cs" />
     <Compile Include="Products\IProductRepository.cs" />

@@ -20,9 +20,9 @@ namespace EAutopay.Upsells
         /// <summary>
         /// Determines whether the specified product has an upsell(s) in E-Autopay.
         /// </summary>
-        /// <param name="p">The <see cref="Product"/> to be checked.</param>
+        /// <param name="productId">The ID of the product to be checked.</param>
         /// <returns>true if the product doesn't have an upsell(s); otherwise, false.</returns>
-        bool HasUpsell(Product p);
+        bool HasUpsell(int productId);
 
         /// <summary>
         /// Creates a new upsell in E-Autopay; or updates existing one.
@@ -48,7 +48,7 @@ namespace EAutopay.Upsells
         /// <summary>
         /// Deletes all upsells for the specified product.
         /// </summary>
-        /// <param name="p"><see cref="Upsell"/> to remove upsells from.</param>
-        void DeleteByProduct(Product p);
+        /// <param name="productId">ID of the product to remove upsells from.</param>
+        void DeleteByProduct(int productId);
     }
 }
