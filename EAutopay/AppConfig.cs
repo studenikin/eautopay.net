@@ -58,7 +58,7 @@ namespace EAutopay
             {
                 int ret;
                 int.TryParse(_settings["eautopay_upsell_interval"], out ret);
-                return ret > 0 ? ret : 20;
+                return ret;
             }
         }
     }

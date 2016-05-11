@@ -33,7 +33,12 @@ namespace EAutopay.Tests.Fakes
 
         public int UpsellInterval
         {
-            get { return int.Parse(_settings["eautopay_upsell_interval"]); }
+            get
+            {
+                int ret;
+                int.TryParse(_settings["eautopay_upsell_interval"], out ret);
+                return ret;
+            }
         }
 
         public string UpsellLandingPage

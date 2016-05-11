@@ -96,7 +96,7 @@ namespace EAutopay.Tests.Integration
         public void Upsell_Empty_Product_Has_No_Upsells()
         {
             var p = Common.CreateTestProduct();
-            Assert.IsFalse(_upsellRepo.HasUpsell(p));
+            Assert.IsFalse(_upsellRepo.HasUpsell(p.ID));
         }
 
         [TestMethod]
@@ -105,7 +105,7 @@ namespace EAutopay.Tests.Integration
             var p = Common.CreateTestProduct();
             var upsell = CreateAndSaveUpsell(p);
 
-            Assert.IsTrue(_upsellRepo.HasUpsell(p));
+            Assert.IsTrue(_upsellRepo.HasUpsell(p.ID));
         }
 
         [TestMethod]
@@ -143,11 +143,11 @@ namespace EAutopay.Tests.Integration
 
             _upsellRepo.Delete(upsell);
 
-            Assert.IsTrue(_upsellRepo.HasUpsell(p));
+            Assert.IsTrue(_upsellRepo.HasUpsell(p.ID));
 
             _upsellRepo.Delete(upsell2);
 
-            Assert.IsFalse(_upsellRepo.HasUpsell(p));
+            Assert.IsFalse(_upsellRepo.HasUpsell(p.ID));
         }
 
         [TestMethod]
@@ -157,9 +157,9 @@ namespace EAutopay.Tests.Integration
             var upsell = CreateAndSaveUpsell(p);
             var upsell2 = CreateAndSaveUpsell(p);
 
-            _upsellRepo.DeleteByProduct(p);
+            _upsellRepo.DeleteByProduct(p.ID);
 
-            Assert.IsFalse(_upsellRepo.HasUpsell(p));
+            Assert.IsFalse(_upsellRepo.HasUpsell(p.ID));
         }
 
         [TestMethod]

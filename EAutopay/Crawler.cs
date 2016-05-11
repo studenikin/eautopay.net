@@ -176,7 +176,7 @@ namespace EAutopay
 
             ret.Uri = httpResp.ResponseUri;
             ret.StatusCode = httpResp.StatusCode;
-
+            
             using (var stream = httpResp.GetResponseStream())
             {
                 var reader = new StreamReader(httpResp.GetResponseStream());

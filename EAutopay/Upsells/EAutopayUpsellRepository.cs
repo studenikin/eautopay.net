@@ -38,11 +38,11 @@ namespace EAutopay.Upsells
         /// <summary>
         /// Determines whether the specified product has an upsell(s) in E-Autopay.
         /// </summary>
-        /// <param name="p">The <see cref="Product"/> to be checked.</param>
+        /// <param name="productId">The ID of the product to be checked.</param>
         /// <returns>true if the product doesn't have an upsell(s); otherwise, false.</returns>
-        public bool HasUpsell(Product p)
+        public bool HasUpsell(int productId)
         {
-            return GetByProduct(p.ID).Count > 0;
+            return GetByProduct(productId).Count > 0;
         }
 
         /// <summary>
@@ -108,10 +108,10 @@ namespace EAutopay.Upsells
         /// <summary>
         /// Deletes all upsells for the specified product.
         /// </summary>
-        /// <param name="p"><see cref="Upsell"/> to remove upsells from.</param>
-        public void DeleteByProduct(Product p)
+        /// <param name="productId">ID of the product to remove upsells from.</param>
+        public void DeleteByProduct(int productId)
         {
-            var upsells = GetByProduct(p.ID);
+            var upsells = GetByProduct(productId);
             foreach (var upsell in upsells)
             {
                 Delete(upsell);
@@ -152,7 +152,7 @@ namespace EAutopay.Upsells
         /// Tells E-Autopay that the product can have upsells.
         /// </summary>
         /// <param name="productId">ID of the product to enable upsells for.</param>
-        private void EnableUpsells(int productId)
+        internal void EnableUpsells(int productId)
         {
             ToggleUpsells(productId, true);
         }
@@ -161,7 +161,7 @@ namespace EAutopay.Upsells
         /// Tells E-Autopay that the product is disabled for upsells.
         /// </summary>
         /// <param name="productId">ID of the product to disable upsells for.</param>
-        private void DisableUpsells(int productId)
+        internal void DisableUpsells(int productId)
         {
             ToggleUpsells(productId, false);
         }
@@ -183,7 +183,7 @@ namespace EAutopay.Upsells
                 {"nal_ok_url", ""},
                 {"nal_countries[]", "Россия"},
                 {"additional_tovar_offer", enable ? "1" : "0"},
-                {"time_for_add", _config.UpsellInterval.ToString()},
+                {"time_for_add", GetInterval()},
                 {"no_multi_upsells", "0"},
                 {"upsell_error_url", ""},
                 {"additional_tovar_page_offer", _config.UpsellLandingPage},
@@ -223,8 +223,16 @@ namespace EAutopay.Upsells
             upsell.ParentID = 0;
             upsell.OriginID = 0;
             upsell.Price = 0.0;
+            upsell.Title = string.Empty;
             upsell.SuccessUri = string.Empty;
             upsell.ClientUri = string.Empty;
+        }
+
+        private string GetInterval()
+        {
+            int ret;
+            int.TryParse(_config.UpsellInterval.ToString(), out ret);
+            return ret > 0 ? ret.ToString() : "20";
         }
     }
 }

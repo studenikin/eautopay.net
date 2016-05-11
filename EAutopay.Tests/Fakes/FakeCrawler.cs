@@ -7,6 +7,8 @@ namespace EAutopay.Tests.Fakes
     {
         bool _wasCalled;
 
+        NameValueCollection _paramz;
+
         public EAutopayResponse Get(string uri)
         {
             return Get(uri, null);
@@ -15,18 +17,25 @@ namespace EAutopay.Tests.Fakes
         public EAutopayResponse Get(string uri, NameValueCollection paramz)
         {
             _wasCalled = true;
-            return new EAutopayResponse { Data = "", StatusCode = HttpStatusCode.OK };
+            _paramz = paramz;
+            return new EAutopayResponse();
         }
 
         public EAutopayResponse Post(string uri, NameValueCollection paramz)
         {
             _wasCalled = true;
-            return new EAutopayResponse { Data = "", StatusCode = HttpStatusCode.OK };
+            _paramz = paramz;
+            return new EAutopayResponse();
         }
 
         public bool WasCalled
         {
             get { return _wasCalled; }
+        }
+
+        public NameValueCollection Paramz
+        {
+            get { return _paramz; }
         }
     }
 }
