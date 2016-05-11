@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AuthResultTest .cs" />
     <Compile Include="AppConfigTest.cs" />
     <Compile Include="EAutopayUpsellRepositoryTest.cs" />
     <Compile Include="EAutopayProductRepositoryTest.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="ProductTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpsellTest.cs" />
+    <Compile Include="AuthTest.cs" />
     <Compile Include="UriDetectorTest.cs" />
     <Compile Include="UriProviderTest.cs" />
   </ItemGroup>

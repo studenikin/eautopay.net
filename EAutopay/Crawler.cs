@@ -17,10 +17,12 @@ namespace EAutopay
 
         readonly IConfiguration _config;
 
+        readonly ITokenParser _parser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Crawler"/> class.
         /// </summary>
-        public Crawler() : this(null, null)
+        public Crawler() : this(null, null, null)
         { }
 
         /// <summary>
@@ -28,11 +30,13 @@ namespace EAutopay
         /// </summary>
         /// <param name="cache"><see cref="ICache"/> for caching Cookies, etc.</param>
         /// <param name="config">General E-Autopay settings.</param>
-        public Crawler(ICache cache, IConfiguration config)
+        public Crawler(ICache cache, IConfiguration config, ITokenParser parser)
         {
             _cache = cache ?? new HttpCache();
 
             _config = config ?? new AppConfig();
+
+            _parser = parser ?? new EAutopayTokenParser();
 
             if (string.IsNullOrEmpty(Token))
             {
@@ -165,9 +169,7 @@ namespace EAutopay
         {
             var up = new UriProvider(_config.Login);
             var resp = Get(up.LoginUri);
-
-            var parser = new Parser(resp.Data);
-            return parser.GetToken();
+            return _parser.ExtractToken(resp.Data);
         }
 
         private EAutopayResponse GetEAutopayResponse(HttpWebResponse httpResp)
