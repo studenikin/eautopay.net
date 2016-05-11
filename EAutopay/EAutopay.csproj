@@ -54,6 +54,7 @@
     <Compile Include="EAutopayResponse.cs" />
     <Compile Include="Parsers\EAutopayUpsellParser.cs" />
     <Compile Include="Parsers\EAutopayProductParser.cs" />
+    <Compile Include="Parsers\ITokenParser.cs" />
     <Compile Include="Parsers\IUpsellParser.cs" />
     <Compile Include="Parsers\IProductParser.cs" />
     <Compile Include="Parsers\IFormParser.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="Forms\EAutopayFormRepository.cs" />
     <Compile Include="HttpCache.cs" />
     <Compile Include="ICache.cs" />
-    <Compile Include="Parsers\Parser.cs" />
+    <Compile Include="Parsers\EAutopayTokenParser.cs" />
     <Compile Include="Crawler.cs" />
     <Compile Include="Products\Product.cs" />
     <Compile Include="Products\EAutopayProductRepository.cs" />
