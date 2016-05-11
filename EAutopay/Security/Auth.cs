@@ -15,11 +15,13 @@ namespace EAutopay.Security
 
         readonly IConfiguration _config;
 
+        readonly ICrawler _crawler;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Auth"/> class.
         /// Use this ctor for performing Logout and IsLogged operations.
         /// </summary>
-        public Auth() : this(null, null, null, null)
+        public Auth() : this(null, null, null, null, null)
         {}
 
         /// <summary>
@@ -28,7 +30,7 @@ namespace EAutopay.Security
         /// <param name="login">Login in E-Autopay.</param>
         /// <param name="password">Password in E-Autopay.</param>
         /// <param name="secret">Answer to secret question in E-Autopay.</param>
-        public Auth(string login, string password, string secret) : this(login, password, secret, null)
+        public Auth(string login, string password, string secret) : this(login, password, secret, null, null)
         {}
 
         /// <summary>
@@ -38,12 +40,13 @@ namespace EAutopay.Security
         /// <param name="password">Password in E-Autopay.</param>
         /// <param name="secret">Answer to secret question in E-Autopay.</param>
         /// <param name="config">General E-Autopay settings.</param>
-        public Auth(string login, string password, string secret, IConfiguration config)
+        public Auth(string login, string password, string secret, IConfiguration config, ICrawler crawler)
         {
             _login = login;
             _password = password;
             _secret = secret;
             _config = config ?? new AppConfig();
+            _crawler = crawler ?? new Crawler();
         }
 
         /// <summary>
@@ -66,24 +69,25 @@ namespace EAutopay.Security
         /// </summary>
         public void Logout()
         {
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
-            crawler.Get(up.LogoutUri);
+            _crawler.Get(up.LogoutUri);
         }
 
         /// <summary>
         /// Returns a value indicating whether a user is logged in E-Autopay.
         /// </summary>
         /// <returns>true if the user is logged in; otherwise, false.</returns>
-        public bool IsLogged()
+        public bool IsLogged
         {
-            var crawler = new Crawler();
-            var up = new UriProvider(_config.Login);
+            get
+            {
+                var up = new UriProvider(_config.Login);
 
-            var resp = crawler.Get(up.MainUri);
+                var resp = _crawler.Get(up.MainUri);
 
-            var ud = new UriDetector(resp.Uri);
-            return ud.IsMainURI;
+                var ud = new UriDetector(resp.Uri);
+                return ud.IsMainURI;
+            }
         }
 
         private AuthResult PostLoginData()
@@ -92,10 +96,9 @@ namespace EAutopay.Security
             paramz["login"] = _login;
             paramz["password"] = _password;
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            var resp = crawler.Post(up.LoginUri, paramz);
+            var resp = _crawler.Post(up.LoginUri, paramz);
 
             var result = new AuthResult();
             result.SetStatusFromLoginResponse(resp);
@@ -107,10 +110,9 @@ namespace EAutopay.Security
             NameValueCollection paramz = new NameValueCollection();
             paramz["secret_answer"] = _secret;
 
-            var crawler = new Crawler();
             var up = new UriProvider(_config.Login);
 
-            var resp = crawler.Post(up.SecretUri, paramz);
+            var resp = _crawler.Post(up.SecretUri, paramz);
 
             var result = new AuthResult();
             result.SetStatusFromSecretResponse(resp);

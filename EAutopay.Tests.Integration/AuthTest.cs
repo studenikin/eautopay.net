@@ -100,7 +100,7 @@ namespace EAutopay.Tests.Integration
 
         private bool IsLogged()
         {
-            return new Auth().IsLogged();
+            return new Auth().IsLogged;
         }
     }
 }
