@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="AuthResultTest .cs" />
     <Compile Include="AppConfigTest.cs" />
+    <Compile Include="EAutopayProductParserTest.cs" />
     <Compile Include="EAutopayUpsellParserTest.cs" />
     <Compile Include="EAutopayFormParserTest.cs" />
     <Compile Include="EAutopayTokenParserTest.cs" />
@@ -80,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Forms.html" />
+    <Content Include="Data\Products.html" />
     <Content Include="Data\Upsells.html" />
     <Content Include="Data\Login.html" />
   </ItemGroup>

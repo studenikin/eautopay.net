@@ -1,0 +1,1235 @@
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Настройки :: Товары для одиночной продажи</title>
+    <link href="../default.css" rel="stylesheet" type="text/css" />
+    <link href="../verticalslider_style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+            function failNotice(msg){
+                var text = 'Произошла ошибка!<br/>Повторите попытку позже или обратитесь к администратору!';
+                generate('top', 'error', text);
+            }
+
+            function editCat(cat_id, num_tab){
+                var old_cat_name = $('#cat_name_'+cat_id).val();
+                $('#edit_cat_name').val(old_cat_name);
+                $('#dialog_edit_category').dialog({
+                    resizable: true,
+                    height:200,
+                    width:430,
+                    modal: true,
+                    buttons: {
+                        "Сохранить категорию": function() {
+                            var cat_name = $('#edit_cat_name').val();
+                            if(cat_name == ''){
+                                generate('top', 'warning', 'Введите название категории');
+                            }else{
+                                $( this ).dialog( "close" );
+                                var url = '/adminka/settings/categories/edit_category.php?cat_name='+encodeURIComponent(cat_name)+'&cat_id='+cat_id;
+                                //alert(url);
+                                startLoadingAnimation();
+                                var response = $.ajax({
+                                    url: url,
+                                    async: false
+                                });
+                                stopLoadingAnimation();
+                                response.success(function(msg){
+                                    if(msg == 'ok')
+                                        window.location = '/adminka/tovars/list_tovars.php?view='+num_tab+'&status=1';
+                                    else
+                                        failNotice(msg);
+                                });
+                                response.fail(function(msg){
+                                    failNotice(msg);
+                                });
+                            }
+                        },
+                        "Отмена": function(){
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            }
+
+            function deleteCat(cat_id){
+                var cat_name = $('#cat_name_'+cat_id).val();
+                $('#delete_cat_name').text(cat_name);
+                $('#dialog_delete_category').dialog({
+                    resizable: true,
+                    height:200,
+                    width:430,
+                    modal: true,
+                    buttons: {
+                        "Удалить категорию": function() {
+                            $( this ).dialog( "close" );
+                            var url = '/adminka/settings/categories/delete_category.php?cat_id='+cat_id;
+                            //alert(url);
+                            startLoadingAnimation();
+                            var response = $.ajax({
+                                url: url,
+                                async: false
+                            });
+                            stopLoadingAnimation();
+                            response.success(function(msg){
+                                if(msg == 'ok')
+                                    window.location = '/adminka/tovars/list_tovars.php?status=3';
+                                else
+                                    failNotice(msg);
+                            });
+                            response.fail(function(msg){
+                                failNotice(msg);
+                            });
+                        },
+                        "Отмена": function(){
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            }
+
+            function confirmDE(id, action, tovar_type, vkladka){
+                if(action == '1'){
+                    var span = 'Вы действительно хотите выключить (снять с продажи) данный товар?';
+                }else{
+                    var span = 'Вы действительно хотите включить продажи данного товара?';
+                }
+
+                $('#action-d-e').text(span);
+
+                $( '#dialog-d-e').dialog({
+                    resizable: true,
+                    modal: true,
+                    height:200,
+                    width:450,
+                    buttons: {
+                        "Да": function() {
+                            $( this ).dialog( "close" );
+                            window.location.href = 'disable_enable_tovar.php?id='+id+'&action='+action+'&tovar_type='+tovar_type+'&view='+vkladka;
+                        },
+                        "Отмена": function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            }
+
+            function copyProduct(id, tab){
+                var url = 'copy_tovar.php?';
+
+                if(typeof tab != 'undefined')
+                    url = url + 'view='+tab+'&';
+
+                url = url + 'id=' + id + '&tovar_type=';
+
+                $('#dialog_copy_product').dialog({
+                    resizable: true,
+                    height:200,
+                    width:430,
+                    modal: true,
+                    buttons: {
+                        "Цифровой": function() {
+                            $( this ).dialog( "close" );
+                            url = url + '0';
+                            window.location = url;
+                        },
+                        "Физический": function() {
+                            $( this ).dialog( "close" );
+                            url = url + '1';
+                            window.location = url;
+                        },
+                        "Отмена": function(){
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            }
+
+            function confirmOutАrchive(id, action, vkladka){
+                $('#action-d-e').text('Вы действительно хотите восстановить из архива данный товар?');
+
+                $( '#dialog-d-e').dialog({
+                    resizable: true,
+                    modal: true,
+                    height:200,
+                    width:450,
+                    buttons: {
+                        "Да": function() {
+                            $( this ).dialog( "close" );
+                            window.location.href = 'out_archive_tovar.php?id='+id;
+                        },
+                        "Отмена": function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            }
+
+    </script>
+    <style>
+        pre {
+            text-align: left;
+            color: #fff;
+            background-color: #222;
+            margin: 10px 0 0;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dialog" id="dialog_add_category" title="Добавление категории"><p>Введите название категории<br /><input type="text" id="cat_name" value="" maxlength="27" /></p></div>
+    <div class="dialog" id="dialog_edit_category" title="Редактирование категории"><p>Введите название категории<br /><input type="text" id="edit_cat_name" value="" maxlength="27" /></p></div>
+    <div class="dialog" id="dialog_delete_category" title="Подтверждение действия"><p>Вы действительно хотите удалить категорию &quot;<span id="delete_cat_name"></span>&quot;?</p></div>
+    <div class="dialog" id="dialog_copy_product" title="Выбор типа товара"><p>Укажите тип товара!</p></div>
+    <div class="dialog" id="dialog-d-e" title="Подтверждение действия"><p><span id="action-d-e"></span></p></div>
+
+    <div class="dialog" id="dialog_view_code" title="Код формы заказа">
+        <p class="ok">URL страницы заказа с данной формой</p>
+        <pre>http://demo.e-autopay.com/checkout/<span id="url_order_id_prod"></span><span id="url_order_id_form"></span></pre>
+        <p class="ok">
+            Зайдите в целевой HTML файл и вставьте следующий код в том месте, где бы Вы хотели видеть форму:<br />
+            <pre>&lt;script charset="UTF-8" type="text/javascript" src="http://demo.e-autopay.com/js/orderform_<span id="form_id"></span>/<span id="product_id">product_id</span>"&gt;&lt;/script&gt;</pre>
+        </p>
+        <p class="ok">HTML-код формы<br /><textarea style="width:100%; height:200px;" id="show_form_code"></textarea></p>
+    </div>
+    <div class="dialog" id="dialog_get_product_id" title="Выберите форму для данного товара">
+        <p style="font-weight:normal;">
+            Выберите форму для данного товара.<br />Эта форма будет применяться на странице заказа.<br />
+            <div style="text-align: center;">
+                <select name="form_id" id="form_id">
+                    <option value="">-- Выберите форму --</option>
+                    <option value="default">Форма по умолчанию</option>
+                    <option value="25800">Форма 1.0</option>
+                    <option value="25801">Форма 2.0</option>
+                </select>
+            </div>
+        </p>
+    </div>
+
+    <div id="outer">
+        <link href="/assets/toastr/toastr.min.css" rel="stylesheet">
+        <script type="text/javascript">
+    if (window.jQuery == undefined) {
+        document.write(unescape("%3Cscript src='/js/jq.js' type='text/javascript'%3E%3C/script%3E"));
+        document.write(unescape("%3Cscript src='/js/jq-ui-custom.js' type='text/javascript'%3E%3C/script%3E"));
+    }
+        </script>
+
+        <script type="text/javascript" src="/js/noty/jquery.noty.js"></script>
+        <!-- layouts -->
+        <script type="text/javascript" src="/js/noty/layouts/bottom.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/bottomCenter.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/bottomLeft.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/bottomRight.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/center.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/centerLeft.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/centerRight.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/inline.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/top.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/topCenter.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/topLeft.js"></script>
+        <script type="text/javascript" src="/js/noty/layouts/topRight.js"></script>
+        <script type="text/javascript" src="/js/noty/themes/default.js"></script>
+
+        <script type="text/javascript" src="/js/main.js"></script>
+        <script type="text/javascript" src="/js/parsley/messages.ru.js"></script>
+
+        <script type="text/javascript" src="/js/parsley/parsley.js"></script>
+        <script type="text/javascript" src="/js/owl.carousel.js"></script>
+
+
+        <link type="text/css" href="/ui/themes/start/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+        <link href="/assets/voip/css/voipbundle.css" rel="stylesheet">
+        <link href="/adminka/_voip/css/bootstrap.css" rel="stylesheet">
+        <script src="/adminka/_voip/button.js"></script>
+        <script type="text/javascript" src="/ui/jquery.ui.dialog.js"></script>
+
+        <script src="/js/jquery.megamenu.js" type="text/javascript"></script>
+        <script src="/js/jquery.selectric.min.js" type="text/javascript"></script>
+        <script src="/js/jquery.bpopup.min.js" type="text/javascript"></script>
+        <script src="/js/root.js"></script>
+
+        <script>
+    function wow()
+    {
+        $.ajax({
+            url: "/adminka/security.php",
+            cache: false
+        });
+        setTimeout("wow()", 300000);
+    }
+    setTimeout("wow()", 300000);
+
+    $(function() {
+
+        var menu_top = $('.my-div');
+        menu_top.each(function () {
+            var li = $(this);
+            var children = li.children();
+            if (children.length > 1) {
+                children.first().addClass('none');
+            }
+        });
+
+        $("#tabs").tabs();
+        $('.show_menu').click(function(){
+            var menu = $('#menu');
+            if(!menu.hasClass('active')){
+                menu.stop(true, true).addClass('active');
+                menu.find('ul').removeClass('ui-tabs-nav');
+            }
+            else{
+                menu.stop(true, true).removeClass('active');
+                menu.find('ul').addClass('ui-tabs-nav');
+            }
+        });
+
+            $('body').delegate('#menu_hover > li','hover', function(){
+                if(!$(this).find('.hide_menu').is(':visible')){
+                    $(this).find('.hide_menu').stop(true, true).show();
+                }
+                else{
+                    $(this).find('.hide_menu').stop(true, true).hide();
+                }
+            });
+
+
+        $('.my-div > a.none').click(function(){
+            $('ul.hover_menu').hide();
+            if(!$(this).hasClass('active_vip_menu')){
+                $('.my-div > a').removeClass('active_vip_menu');
+                $(this).addClass('active_vip_menu');
+                $(this).parent().find('ul.hover_menu').show();
+            }
+            else{
+                $(this).removeClass('active_vip_menu');
+                $(this).parent().find('ul.hover_menu').hide();
+            }
+            return false;
+        });
+    });
+
+
+    jQuery(function() {
+        $('#start_date, #end_date, #exps_date, #status_start_date, #status_end_date').focus(function(){
+            if($('.ui-datepicker-month').get(0).tagName.toLowerCase()=='select'){
+                $('.ui-datepicker-month').selectric({
+                    maxHeight: 400
+                });
+            }
+            if($('.ui-datepicker-year').get(0).tagName.toLowerCase()=='select'){
+                $('.ui-datepicker-year').selectric({
+                    maxHeight: 300
+                });
+            }
+        });
+        $('#field').selectric({
+            maxHeight: 400
+        });
+        $('.select-style').selectric({
+            maxHeight: 500
+        });
+        $('#ea_export_to_file').selectric();
+
+        var SelfLocation = window.location.href.split('?');
+        switch (SelfLocation[1]) {
+            case "justify_right":
+//                jQuery(".megamenu").megamenu({'justify': 'right'});
+                break;
+            case "justify_left":
+            default:
+//                jQuery(".megamenu").megamenu();
+        }
+
+        $('a#activate_tariff').click(function(event) {
+            event.preventDefault();
+            var text = "Внимание!\nТариф начнет действовать прямо сейчас!\nВозврат средств за неиспользованные дни действия текущего тарифа произведен НЕ БУДЕТ!!!!!\nПерейти на тариф \"\" сейчас?";
+            if (confirm(text)) {
+                window.location = $(this).attr('href');
+            }
+        });
+        $(".owl-carousel").owlCarousel({
+            items : 12, //10 изображений на 1000px
+            itemsDesktop : [1200,11], //5 изображений на ширину между 1000px и 901px
+            itemsDesktopSmall : [1000,10], // 3 изображения между 900px и 601px
+            itemsTablet: [900,7], //2 изображения между 600 и 0;
+            itemsMobile : [600,6],
+            navigation : true
+        });
+
+        var position_left;
+        var position_width = $(window).width();
+        function position_menu(){
+            $('.item > a').hover(
+                function(){
+                    position_left = $(this).offset().left;
+                    if(position_left<=780){
+                        $(this).addClass('menu_right');
+                    }
+                    else{
+                        $('.item > a').removeClass('menu_right');
+                    }
+                }, function(){
+
+                }
+            )
+        }
+        position_menu();
+            $(window).resize(function(){
+                position_left = $(window).width();
+                position_width = $(window).width();
+                position_menu();
+                $('.hide_menu').removeClass('right');
+            });
+        $('.item > a').click(function(){
+            $('.my-div > a').removeClass('active_vip_menu');
+            $('.profile').removeClass('active_down');
+            $('.account').removeClass('active_down');
+            $('.hide_tariff').hide();
+            $('.hide_profile').hide();
+            $('.hover_menu').hide();
+            $('.hide_menu').hide();
+            if(!$(this).hasClass('active_menu')){
+                var rel = $(this).attr('rel');
+                var height = $(this).parent().height();
+                $('.item > a').removeClass('active_menu');
+                $(this).addClass('active_menu');
+                var top = $(this).offset().top + height;
+                var left = $(this).offset().left;
+                var right = $(window).width() - ( $(this).offset().left + $(this).width() );
+                if(position_width>=1200){
+                    $('#'+ rel).css({'top':top,'left':left, right: 'auto'}).show();
+                }
+                else if(position_left>=720 || position_left>=500){
+                    $('#' + rel).addClass('right').css({'top': top, 'right': right, left: 'auto'}).show();
+                }
+                else{
+                    $('#'+ rel).css({'top':top,'left':left, right: 'auto'}).show();
+                }
+            }
+            else{
+                var rel = $(this).attr('rel');
+                $('#'+ rel).hide();
+                $(this).removeClass('active_menu');
+            }
+
+            if($(this).attr('rel') == undefined){
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
+        var esc = $('body');
+        esc.on('click', function(event){
+            if ($(event.target).closest('.hide_menu').length == 0) {
+                $('.item > a').removeClass('active_menu');
+                $('.hide_menu').hide();
+                $('.my-div > a').removeClass('active_vip_menu');
+                $('.hover_menu').hide();
+            }
+        });
+    });
+    function hide_popap(){
+        $('.hide_tariff').fadeOut(200);
+        $('.hide_profile').fadeOut(200);
+        $('.hide_menu').hide();
+        $('.item a').removeClass('active_menu');
+        $('.hide_tariff1').fadeOut(200);
+        $('.show_tariff1').removeClass('active_down');
+        $('.show_tariff').removeClass('active_down');
+        $('.account').removeClass('active_down');
+        $('.profile').removeClass('active_down');
+    }
+
+    $(function(){
+//        функция показа информации о заказах в разделе логистика
+        $('ul.logistics_status > li > a').hover(
+            function(){
+                var _this = $(this).children('.info-hide');
+                switch ($(this).width()){
+                    case 7  : _this.addClass('small'); break;
+                    case 14 : _this.addClass('small_average'); break;
+                    case 21 : _this.addClass('average'); break;
+                    default : _this.addClass('big'); break;
+                }
+                _this.stop(true, true).fadeIn(300);
+            },
+            function(){
+                var _this = $(this).children('.info-hide');
+                $('.info-hide')
+                    .removeClass('average')
+                    .removeClass('small')
+                    .removeClass('small_average')
+                    .removeClass('big');
+                _this.stop(true, true).hide();
+            }
+        );
+
+        $('.account')
+            .on('click', '.show_tariff, .show_tariff1', function(event){
+                var classname = '.'+$(this).data('target-block');
+                if(!$(classname).is(':visible')){
+                    hide_popap();
+                    var left = $(this).children('.account_quantity').width();
+                    $(this).toggleClass('active_down');
+                    $(this).parent().next(classname).css('left',-left).stop(true, true).fadeToggle(300);
+                }
+                else{
+                    $(this).toggleClass('active_down');
+                    $(this).parent().next(classname).stop(true, true).fadeToggle(300);
+                }
+                event.stopPropagation();
+                return false;
+            });
+
+        $('.profile')
+            .on('click', '.profile_avatar, .profile_set', function(event){
+                    if(!$('.hide_profile').is(':visible')){
+                        hide_popap();
+                        $(this).parent().toggleClass('active_down');
+                        $(this).parent().find('.hide_profile').stop(true, true).fadeToggle(300);
+                    }
+                    else{
+                        $(this).parent().toggleClass('active_down');
+                        $(this).parent().find('.hide_profile').stop(true, true).fadeToggle(300);
+                    }
+                event.stopPropagation();
+                return false;
+        });
+
+        $('body').on("click", function (event) {
+            if ($(event.target).closest('.hide_tariff, .hide_tariff1, .hide_profile').length == 0) {
+                hide_popap();
+            }
+        });
+        // функция фиксирование главного меню при скролле
+        function menu_fixed(){
+            if($(window).scrollTop() >=65){
+                $('#menu').addClass('fix');
+                $('body').css('marginTop', 59);
+                $('.hide_menu').addClass('fix_menu');
+            } else{
+                $('#menu').removeClass('fix');
+                $('body').css('marginTop', 0);
+                $('.hide_menu').css('top', 124).removeClass('fix_menu');
+            }
+        }
+        menu_fixed();
+        $(window).scroll(function(){
+            menu_fixed();
+        });
+        // конец функции
+        if($(window).height() >= $('#content').height()){
+            $('#footer').addClass('bottom');
+        }
+        else{
+            $('#footer').removeClass('bottom');
+        }
+    });
+        </script>
+        <div id="header">
+            <h1><img src="/adminka/logo.png" /></h1>
+            <div class="profile">
+                <img src="https://secure.gravatar.com/avatar/7730d87f3039de6e6cecd3dae6e50bb8?d=mm&s=50" alt="" class="profile_avatar" />
+                <div class="profile_set">
+                    <span class="profile_name">Иван <i class="account_arrow"></i></span>
+                    <span class="profile_status">Администратор</span>
+                </div>
+                <div class="hide_profile">
+                    <ul class="hide_profile_list">
+                        <li>
+                            <b>Иван</b><br />
+                            Администратор
+                        </li>
+                        <li>
+                            <a href="/adminka/settings.php?account_settings" class="link_li">Редактировать профиль</a>
+                        </li>
+                        <li>
+                            <a href="/adminka/security_settings.php" class="link_li">Настройка безопасности</a>
+                        </li>
+                        <li><a href="/adminka/logout" class="footer_exit link_li">Выход</a></li>
+                    </ul>
+                </div>
+                <input type="hidden" name="csrf-token" value="7Ko5KkumTKY7uyww9iiV51aO1xTV49xOmzQ5lgqD">
+            </div>
+            <div class="account">
+                <div class="main_balance_block"></div>
+                <div class="voip_balance_block"></div>
+            </div>
+
+            <script>
+        rest.json('/adminka/settings/balance', 'post', {}, function(type, json){
+            if(type == 'success' && json.type == 'success'){
+                $('.main_balance_block').empty().append(json.html);
+            }
+        });
+                rest.json('/adminka/settings/voip/balance', 'post', {}, function(type, json){
+            if(type == 'success' && json.type == 'success'){
+                $('.voip_balance_block').empty().append(json.html);
+            }else{
+                $('.voip_balance_block').remove();
+            }
+        });
+            </script>
+        </div>
+        <div class="hide_menu" id="logistics">
+            <div class="my-div"><a href="/logistics/">Список заказов</a></div>
+            <div class="my-div"><a href="/logistics/settings.php">Настройки</a></div>
+            <div class="my-div"><a href="/logistics/find_rpo.php">Поиск заказа</a></div>
+        </div>
+        <div class="hide_menu" id="clients">
+            <div class="my-div"><a href="/adminka/clients/clients.php?all">Список клиентов</a></div>
+            <div class="my-div"><a href="/adminka/group">Группы клиентов</a></div>
+            <div class="my-div"><a href="/adminka/clients/clients.php?all&amp;bl=1">Черный список</a></div>
+            <div class="my-div"><a href="/adminka/client/create">Добавить клиента</a></div>
+        </div>
+        <div class="hide_menu" id="transitions">
+            <div class="my-div"><a href="/adminka/clicks.php">Переходы по партнерским ссылкам</a></div>
+            <div class="my-div"><a href="/adminka/stats_target/stats_target.php">Переходы по целевым страницам</a></div>
+            <div class="my-div"><a href="/adminka/stats_referer/stats_referer.php">Переходы по реферерам</a></div>
+        </div>
+        <div class="hide_menu" id="payments">
+            <div class="my-div"><a href="/adminka/payouts.php">Выплаты</a></div>
+            <div class="my-div">
+                <a href="/adminka/payouts_history.php">История выплат</a>
+                <ul class="hide_ul hover_menu">
+                    <li><div class="my-div"><a href="/adminka/payouts_history.php">Партнерам</a></div></li>
+                    <li><div class="my-div"><a href="/adminka/payouts_history_authors.php">Совладельцам</a></div></li>
+                </ul>
+            </div>
+        </div>
+        <div class="hide_menu" id="mailing_lists">
+            <div class="my-div">
+                <a href="/adminka/email/email_delivery.php">
+                    Email сообщений
+                </a>
+                <ul class="hide_ul hover_menu">
+                    <li><div class="my-div"><a href="/adminka/email/email_delivery">Создать Email рассылку</a></div></li>
+                    <li><div class="my-div"><a href="/adminka/email/email_history.php">История Email рассылок</a></div></li>
+                    <li><div class="my-div"><a href="/adminka/email_history.php">История служебных писем</a></div></li>
+                </ul>
+            </div>
+            <div class="my-div">
+                <a href="/adminka/sms/sms_delivery.php">Sms сообщений</a>
+                <ul class="hide_ul hover_menu">
+                    <li><div class="my-div"><a href="/adminka/sms/sms_delivery.php">Создать CMC рассылку</a></div></li>
+                    <li><div class="my-div"><a href="/adminka/sms/sms_history.php">История CMC рассылок</a></div></li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="hide_menu" id="setting">
+            <div class="my-div"><a title="" href="/adminka/settings/currencies_settings.php"><nobr>Настройки валют и способов оплаты</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/tovars/list_tovars.php"><nobr>Товары для одиночной продажи</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/form_generator/"><nobr>Конструктор форм</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings/affiliate_settings.php"><nobr>Настройки партнерской программы</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings/emailsenders"><nobr>Параметры отправки писем</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings/delivery_settings.php"><nobr>Стоимость доставки</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings/upsells_setting.php"><nobr>Апселы</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/authors.php"><nobr>Совладельцы</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings/mailsservices"><nobr>Настройка сервисов рассылки</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings/reminders.php"><nobr>Настройки напоминаний о заказах</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/promoactions/promoactions.php"><nobr>Промоакции</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings.php?blanks"><nobr>Генератор почтовых бланков</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/imports"><nobr>Импорт данных из других сервисов</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings.php?shop"><nobr>Настройки магазина с корзиной заказа</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings.php?employee"><nobr>Сотрудники</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings.php?news"><nobr>Новости для партнеров</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings/api_key.php"><nobr>Настройки API</nobr></a></div>
+            <div class="my-div"><a title="" href="/adminka/settings/voip"><nobr>Настройки телефонии</nobr></a></div>
+        </div>
+
+        <div id="menu">
+            <div id="main_menu">
+                <div class="ui-tabs-nav ui-helper-reset owl-carousel">
+                    <!--first-->
+                    <div class="item">
+                        <a href="/adminka/main.php" title="">
+                            <i class="demo-icon icon-home">&#xe80c;</i>
+                            <span class="title-link">Главная</span>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/adminka/orders.php" title="">
+                            <i class="demo-icon icon-cubes">&#xe804;</i>
+                            <span class="title-link">Заказы</span>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/logistics/" title="" rel="logistics">
+                            <i class="demo-icon icon-truck">&#xe809;</i>
+                            <span class="title-link">Логистика <b class="caret"></b></span>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/adminka/campaigns/" title="">
+                            <i class="demo-icon icon-chart-bar">&#xe800;</i>
+                            <span class="title-link">Реклама</span>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/adminka/clients/clients.php?all" title="" rel="clients">
+                            <i class="demo-icon icon-user">&#xe801;</i>
+                            <span class="title-link">Клиенты <b class="caret"></b></span>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/adminka/users.php" title="">
+                            <i class="demo-icon icon-users">&#xe80a;</i>
+                            <span class="title-link">Партнеры</span>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/adminka/clicks.php" title="" rel="transitions">
+                            <i class="demo-icon icon-export">&#xe80b;</i>
+                            <span class="title-link">Переходы <b class="caret"></b></span>
+                        </a>
+                    </div>
+
+                    <div class="item">
+                        <a href="/adminka/payouts.php" title="Выплаты комиссионных" rel="payments">
+                            <i class="demo-icon icon-credit-card">&#xe803;</i>
+                            <span class="title-link">Выплаты <b class="caret"></b></span>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/adminka/finance/" title="">
+                            <i class="demo-icon icon-database">&#xe805;</i>
+                            <span class="title-link">Финансы</span>
+                        </a>
+                    </div>
+
+                    <div class="item">
+                        <a href="/adminka/email/email_delivery.php" title="" rel="mailing_lists">
+                            <i class="demo-icon icon-paper-plane">&#xe802;</i>
+                            <span class="title-link">Рассылки <b class="caret"></b></span>
+                        </a>
+
+                    </div>
+                    <div class="item">
+                        <a href="/adminka/settings.php" title="" rel="setting">
+                            <i class="demo-icon icon-cog">&#xe808;</i>
+                            <span class="title-link">Настройки <b class="caret"></b></span>
+                        </a>
+                    </div>
+
+                    <div class="item item-last">
+                        <a href="http://support.e-autopay.info/" title="Центр техподдержки" target="_blank">
+                            <i class="demo-icon icon-help-circled">&#xe807;</i>
+                            <span class="title-link">Помощь</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-header" id="content-header" style="display:none;">
+            <div style="float:left;">
+                <img src="/adminka/images/e-autopay.png" style="height:40px; padding-left: 5px; padding-top: 5px; padding-right: 5px;" />
+            </div>
+            <div style="float:left;padding-top: 12px;">
+                Ваш баланс: <a href="/adminka/balance/balance_report.php" class="balance" id="balance_header">0.00        </a> руб. <a style="color: #005486;" href="http://e-autopay.com/balance_pay.php?login=demo" target="_blank">Пополнить.</a>
+            </div>    <div id="content-header-menu">
+                <ul>
+                    <li class="first"><a href="/adminka/main.php" title="">Главная</a></li>
+                    <li><a href="/adminka/orders.php" title="">Заказы</a></li>
+                    <li><a href="/logistics/" title="">Логистика</a></li>
+                    <li><a href="/adminka/campaigns/" title="">Рекламные кампании</a></li>
+                    <li><a href="/adminka/clients/clients.php?all" title="">Клиенты</a></li>
+                    <li><a href="/adminka/users.php" title="">Партнеры</a></li>
+                    <li><a href="/adminka/clicks.php" title="">Переходы</a></li>
+                    <li><a href="/adminka/payouts.php" title="">Выплаты</a></li>
+                    <li><a href="/adminka/finance/" title="">Финансы</a></li>
+                    <li><a href="/adminka/email/email_delivery.php" title="">Рассылка сообщений</a></li>
+                    <li><a href="/adminka/sms/sms_delivery.php" title="">Рассылка CMC сообщений</a></li>
+                    <li><a href="/adminka/settings.php" title="">Настройки</a></li>
+                    <li><a href="/adminka/authors.php" title="">Авторы</a></li>
+                    <li><a href="http://support.e-autopay.info/" title="Центр техподдержки" target="_blank"><strong>Помощь</strong></a></li>
+                    <li><a href="/adminka/logout" title="">Выход</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="aep_ovrl">
+            <div id="aep_win">
+                <div id="aep_t"><img src="/images/loader_for_dark.gif" /></div>
+            </div>
+        </div>
+
+        <div class="dialog" id="div_noty_ie" title="Уведомление"><p class="ok" id="p_for_ie"></p></div>
+
+
+
+        <script type="text/javascript" src="/js/verticaltabs1.0.pack.js"></script>
+
+        <script type="text/javascript">
+                $(document).ready(function() {
+                    var vkladka = $.getUrlVar('view');
+                    if(typeof vkladka === 'undefined' || vkladka === '')
+                        vkladka = 0;
+                    $("#slider").verticaltabs({activeIndex:vkladka});
+
+                    var status = $.getUrlVar('status');
+                    if(typeof status !== 'undefined'){
+                        switch(status){
+                            case '0':
+                                type = 'error';
+                                msg = 'Произошла ошибка!<br/>Повторите попытку позже или обратитесь к администратору!';
+                                break;
+                            case '1':
+                                type = 'success';
+                                msg = 'Категория успешно обновлена!';
+                                break;
+                            case '2':
+                                type = 'success';
+                                msg = 'Категория успешно добавлена!';
+                                break;
+                            case '3':
+                                type = 'success';
+                                msg = 'Категория успешно удалена!';
+                                break;
+                            case '4':
+                                type = 'success';
+                                msg = 'Копия товара успешно создана!';
+                                break;
+                            case '5':
+                                type = 'success';
+                                msg = 'Изменения успешно сохранены!';
+                                break;
+                            case '6':
+                                type = 'success';
+                                msg = 'Товар успешно отправлен в архив!';
+                                break;
+                            case '7':
+                                type = 'success';
+                                msg = 'Товар успешно добавлен!';
+                                break;
+                            case '8':
+                                type = 'success';
+                                msg = 'Товар успешно восстановлен из архива!';
+                                break;
+                            default:
+                                break;
+                        }
+                        generate('top', type, msg);
+                    }
+
+                    $('#add_category').click(function(){
+                        $('#dialog_add_category').dialog({
+                            resizable: true,
+                            height:200,
+                            width:430,
+                            modal: true,
+                            buttons: {
+                                "Создать категорию": function() {
+                                    var cat_name = $('#cat_name').val();
+                                    if(cat_name === ''){
+                                        generate('top', 'warning', 'Введите название категории');
+                                    }else{
+                                        $( this ).dialog( "close" );
+                                        var url = '/adminka/settings/categories/add_category.php?cat_name='+encodeURIComponent(cat_name)+'&parent_id=0&special=1';
+                                        //alert(url);
+                                        startLoadingAnimation();
+                                        var response = $.ajax({
+                                            url: url,
+                                            async: false
+                                        });
+                                        stopLoadingAnimation();
+                                        response.success(function(msg){
+                                            if(msg === 'ok')
+                                                window.location = '/adminka/tovars/list_tovars.php?status=2';
+                                            else
+                                                failNotice(msg);
+                                        });
+                                        response.fail(function(msg){
+                                            failNotice(msg);
+                                        });
+                                        $('#cat_name').val('');
+                                    }
+                                },
+                                "Отмена": function(){
+                                    $( this ).dialog( "close" );
+                                    $('#cat_name').val('');
+                                }
+                            },
+                            beforeclose : function() {
+                                $('#cat_name').val('');
+                            }
+                        });
+                    });
+
+                    $('a#view_code').click(function() {
+                        //сбрасываем код формы в textarea
+                        $('textarea#show_form_code').val('');
+                        //информация о товара
+                        var prod_data = $(this).attr('href').split('_');
+                        //id товара
+                        var prod_id = prod_data[0];
+                        //тип товара
+                        var prod_type = prod_data[1];
+
+                        $('#dialog_get_product_id').dialog({
+                            resizable: false,
+                            height: 'auto',
+                            width: 'auto',
+                            modal: true,
+                            buttons: {
+                                "Показать код": function() {
+                                    var form_id = $('select#form_id').val();
+                                    if(form_id === ''){
+                                        generate('top', 'warning', 'Выберите форму для страницы заказа данного товара!');
+                                    }else{
+                                        $(this).dialog("close");
+                                        getFormCode(prod_id, form_id);
+                                        if(form_id !== 'default'){
+                                            $('span#form_id').text(form_id);
+                                            $('span#url_order_id_form').text('/' + form_id);
+                                        }else
+                                            $('span#form_id').text('default');
+
+                                        $('span#product_id').text(prod_id);
+                                        $('span#url_order_id_prod').text(prod_id);
+
+                                        dialogMsg('dialog_view_code', 'auto', 'auto');
+                                    }
+                                },
+                                "Отмена": function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
+                    });
+                });
+
+                function getFormCode(prod_id, form_id) {
+                    var url = '/adminka/form_generator/get_form.php';
+                    var data = 'action=get_code_form&form_id=' + form_id + '&id=' + prod_id;
+                    startLoadingAnimation();
+
+                    var response = $.ajax({
+                        type: "POST",
+                        dataType: 'text',
+                        url: url,
+                        data: data,
+                        async: false
+                    });
+
+                    response.success(function(msg) {
+                        stopLoadingAnimation();
+                        if (isNaN(msg)) {
+                            $('textarea#show_form_code').val(msg);
+                        } else {
+                            return false;
+                        }
+                    });
+
+                    response.fail(function(msg) {
+                        stopLoadingAnimation();
+                        return false;
+                    });
+
+                    return false;
+                }
+        </script>
+        <div id="content">
+            <div id="primaryContentContainer">
+                <div id="primaryContent">
+                    <h2>Товары для одиночной продажи</h2>
+                    <div id="menu2">
+                        <ul>
+                            <li class="first"><a href="/adminka/settings/currencies_settings.php"><nobr>Настройки валют и способов оплаты</nobr></a></li>
+                            <li><a href="/adminka/tovars/list_tovars.php"><nobr>Товары для одиночной продажи</nobr></a></li>
+                            <li><a href="/adminka/form_generator/"><nobr>Конструктор форм</nobr></a></li>
+                            <li><a href="/adminka/settings/affiliate_settings.php"><nobr>Настройки партнерской программы</nobr></a></li>
+                            <li><a href="/adminka/settings/emailsenders"><nobr>Параметры отправки писем</nobr></a></li>
+                            <li><a href="/adminka/settings/delivery_settings.php"><nobr>Стоимость доставки</nobr></a></li>
+                            <li><a href="/adminka/settings/upsells_setting.php"><nobr>Апселы</nobr></a></li>
+                            <li><a href="/adminka/authors.php"><nobr>Совладельцы</nobr></a></li>
+                            <li><a href="/adminka/settings/mailsservices"><nobr>Настройка сервисов рассылки</nobr></a></li>
+                            <li><a href="/adminka/settings/reminders.php"><nobr>Настройки напоминаний о заказах</nobr></a></li>
+                            <li><a href="/adminka/promoactions/promoactions.php"><nobr>Промоакции</nobr></a></li>
+                            <li><a href="/adminka/settings.php?blanks"><nobr>Генератор почтовых бланков</nobr></a></li>
+                            <li><a href="/adminka/imports"><nobr>Импорт данных из других сервисов</nobr></a></li>
+                            <li><a href="/adminka/settings.php?shop"><nobr>Настройки магазина с корзиной заказа</nobr></a></li>
+                            <li><a href="/adminka/settings.php?employee"><nobr>Сотрудники</nobr></a></li>
+                            <li><a href="/adminka/settings.php?news"><nobr>Новости для партнеров</nobr></a></li>
+                            <li><a href="/adminka/settings/api_key.php"><nobr>Настройки API</nobr></a></li>
+                            <li><a href="/adminka/settings/voip"><nobr>Настройки телефонии</nobr></a></li>
+                        </ul>
+                    </div>
+                    <div class="verticalslider center" id="slider" width="100%" align="center">
+                        <ul class="verticalslider_tabs">
+                            <li><a href="#">Все товары (3)</a></li>
+                            <li><a href="#">Без категории (3)</a></li>
+                            <li><a href="#">Товары в архиве (483)</a></li>
+                            <li class="last">
+                                <div><input name="button" type="button" class="button" id="add_category" value="Добавить категорию" /></div>
+                                <div><input name="Button" type="button" class="button" value="Добавить товар" onclick="document.location='./add_tovar.php';" /></div>
+                            </li>
+                        </ul>
+
+                        <script type="text/javascript">
+                                function supports_html5_storage() {
+                                    try {
+                                        return 'localStorage' in window && window['localStorage'] !== null;
+                                    } catch (e) {
+                                        return false;
+                                    }
+                                }
+                                // Сохраниен выбраной категории
+                                $(document).ready(function(){
+                                    if(supports_html5_storage()) {
+                                        var cacheID = 'list_tovars::category';
+
+                                        $('.verticalslider_tabs a').on('click', function(){
+                                            localStorage[cacheID] = $('.verticalslider_tabs a').index(this);
+                                        });
+
+                                        var current = localStorage[cacheID] || 0;
+                                        if(current < $('.verticalslider_tabs li').length - 1){
+                                            $('.verticalslider_tabs li:eq('+current+') a').click();
+                                        }
+
+                                        setTimeout(function(){
+                                            if(window.location.hash.match(/\#tr/i) !== null){
+                                                $(window).scrollTop($('.activeContent ' + window.location.hash).offset().top-70);
+                                            }
+                                        }, 1);
+                                    }
+                                });
+                        </script>
+                        <ul class="verticalslider_contents tab_right max-width">
+                            <li>
+                                <div align="center">
+                                    <p align="center" style="font-size: 14px; font-weight: bold;">
+                                        Все товары <em>(включая товары без категории)</em>
+                                    </p>
+                                    <table class="tables" align="center" cellspacing="1">
+                                        <tr class="rowH">
+                                            <td width="50" align="center">&nbsp;</td>
+                                            <td align="center"><nobr><a style="color: #ffffff; margin-bottom:10px;" href="?order=id&dir=asc" title="Отсортировать"><b><font color="white">ID</font></b></a></nobr></td>
+                                            <td align="center"><nobr><a style="color: #ffffff; padding-bottom:5px;" href="?order=name&dir=desc" title="Отсортировать" onmouseover="if(document.getElementById('soimg1_name0')){ document.getElementById('soimg1_name0').src='../s_desc.png'; }" onmouseout="if(document.getElementById('soimg1_name0')){ document.getElementById('soimg1_name0').src='../s_asc.png'; }"><b><font color="white">Название</font></b></a>&nbsp;<img src="../s_asc.png" border=0 width=11 height=9 alt="По возрастанию" title="По возрастанию" id="soimg1_name0"></nobr></td>
+                                            <td align="center"><b><font color="white">Стоимость</font></b></td>
+                                            <td align="center"><nobr><a style="color: #ffffff; margin-bottom:10px;" href="?order=tovar_type&dir=asc" title="Отсортировать"><b><font color="white">Тип товара</font></b></a></nobr></td>
+                                            <td align="center"><b><font color="white">Осталось<br />пин-кодов</font></b></td>
+                                            <td align="center"><strong>Ссылка на страницу заказа<br />данного товара</strong> </td>
+                                            <td align="center">&nbsp;</td>
+                                        </tr>
+                                        <tr id="tr235045" bgcolor="#F4F8F8" onMouseOver="this.setAttribute('bgcolor', '#DDE6E6', 0);" onMouseOut="if(this.getAttribute('bgcolor')!='#Array') this.setAttribute('bgcolor', '#F4F8F8', 0);">
+                                            <td align="center">
+                                                <nobr>
+                                                    <a href="/adminka/product/edit/235045" title="Редактировать товар"><img src="../b_edit.png" width="16" height="16" border="0" alt="Редaктиpовaть" /></a>&nbsp;&nbsp;
+                                                    <a href='del_tovar.php?id=235045&view=0' title="Отправить в архив" onClick="document.getElementById('tr235045').setAttribute('bgcolor', '#FFCCFF', 0); if(confirm('Вы действительно хотите отправить в архив выделенный товаp?')) return true; else return false;"><img src="../b_drop.png" width="16" height="16" border="0" alt="В архив" /></a>&nbsp;&nbsp;
+                                                    <a href="#" style="color:red;" onClick="confirmDE('235045', '1', 'one', '0'); return false;">Выкл</a>&nbsp;&nbsp;
+                                                </nobr>
+                                            </td>
+                                            <td align="center">235045</td>
+                                            <td>
+                                                Апселл для Товара 1_UPSELL
+                                            </td>
+                                            <td align="center">700.00 руб                                                        <br /><nobr>17.5 USD</nobr>                                                     </td>
+                                            <td align="center">физический</td>
+                                            <td align="center">&nbsp;</td>
+                                            <td align="center"><div style="margin-top:10px; margin-bottom:10px;"><a href="http://demo.e-autopay.com/checkout/235045" target="_blank">http://demo.e-autopay.com/checkout/235045</a></div></td>
+                                            <td align="center">
+                                                <input name="Button" type="button" class="button-small" value="создать копию товара" onclick="copyProduct('235045');" />
+                                            </td>
+                                        </tr>
+                                        <tr id="tr235043" bgcolor="#EEF2F2" onMouseOver="this.setAttribute('bgcolor', '#DDE6E6', 0);" onMouseOut="if(this.getAttribute('bgcolor')!='#Array') this.setAttribute('bgcolor', '#EEF2F2', 0);">
+                                            <td align="center">
+                                                <nobr>
+                                                    <a href="/adminka/product/edit/235043" title="Редактировать товар"><img src="../b_edit.png" width="16" height="16" border="0" alt="Редaктиpовaть" /></a>&nbsp;&nbsp;
+                                                    <a href='del_tovar.php?id=235043&view=0' title="Отправить в архив" onClick="document.getElementById('tr235043').setAttribute('bgcolor', '#FFCCFF', 0); if(confirm('Вы действительно хотите отправить в архив выделенный товаp?')) return true; else return false;"><img src="../b_drop.png" width="16" height="16" border="0" alt="В архив" /></a>&nbsp;&nbsp;
+                                                    <a href="#" style="color:red;" onClick="confirmDE('235043', '1', 'one', '0'); return false;">Выкл</a>&nbsp;&nbsp;
+                                                </nobr>
+                                            </td>
+                                            <td align="center">235043</td>
+                                            <td>
+                                                Товар 1
+                                            </td>
+                                            <td align="center">1900.00 руб                                                        <br /><nobr>47.5 USD</nobr>                                                     </td>
+                                            <td align="center">физический</td>
+                                            <td align="center">&nbsp;</td>
+                                            <td align="center"><div style="margin-top:10px; margin-bottom:10px;"><a href="http://demo.e-autopay.com/checkout/235043" target="_blank">http://demo.e-autopay.com/checkout/235043</a></div></td>
+                                            <td align="center">
+                                                <input name="Button" type="button" class="button-small" value="создать копию товара" onclick="copyProduct('235043');" />
+                                            </td>
+                                        </tr>
+                                        <tr id="tr235044" bgcolor="#F4F8F8" onMouseOver="this.setAttribute('bgcolor', '#DDE6E6', 0);" onMouseOut="if(this.getAttribute('bgcolor')!='#Array') this.setAttribute('bgcolor', '#F4F8F8', 0);">
+                                            <td align="center">
+                                                <nobr>
+                                                    <a href="/adminka/product/edit/235044" title="Редактировать товар"><img src="../b_edit.png" width="16" height="16" border="0" alt="Редaктиpовaть" /></a>&nbsp;&nbsp;
+                                                    <a href='del_tovar.php?id=235044&view=0' title="Отправить в архив" onClick="document.getElementById('tr235044').setAttribute('bgcolor', '#FFCCFF', 0); if(confirm('Вы действительно хотите отправить в архив выделенный товаp?')) return true; else return false;"><img src="../b_drop.png" width="16" height="16" border="0" alt="В архив" /></a>&nbsp;&nbsp;
+                                                    <a href="#" style="color:red;" onClick="confirmDE('235044', '1', 'one', '0'); return false;">Выкл</a>&nbsp;&nbsp;
+                                                </nobr>
+                                            </td>
+                                            <td align="center">235044</td>
+                                            <td>
+                                                Товар 2
+                                            </td>
+                                            <td align="center">1400.00 руб                                                        <br /><nobr>35 USD</nobr>                                                     </td>
+                                            <td align="center">физический</td>
+                                            <td align="center">&nbsp;</td>
+                                            <td align="center"><div style="margin-top:10px; margin-bottom:10px;"><a href="http://demo.e-autopay.com/checkout/235044" target="_blank">http://demo.e-autopay.com/checkout/235044</a></div></td>
+                                            <td align="center">
+                                                <input name="Button" type="button" class="button-small" value="создать копию товара" onclick="copyProduct('235044');" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </li>
+                            <li>
+                                <div align="center">
+                                    <p align="center" style="font-size: 14px; font-weight: bold;">
+                                        Товары без категории</em>
+                                    </p>
+                                    <table class="tables" align="center" cellspacing="1">
+                                        <tr class="rowH">
+                                            <td width="50" align="center">&nbsp;</td>
+                                            <td align="center"><nobr><a style="color: #ffffff; margin-bottom:10px;" href="?order=id&dir=asc" title="Отсортировать"><b><font color="white">ID</font></b></a></nobr></td>
+                                            <td align="center"><nobr><a style="color: #ffffff; padding-bottom:5px;" href="?order=name&dir=desc" title="Отсортировать" onmouseover="if(document.getElementById('soimg1_name1')){ document.getElementById('soimg1_name1').src='../s_desc.png'; }" onmouseout="if(document.getElementById('soimg1_name1')){ document.getElementById('soimg1_name1').src='../s_asc.png'; }"><b><font color="white">Название</font></b></a>&nbsp;<img src="../s_asc.png" border=0 width=11 height=9 alt="По возрастанию" title="По возрастанию" id="soimg1_name1"></nobr></td>
+                                            <td align="center"><b><font color="white">Стоимость</font></b></td>
+                                            <td align="center"><nobr><a style="color: #ffffff; margin-bottom:10px;" href="?order=tovar_type&dir=asc" title="Отсортировать"><b><font color="white">Тип товара</font></b></a></nobr></td>
+                                            <td align="center"><b><font color="white">Осталось<br />пин-кодов</font></b></td>
+                                            <td align="center"><strong>Ссылка на страницу заказа<br />данного товара</strong> </td>
+                                            <td align="center">&nbsp;</td>
+                                        </tr>
+                                        <tr id="tr235045" bgcolor="#F4F8F8" onMouseOver="this.setAttribute('bgcolor', '#DDE6E6', 0);" onMouseOut="if(this.getAttribute('bgcolor')!='#Array') this.setAttribute('bgcolor', '#F4F8F8', 0);">
+                                            <td align="center">
+                                                <nobr>
+                                                    <a href="/adminka/product/edit/235045" title="Редактировать товар"><img src="../b_edit.png" width="16" height="16" border="0" alt="Редaктиpовaть" /></a>&nbsp;&nbsp;
+                                                    <a href='del_tovar.php?id=235045&view=1' title="Отправить в архив" onClick="document.getElementById('tr235045').setAttribute('bgcolor', '#FFCCFF', 0); if(confirm('Вы действительно хотите отправить в архив выделенный товаp?')) return true; else return false;"><img src="../b_drop.png" width="16" height="16" border="0" alt="В архив" /></a>&nbsp;&nbsp;
+                                                    <a href="#" style="color:red;" onClick="confirmDE('235045', '1', 'one', '1'); return false;">Выкл</a>&nbsp;&nbsp;
+                                                </nobr>
+                                            </td>
+                                            <td align="center">235045</td>
+                                            <td>
+                                                Апселл для Товара 1_UPSELL
+                                            </td>
+                                            <td align="center">700.00 руб                                                        <br /><nobr>17.5 USD</nobr>                                                     </td>
+                                            <td align="center">физический</td>
+                                            <td align="center">&nbsp;</td>
+                                            <td align="center"><div style="margin-top:10px; margin-bottom:10px;"><a href="http://demo.e-autopay.com/checkout/235045" target="_blank">http://demo.e-autopay.com/checkout/235045</a></div></td>
+                                            <td align="center">
+                                                <input name="Button" type="button" class="button-small" value="создать копию товара" onclick="copyProduct('235045');" />
+                                            </td>
+                                        </tr>
+                                        <tr id="tr235043" bgcolor="#EEF2F2" onMouseOver="this.setAttribute('bgcolor', '#DDE6E6', 0);" onMouseOut="if(this.getAttribute('bgcolor')!='#Array') this.setAttribute('bgcolor', '#EEF2F2', 0);">
+                                            <td align="center">
+                                                <nobr>
+                                                    <a href="/adminka/product/edit/235043" title="Редактировать товар"><img src="../b_edit.png" width="16" height="16" border="0" alt="Редaктиpовaть" /></a>&nbsp;&nbsp;
+                                                    <a href='del_tovar.php?id=235043&view=1' title="Отправить в архив" onClick="document.getElementById('tr235043').setAttribute('bgcolor', '#FFCCFF', 0); if(confirm('Вы действительно хотите отправить в архив выделенный товаp?')) return true; else return false;"><img src="../b_drop.png" width="16" height="16" border="0" alt="В архив" /></a>&nbsp;&nbsp;
+                                                    <a href="#" style="color:red;" onClick="confirmDE('235043', '1', 'one', '1'); return false;">Выкл</a>&nbsp;&nbsp;
+                                                </nobr>
+                                            </td>
+                                            <td align="center">235043</td>
+                                            <td>
+                                                Товар 1
+                                            </td>
+                                            <td align="center">1900.00 руб                                                        <br /><nobr>47.5 USD</nobr>                                                     </td>
+                                            <td align="center">физический</td>
+                                            <td align="center">&nbsp;</td>
+                                            <td align="center"><div style="margin-top:10px; margin-bottom:10px;"><a href="http://demo.e-autopay.com/checkout/235043" target="_blank">http://demo.e-autopay.com/checkout/235043</a></div></td>
+                                            <td align="center">
+                                                <input name="Button" type="button" class="button-small" value="создать копию товара" onclick="copyProduct('235043');" />
+                                            </td>
+                                        </tr>
+                                        <tr id="tr235044" bgcolor="#F4F8F8" onMouseOver="this.setAttribute('bgcolor', '#DDE6E6', 0);" onMouseOut="if(this.getAttribute('bgcolor')!='#Array') this.setAttribute('bgcolor', '#F4F8F8', 0);">
+                                            <td align="center">
+                                                <nobr>
+                                                    <a href="/adminka/product/edit/235044" title="Редактировать товар"><img src="../b_edit.png" width="16" height="16" border="0" alt="Редaктиpовaть" /></a>&nbsp;&nbsp;
+                                                    <a href='del_tovar.php?id=235044&view=1' title="Отправить в архив" onClick="document.getElementById('tr235044').setAttribute('bgcolor', '#FFCCFF', 0); if(confirm('Вы действительно хотите отправить в архив выделенный товаp?')) return true; else return false;"><img src="../b_drop.png" width="16" height="16" border="0" alt="В архив" /></a>&nbsp;&nbsp;
+                                                    <a href="#" style="color:red;" onClick="confirmDE('235044', '1', 'one', '1'); return false;">Выкл</a>&nbsp;&nbsp;
+                                                </nobr>
+                                            </td>
+                                            <td align="center">235044</td>
+                                            <td>
+                                                Товар 2
+                                            </td>
+                                            <td align="center">1400.00 руб                                                        <br /><nobr>35 USD</nobr>                                                     </td>
+                                            <td align="center">физический</td>
+                                            <td align="center">&nbsp;</td>
+                                            <td align="center"><div style="margin-top:10px; margin-bottom:10px;"><a href="http://demo.e-autopay.com/checkout/235044" target="_blank">http://demo.e-autopay.com/checkout/235044</a></div></td>
+                                            <td align="center">
+                                                <input name="Button" type="button" class="button-small" value="создать копию товара" onclick="copyProduct('235044');" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </li>
+                            <li>
+                                <div align="center">
+                                    <p align="center" style="font-size: 14px; font-weight: bold;">
+                                        Товары из архива</em>
+                                    </p>
+                                    <table class="tables" align="center" cellspacing="1">
+                                        <tr class="rowH">
+                                            <td width="50" align="center">&nbsp;</td>
+                                            <td align="center"><nobr><a style="color: #ffffff; margin-bottom:10px;" href="?order=id&dir=asc" title="Отсортировать"><b><font color="white">ID</font></b></a></nobr></td>
+                                            <td align="center"><nobr><a style="color: #ffffff; padding-bottom:5px;" href="?order=name&dir=desc" title="Отсортировать" onmouseover="if(document.getElementById('soimg1_name3')){ document.getElementById('soimg1_name3').src='../s_desc.png'; }" onmouseout="if(document.getElementById('soimg1_name3')){ document.getElementById('soimg1_name3').src='../s_asc.png'; }"><b><font color="white">Название</font></b></a>&nbsp;<img src="../s_asc.png" border=0 width=11 height=9 alt="По возрастанию" title="По возрастанию" id="soimg1_name3"></nobr></td>
+                                            <td align="center"><b><font color="white">Стоимость</font></b></td>
+                                            <td align="center"><nobr><a style="color: #ffffff; margin-bottom:10px;" href="?order=tovar_type&dir=asc" title="Отсортировать"><b><font color="white">Тип товара</font></b></a></nobr></td>
+                                            <td align="center"><b><font color="white">Осталось<br />пин-кодов</font></b></td>
+                                            <td align="center">&nbsp;</td>
+                                        </tr>
+                                        <tr id="tr234087" bgcolor="#F4F8F8" onMouseOver="this.setAttribute('bgcolor', '#DDE6E6', 0);" onMouseOut="if(this.getAttribute('bgcolor')!='#Array') this.setAttribute('bgcolor', '#F4F8F8', 0);">
+                                            <td align="center">
+                                                <nobr>
+                                                    <a href="/adminka/product/edit/234087" title="Редактировать товар"><img src="../b_edit.png" width="16" height="16" border="0" alt="Редaктиpовaть" /></a>&nbsp;&nbsp;
+                                                    <a href="#" style="color:red;" onClick="confirmDE('234087', '1', 'one', '3'); return false;">Выкл</a>&nbsp;&nbsp;
+                                                </nobr>
+                                            </td>
+                                            <td align="center">234087</td>
+                                            <td>
+                                                #_TEST_PRODUCT_#
+                                            </td>
+                                            <td align="center">999.99 руб                                                        <br /><nobr>25 USD</nobr>                                                     </td>
+                                            <td align="center">физический</td>
+                                            <td align="center">&nbsp;</td>
+                                            <td align="center">
+                                                <input name="Button" type="button" class="button-small" value="в список товаров" onclick="confirmOutАrchive('234087');" />
+                                            </td>
+                                        </tr>
+                                        <tr id="tr234088" bgcolor="#EEF2F2" onMouseOver="this.setAttribute('bgcolor', '#DDE6E6', 0);" onMouseOut="if(this.getAttribute('bgcolor')!='#Array') this.setAttribute('bgcolor', '#EEF2F2', 0);">
+                                            <td align="center">
+                                                <nobr>
+                                                    <a href="/adminka/product/edit/234088" title="Редактировать товар"><img src="../b_edit.png" width="16" height="16" border="0" alt="Редaктиpовaть" /></a>&nbsp;&nbsp;
+                                                    <a href="#" style="color:red;" onClick="confirmDE('234088', '1', 'one', '3'); return false;">Выкл</a>&nbsp;&nbsp;
+                                                </nobr>
+                                            </td>
+                                            <td align="center">234088</td>
+                                            <td>
+                                                #_TEST_PRODUCT_#
+                                            </td>
+                                            <td align="center">999.99 руб                                                        <br /><nobr>25 USD</nobr>                                                     </td>
+                                            <td align="center">физический</td>
+                                            <td align="center">&nbsp;</td>
+                                            <td align="center">
+                                                <input name="Button" type="button" class="button-small" value="в список товаров" onclick="confirmOutАrchive('234088');" />
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="footer">
+                <script src="/assets/toastr/toastr.min.js"></script>
+                <p>© 2009-2016 <a href="http://e-autopay.com" target="_blank">e-AutoPay.com</a>. Все права защищены. <a href="http://support.e-autopay.info/" target="_blank">Центр поддержки пользователей</a></p>
+                <input type="hidden" name="csrf_token" value="7Ko5KkumTKY7uyww9iiV51aO1xTV49xOmzQ5lgqD">
+            </div>
+            <script src="/assets/eautopay2/js/is.min.js"></script>
+            <script type="text/javascript" src="/assets/voip/js/voipinactivebundle.js"></script>
+
+
+        </div>
+    </div>
+</body>
+</html>
