@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
@@ -75,8 +76,11 @@ namespace EAutopay.Upsells
         /// <param name="upsell"><see cref="Upsell"/> to be created/updated.</param>
         /// <param name="productId"><see cref="Product"/> ID.</param>
         /// <returns><see cref="Upsell"/> ID.</returns>
+        /// <exception cref="ArgumentException">Thrown when OriginID is less (or equals) than zero.</exception>
         public int Save(Upsell upsell, int productId)
         {
+            if (upsell.OriginID <= 0) throw new ArgumentException(null, "OriginID");
+            
             BindUpsell(upsell, productId);
 
             EnableUpsells(productId);

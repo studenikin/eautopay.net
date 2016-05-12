@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using EAutopay.Upsells;
 using EAutopay.Tests.Fakes;
@@ -14,10 +15,42 @@ namespace EAutopay.Tests
         EAutopayUpsellRepository _repo;
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Throws_On_Save_If_OriginID_Equals_Zero()
+        {
+            InitRepo();
+            var u = new Upsell();
+            u.OriginID = 0;
+
+            _repo.Save(u, 1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Throws_On_Save_If_OriginID_Less_Than_Zero()
+        {
+            InitRepo();
+            var u = new Upsell();
+            u.OriginID = -1;
+            
+            _repo.Save(u, 1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Throws_On_Save_If_OriginID_Is_Not_Assigned()
+        {
+            InitRepo();
+            var u = new Upsell();
+            _repo.Save(u, 1);
+        }
+
+        [TestMethod]
         public void Save_Upsell_Triggers_Crawler()
         {
             InitRepo();
             var u = new Upsell();
+            u.OriginID = 5;
 
             _repo.Save(u, 1);
             Assert.IsTrue(_crawler.WasCalled);
@@ -29,6 +62,7 @@ namespace EAutopay.Tests
             InitRepo();
             var u = new Upsell();
             u.ID = 100;
+            u.OriginID = 5;
 
             _repo.Save(u, 1);
             Assert.AreEqual(100, u.ID);
@@ -39,6 +73,7 @@ namespace EAutopay.Tests
         {
             InitRepo();
             var u = new Upsell();
+            u.OriginID = 5;
 
             _repo.Save(u, 1);
             Assert.AreEqual(3, u.ID);
@@ -49,6 +84,7 @@ namespace EAutopay.Tests
         {
             InitRepo();
             var u = new Upsell();
+            u.OriginID = 5;
 
             _repo.Save(u, 1);
             Assert.AreEqual(1, u.ParentID);
