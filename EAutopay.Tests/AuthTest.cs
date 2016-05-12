@@ -25,7 +25,7 @@ namespace EAutopay.Tests
         public void Login_Should_Return_OK_For_MainUri()
         {
             InitAuth();
-            _crawler.SetResponseUri("https://login.e-autopay.com/adminka/main.php");
+            _crawler.SetResponseUri(Common.MAIN_URI);
 
             var resp = _auth.Login();
             Assert.AreEqual(AuthStatus.Ok, resp.Status);
@@ -37,7 +37,7 @@ namespace EAutopay.Tests
             InitAuth();
 
             // simulate redirection to the secret page after loggin in
-            _crawler.SetResponseUri("https://login.e-autopay.com/adminka/identify");
+            _crawler.SetResponseUri(Common.SECRET_URI);
 
             _auth.Login();
 
@@ -49,7 +49,7 @@ namespace EAutopay.Tests
         public void Login_Should_Not_Post_Secret_For_MainUri()
         {
             InitAuth();
-            _crawler.SetResponseUri("https://login.e-autopay.com/adminka/main.php");
+            _crawler.SetResponseUri(Common.MAIN_URI);
 
             _auth.Login();
 
@@ -61,19 +61,18 @@ namespace EAutopay.Tests
         public void Logout_Should_Send_To_Correct_Uri()
         {
             InitAuth();
-            _config.SetLogin("test_login");
+            _config.SetLogin("login");
 
             _auth.Logout();
 
-            var logoutUri = "https://test_login.e-autopay.com/adminka/logout";
-            Assert.AreEqual(logoutUri, _crawler.Uri);
+            Assert.AreEqual(Common.LOGOUT_URI, _crawler.Uri);
         }
 
         [TestMethod]
         public void IsLogged_Returns_True_For_MainUri()
         {
             InitAuth();
-            _crawler.SetResponseUri("https://login.e-autopay.com/adminka/main.php");
+            _crawler.SetResponseUri(Common.MAIN_URI);
 
             Assert.IsTrue(_auth.IsLogged);
         }
@@ -82,7 +81,7 @@ namespace EAutopay.Tests
         public void IsLogged_Returns_False_For_Other_Uri()
         {
             InitAuth();
-            _crawler.SetResponseUri("https://login.e-autopay.com/adminka/forms");
+            _crawler.SetResponseUri(Common.FORMS_URI);
 
             Assert.IsFalse(_auth.IsLogged);
         }

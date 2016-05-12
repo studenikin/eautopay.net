@@ -19,7 +19,7 @@ namespace EAutopay.Tests
         public void SLoginStatus_Should_Be_OK_Form_MainUri()
         {
             var resp = new EAutopayResponse();
-            resp.Uri = new Uri("https://login.e-autopay.com/adminka/main.php");
+            resp.Uri = new Uri(Common.MAIN_URI);
 
             var ar = new AuthResult();
             ar.SetStatusFromLoginResponse(resp);
@@ -31,7 +31,7 @@ namespace EAutopay.Tests
         public void LoginStatus_Should_Be_NeedSecret_For_SecretUri()
         {
             var resp = new EAutopayResponse();
-            resp.Uri = new Uri("https://login.e-autopay.com/adminka/identify");
+            resp.Uri = new Uri(Common.SECRET_URI);
 
             var ar = new AuthResult();
             ar.SetStatusFromLoginResponse(resp);
@@ -43,7 +43,7 @@ namespace EAutopay.Tests
         public void LoginStatus_Should_Be_Failed_For_OtherUri()
         {
             var resp = new EAutopayResponse();
-            resp.Uri = new Uri("https://login.e-autopay.com/adminka/forms");
+            resp.Uri = new Uri(Common.FORMS_URI);
 
             var ar = new AuthResult();
             ar.SetStatusFromLoginResponse(resp);
@@ -55,7 +55,7 @@ namespace EAutopay.Tests
         public void SecretStatus_Should_Be_OK_For_MainUri()
         {
             var resp = new EAutopayResponse();
-            resp.Uri = new Uri("https://login.e-autopay.com/adminka/main.php");
+            resp.Uri = new Uri(Common.MAIN_URI);
 
             var ar = new AuthResult();
             ar.SetStatusFromSecretResponse(resp);
@@ -67,7 +67,7 @@ namespace EAutopay.Tests
         public void SecretStatus_Should_Be_SecretFailed_For_LoginUri()
         {
             var resp = new EAutopayResponse();
-            resp.Uri = new Uri("https://login.e-autopay.com/adminka/login");
+            resp.Uri = new Uri(Common.LOGIN_URI);
 
             var ar = new AuthResult();
             ar.SetStatusFromSecretResponse(resp);

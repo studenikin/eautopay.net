@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="AuthResultTest .cs" />
     <Compile Include="AppConfigTest.cs" />
+    <Compile Include="Common.cs" />
     <Compile Include="EAutopayProductParserTest.cs" />
     <Compile Include="EAutopayUpsellParserTest.cs" />
     <Compile Include="EAutopayFormParserTest.cs" />
