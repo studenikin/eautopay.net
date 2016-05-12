@@ -15,6 +15,7 @@ namespace EAutopay
         /// <summary>
         /// Initializes a new instance of the <see cref="EAutopayConfig"/> class.
         /// </summary>
+        /// <exception cref="ConfigurationMissingException">Thrown when settings lack of the eautopay_login element.</exception>
         public AppConfig() :this (ConfigurationManager.AppSettings)
         { }
 
@@ -22,6 +23,7 @@ namespace EAutopay
         /// Initializes a new instance of the <see cref="EAutopayConfig"/> class.
         /// </summary>
         /// <param name="settings">The list of settings. Default value is AppSettings.</param>
+        /// <exception cref="ConfigurationMissingException">Thrown when settings lack of the eautopay_login element.</exception>
         public AppConfig(NameValueCollection settings)
         {
             _settings = settings;

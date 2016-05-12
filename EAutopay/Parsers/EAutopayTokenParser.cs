@@ -3,7 +3,8 @@
 namespace EAutopay.Parsers
 {
     /// <summary>
-    /// Retrieves useful data from E-Autopay by parsing response data.
+    /// Provides secure token over HTTPS.
+    /// The token needs to be sent for every request to E-Autopay.
     /// </summary>
     internal class EAutopayTokenParser : ITokenParser
     {
@@ -11,7 +12,7 @@ namespace EAutopay.Parsers
         /// Gets secure token residing on the Login page.
         /// </summary>
         /// <param name="source">HTML to be parsed.</param>
-        /// <returns>Secure token as string.</returns>
+        /// <returns>The token as string.</returns>
         public string ExtractToken(string source)
         {
             var htmlDoc = new HtmlDocument();

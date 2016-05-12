@@ -1,5 +1,4 @@
-﻿using System.Web.Helpers;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Collections.Generic;
 
 using EAutopay.Products;
@@ -8,11 +7,15 @@ using HtmlAgilityPack;
 
 namespace EAutopay.Parsers
 {
+    /// <summary>
+    /// Extracts the form data out of the "products" page in E-Autopay.
+    /// </summary>
     internal class EAutopayProductParser : IProductParser
     {
         /// <summary>
         /// Gets the list of products on the "products" page in E-Autopay
         /// </summary>
+        /// <param name="source">Html source to be parsed.</param>
         /// <returns>The list of <see cref="Product"/>.</returns>
         public List<Product> ExtractProducts(string source)
         {

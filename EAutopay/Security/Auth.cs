@@ -40,6 +40,7 @@ namespace EAutopay.Security
         /// <param name="password">Password in E-Autopay.</param>
         /// <param name="secret">Answer to secret question in E-Autopay.</param>
         /// <param name="config">General E-Autopay settings.</param>
+        /// <param name="crawler"><see cref="ICrawler"/> to make HTTP requests to E-Autopay.</param>
         public Auth(string login, string password, string secret, IConfiguration config, ICrawler crawler)
         {
             _login = login;

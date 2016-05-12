@@ -27,6 +27,8 @@ namespace EAutopay.Forms
         /// Initializes a new instance of the <see cref="EAutopayFormRepository"/> class.
         /// </summary>
         /// <param name="config">General E-Autopay settings.</param>
+        /// <param name="crawler"><see cref="ICrawler"/> to make HTTP requests to E-Autopay.</param>
+        /// <param name="parser"><see cref="IFormParser"/> to parse response delivered by the crawler.</param>
         public EAutopayFormRepository(IConfiguration config, ICrawler crawler, IFormParser parser)
         {
             _config = config ?? new AppConfig();

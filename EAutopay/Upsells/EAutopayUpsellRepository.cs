@@ -3,7 +3,6 @@ using System.Collections.Specialized;
 using System.Linq;
 
 using EAutopay.Parsers;
-using EAutopay.Products;
 
 namespace EAutopay.Upsells
 {
@@ -28,6 +27,8 @@ namespace EAutopay.Upsells
         /// Initializes a new instance of the <see cref="EAutopayUpsellRepository"/> class.
         /// </summary>
         /// <param name="config">General E-Autopay settings.</param>
+        /// <param name="crawler"><see cref="ICrawler"/> to make HTTP requests to E-Autopay.</param>
+        /// <param name="parser"><see cref="IFormParser"/> to parse response delivered by the crawler.</param>
         public EAutopayUpsellRepository(IConfiguration config, ICrawler crawler, IUpsellParser parser)
         {
             _config = config ?? new AppConfig();

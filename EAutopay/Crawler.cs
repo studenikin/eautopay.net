@@ -30,6 +30,7 @@ namespace EAutopay
         /// </summary>
         /// <param name="cache"><see cref="ICache"/> for caching Cookies, etc.</param>
         /// <param name="config">General E-Autopay settings.</param>
+        /// <param name="parser"><see cref="ITokenParser"/> to retrieve token.</param>
         public Crawler(ICache cache, IConfiguration config, ITokenParser parser)
         {
             _cache = cache ?? new HttpCache();
@@ -45,7 +46,7 @@ namespace EAutopay
         }
 
         /// <summary>
-        /// Posts data and gets a response from the specified URI in E-Autopay.
+        /// Posts data and gets the response from the specified URI in E-Autopay.
         /// </summary>
         /// <param name="uri">The URI of the page in E-Autopay.</param>
         /// <param name="paramz">The data to send to the page.</param>
@@ -73,13 +74,19 @@ namespace EAutopay
             }
         }
 
+        /// <summary>
+        /// Gets the response from the specified URI in E-Autopay.
+        /// </summary>
+        /// <param name="uri">The URI of the page in E-Autopay.</param>
+        /// <param name="paramz">The data to send to the page.</param>
+        /// <returns>A <see cref="EAutopayResponse"/> that contains the response from the URI.</returns>
         public EAutopayResponse Get(string uri)
         {
             return Get(uri, null);
         }
 
         /// <summary>
-        /// Gets a response from the specified URI in E-Autopay.
+        /// Gets the response from the specified URI in E-Autopay.
         /// </summary>
         /// <param name="uri">The URI of the page in E-Autopay.</param>
         /// <param name="paramz">The data to send to the page.</param>

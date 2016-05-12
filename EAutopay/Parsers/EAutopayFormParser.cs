@@ -6,6 +6,9 @@ using HtmlAgilityPack;
 
 namespace EAutopay.Parsers
 {
+    /// <summary>
+    /// Extracts the form data out of the "forms" page in E-Autopay.
+    /// </summary>
     internal class EAutopayFormParser : IFormParser
     {
         /// <summary>
