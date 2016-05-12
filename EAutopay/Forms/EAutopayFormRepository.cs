@@ -75,23 +75,11 @@ namespace EAutopay.Forms
         /// <returns><see cref="Form"/> ID.</returns>
         public int Save(Form form)
         {
-            var paramz = new NameValueCollection
-            {
-                {"action", "new"},
-                {"extra_settings", "{}"},
-                {"name_form", form.Name}
-            };
-
-            var up = new UriProvider(_config.Login);
-            _crawler.Post(up.FormSaveUri, paramz);
+            SaveFormInEAutopay(form);
 
             if (form.IsNew)
             {
-                var lastForm = GetNewest();
-                if (lastForm != null)
-                {
-                    form.ID = lastForm.ID;
-                }
+                form.ID = GetLatestFormID();
             }
             return form.ID;
         }
@@ -120,6 +108,27 @@ namespace EAutopay.Forms
             form.ID = 0;
             form.Name = string.Empty;
         }
-    }
 
+        private int GetLatestFormID()
+        {
+            var latest = GetAll()
+                .OrderByDescending(f => f.ID)
+                .FirstOrDefault();
+
+            return latest != null ? latest.ID : 0;
+        }
+
+        private void SaveFormInEAutopay(Form form)
+        {
+            var paramz = new NameValueCollection
+            {
+                {"action", "new"},
+                {"extra_settings", "{}"},
+                {"name_form", form.Name}
+            };
+
+            var up = new UriProvider(_config.Login);
+            _crawler.Post(up.FormSaveUri, paramz);
+        }
+    }
 }

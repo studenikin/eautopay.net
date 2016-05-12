@@ -66,24 +66,13 @@ namespace EAutopay.Products
         /// <returns><see cref="Product"/> ID.</returns>
         public int Save(Product p, bool isForUpsell)
         {
-            var paramz = new NameValueCollection
-            {
-                {"tovar_type", "1"},
-                {"edit[]", "name"},
-                {"category_id", "0"},
-                {"site_url", ""},
-                {"author_fio", ""},
-                {"name", isForUpsell ? GetNameForUpsell(p.Name) : p.Name},
-                {"product_id", p.ID.ToString().Equals("0") ? "" : p.ID.ToString()}
-            };
-            var up = new UriProvider(_config.Login);
-            _crawler.Post(up.ProductSaveUri, paramz);
+            SaveProductInEAutopay(p, isForUpsell);
 
             if (p.IsNew)
             {
                 p.ID = GetLatestProductID();
             }
-            SetPrice(p);
+            SetPrice(p.ID, p.PriceInvariant);
 
             return p.ID;
         }
@@ -100,7 +89,7 @@ namespace EAutopay.Products
             ResetValues(p);
         }
 
-        private void SetPrice(Product p)
+        private void SetPrice(int productId, string priceInvariant)
         {
             var paramz = new NameValueCollection
             {
@@ -109,8 +98,8 @@ namespace EAutopay.Products
                 {"currency", "руб"},
                 {"is_any_price", "0"},
                 {"summ_rashod", "0.00"},
-                {"product_id", p.ID.ToString()},
-                {"price1", p.PriceInvariant}
+                {"product_id", productId.ToString()},
+                {"price1", priceInvariant}
             };
             var up = new UriProvider(_config.Login);
             _crawler.Post(up.ProductSaveUri, paramz);
@@ -145,6 +134,22 @@ namespace EAutopay.Products
                 .FirstOrDefault();
 
             return latest != null ? latest.ID : 0;
+        }
+
+        private void SaveProductInEAutopay(Product p, bool isForUpsell)
+        {
+            var paramz = new NameValueCollection
+            {
+                {"tovar_type", "1"},
+                {"edit[]", "name"},
+                {"category_id", "0"},
+                {"site_url", ""},
+                {"author_fio", ""},
+                {"name", isForUpsell ? GetNameForUpsell(p.Name) : p.Name},
+                {"product_id", p.ID.ToString().Equals("0") ? "" : p.ID.ToString()}
+            };
+            var up = new UriProvider(_config.Login);
+            _crawler.Post(up.ProductSaveUri, paramz);
         }
     }
 }

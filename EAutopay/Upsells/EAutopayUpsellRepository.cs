@@ -87,8 +87,7 @@ namespace EAutopay.Upsells
 
             if (upsell.IsNew)
             { 
-                var lastUpsell = GetNewest(productId);
-                upsell.ID = lastUpsell != null ? lastUpsell.ID : 0;
+                upsell.ID = GetLatestUpsellID(productId);
             }
 
             upsell.ParentID = productId;
@@ -121,15 +120,6 @@ namespace EAutopay.Upsells
             {
                 Delete(upsell);
             }
-        }
-
-        /// <summary>
-        /// Returns latest created upsell.
-        /// </summary>
-        private Upsell GetNewest(int productId)
-        {
-            var upsells = GetByProduct(productId);
-            return upsells.OrderByDescending(u => u.ID).FirstOrDefault();
         }
 
         /// <summary>
@@ -238,6 +228,15 @@ namespace EAutopay.Upsells
             int ret;
             int.TryParse(_config.UpsellInterval.ToString(), out ret);
             return ret > 0 ? ret.ToString() : "20";
+        }
+
+        private int GetLatestUpsellID(int productId)
+        {
+            var latest = GetByProduct(productId)
+                .OrderByDescending(u => u.ID)
+                .FirstOrDefault();
+
+            return latest != null ? latest.ID : 0;
         }
     }
 }
