@@ -40,3 +40,8 @@ upsell.SuccessUri = "http://myecommerce.com/upsells/success";
 var repository = new EAutopayUpsellRepository();
 repository.Save(upsell, parentId);
 ```
+## Supported Platforms
+
+* .NET 4.5
+* Visual Studio 2012 (or greater)
+* Windows 7 (or greater)
