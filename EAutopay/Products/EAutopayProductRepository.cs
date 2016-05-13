@@ -62,6 +62,16 @@ namespace EAutopay.Products
         /// Creates a new product in E-Autopay; or updates existing one.
         /// </summary>
         /// <param name="p"><see cref="Product"/> to be updated/created.</param>
+        /// <returns><see cref="Product"/> ID.</returns>
+        public int Save(Product p)
+        {
+            return Save(p, false);
+        }
+
+        /// <summary>
+        /// Creates a new product in E-Autopay; or updates existing one.
+        /// </summary>
+        /// <param name="p"><see cref="Product"/> to be updated/created.</param>
         /// <param name="isForUpsell">Indicates whether a specified product is an upsell.</param>
         /// <returns><see cref="Product"/> ID.</returns>
         public int Save(Product p, bool isForUpsell)
