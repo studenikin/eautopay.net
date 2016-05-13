@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="AuthResultTest .cs" />
     <Compile Include="AppConfigTest.cs" />
+    <Compile Include="Common.cs" />
     <Compile Include="EAutopayProductParserTest.cs" />
     <Compile Include="EAutopayUpsellParserTest.cs" />
     <Compile Include="EAutopayFormParserTest.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Fakes\FakeUpsellParser.cs" />
     <Compile Include="Fakes\FakeProductParser.cs" />
     <Compile Include="Fakes\FakeFormParser.cs" />
+    <Compile Include="CrawlerServiceTest.cs" />
     <Compile Include="FormTest.cs" />
     <Compile Include="ProductTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

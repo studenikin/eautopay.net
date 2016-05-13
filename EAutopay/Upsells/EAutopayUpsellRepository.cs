@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
@@ -66,7 +67,9 @@ namespace EAutopay.Upsells
         /// <returns>An <see cref="Upsell"/>.</returns>
         public Upsell Get(int id, int productId)
         {
-            return GetByProduct(productId).Where(u => u.ID == id).FirstOrDefault();
+            return GetByProduct(productId)
+                .Where(u => u.ID == id)
+                .FirstOrDefault();
         }
 
         /// <summary>
@@ -75,16 +78,18 @@ namespace EAutopay.Upsells
         /// <param name="upsell"><see cref="Upsell"/> to be created/updated.</param>
         /// <param name="productId"><see cref="Product"/> ID.</param>
         /// <returns><see cref="Upsell"/> ID.</returns>
+        /// <exception cref="ArgumentException">Thrown when OriginID is less (or equals) than zero.</exception>
         public int Save(Upsell upsell, int productId)
         {
+            if (upsell.OriginID <= 0) throw new ArgumentException(null, "OriginID");
+            
             BindUpsell(upsell, productId);
 
             EnableUpsells(productId);
 
             if (upsell.IsNew)
             { 
-                var lastUpsell = GetNewest(productId);
-                upsell.ID = lastUpsell != null ? lastUpsell.ID : 0;
+                upsell.ID = GetLatestUpsellID(productId);
             }
 
             upsell.ParentID = productId;
@@ -117,15 +122,6 @@ namespace EAutopay.Upsells
             {
                 Delete(upsell);
             }
-        }
-
-        /// <summary>
-        /// Returns latest created upsell.
-        /// </summary>
-        private Upsell GetNewest(int productId)
-        {
-            var upsells = GetByProduct(productId);
-            return upsells.OrderByDescending(u => u.ID).FirstOrDefault();
         }
 
         /// <summary>
@@ -234,6 +230,15 @@ namespace EAutopay.Upsells
             int ret;
             int.TryParse(_config.UpsellInterval.ToString(), out ret);
             return ret > 0 ? ret.ToString() : "20";
+        }
+
+        private int GetLatestUpsellID(int productId)
+        {
+            var latest = GetByProduct(productId)
+                .OrderByDescending(u => u.ID)
+                .FirstOrDefault();
+
+            return latest != null ? latest.ID : 0;
         }
     }
 }

@@ -43,8 +43,9 @@ namespace EAutopay.Forms
         /// <returns>A <see cref="Form"/></returns>
         public Form Get(int id)
         {
-            var forms = GetAll();
-            return forms.Where(f => f.ID == id).FirstOrDefault();
+            return GetAll()
+                .Where(f => f.ID == id)
+                .FirstOrDefault();
         }
 
         /// <summary>
@@ -64,8 +65,9 @@ namespace EAutopay.Forms
         /// <returns>A <see cref="Form"/></returns>
         public Form GetNewest() 
         {
-            var forms = GetAll();
-            return forms.OrderByDescending(f => f.ID).FirstOrDefault();
+            return GetAll()
+                .OrderByDescending(f => f.ID)
+                .FirstOrDefault();
         }
 
         /// <summary>
@@ -75,23 +77,11 @@ namespace EAutopay.Forms
         /// <returns><see cref="Form"/> ID.</returns>
         public int Save(Form form)
         {
-            var paramz = new NameValueCollection
-            {
-                {"action", "new"},
-                {"extra_settings", "{}"},
-                {"name_form", form.Name}
-            };
-
-            var up = new UriProvider(_config.Login);
-            _crawler.Post(up.FormSaveUri, paramz);
+            SaveInEAutopay(form);
 
             if (form.IsNew)
             {
-                var lastForm = GetNewest();
-                if (lastForm != null)
-                {
-                    form.ID = lastForm.ID;
-                }
+                form.ID = GetLatestFormID();
             }
             return form.ID;
         }
@@ -104,13 +94,7 @@ namespace EAutopay.Forms
         {
             if (form.IsNew) return;
 
-            var paramz = new NameValueCollection
-            {
-                {"id", form.ID.ToString()}
-            };
-
-            var up = new UriProvider(_config.Login);
-            _crawler.Post(up.FormDeleteUri, paramz);
+            DeleteFromEAutopay(form);
 
             ResetFormValues(form);
         }
@@ -120,6 +104,38 @@ namespace EAutopay.Forms
             form.ID = 0;
             form.Name = string.Empty;
         }
-    }
 
+        private int GetLatestFormID()
+        {
+            var latest = GetAll()
+                .OrderByDescending(f => f.ID)
+                .FirstOrDefault();
+
+            return latest != null ? latest.ID : 0;
+        }
+
+        private void SaveInEAutopay(Form form)
+        {
+            var paramz = new NameValueCollection
+            {
+                {"action", "new"},
+                {"extra_settings", "{}"},
+                {"name_form", form.Name}
+            };
+
+            var up = new UriProvider(_config.Login);
+            _crawler.Post(up.FormSaveUri, paramz);
+        }
+
+        private void DeleteFromEAutopay(Form form)
+        {
+            var paramz = new NameValueCollection
+            {
+                {"id", form.ID.ToString()}
+            };
+
+            var up = new UriProvider(_config.Login);
+            _crawler.Post(up.FormDeleteUri, paramz);
+        }
+    }
 }
