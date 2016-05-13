@@ -26,3 +26,17 @@ product.Price = 99.99;
 var repository = new EAutopayProductRepository();
 repository.Save(product);
 ```
+Bind an upsell to a product in E-Autopay.
+
+```c#
+int originId = 1234; // id of the product the upsell is based on
+int parentId = 4321; // id of the product the upsell is bound to
+
+var upsell = new Upsell();
+upsell.OriginID = originId;
+upsell.Price = 500.99;
+upsell.SuccessUri = "http://myecommerce.com/upsells/success";
+
+var repository = new EAutopayUpsellRepository();
+repository.Save(upsell, parentId);
+```
