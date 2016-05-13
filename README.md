@@ -43,5 +43,5 @@ repository.Save(upsell, parentId);
 ## Supported Platforms
 
 * .NET 4.5
-* Windows 8
+* Windows 7, 8
 * Visual Studio 2015
