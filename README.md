@@ -16,7 +16,7 @@ var repository = new EAutopayProductRepository();
 var product = repository.Get(1234);
 Console.WriteLine("Name: " + product.Name + " Price: " + product.Price);
 ```
-Create new product in E-Autopay.
+Create a new product in E-Autopay.
 
 ```c#
 var product = new Product();
@@ -43,5 +43,5 @@ repository.Save(upsell, parentId);
 ## Supported Platforms
 
 * .NET 4.5
-* Visual Studio 2012 (or greater)
-* Windows 7 (or greater)
+* Windows 8
+* Visual Studio 2015
