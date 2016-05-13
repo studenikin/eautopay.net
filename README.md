@@ -6,3 +6,23 @@
 
 EAutopay.NET is a client library targeting .NET that provides an easy
 way to interact with the [E-Autopay](http://e-autopay.com/) service.
+
+## Usage examples
+
+Get product from E-Autopay.
+
+```c#
+var repository = new EAutopayProductRepository();
+var product = repository.Get(1234);
+Console.WriteLine("Name: " + product.Name + " Price: " + product.Price);
+```
+Create new product in E-Autopay.
+
+```c#
+var product = new Product();
+product.Name = "Some nice DVD";
+product.Price = 99.99;
+
+var repository = new EAutopayProductRepository();
+repository.Save(product);
+```
