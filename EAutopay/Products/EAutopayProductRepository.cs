@@ -43,8 +43,9 @@ namespace EAutopay.Products
         /// <returns>A <see cref="Product"/></returns>
         public Product Get(int id)
         {
-            var allProducts = GetAll();
-            return allProducts.Where(p => p.ID == id).FirstOrDefault();
+            return GetAll()
+                .Where(p => p.ID == id)
+                .FirstOrDefault();
         }
 
         /// <summary>

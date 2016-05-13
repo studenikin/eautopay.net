@@ -67,7 +67,9 @@ namespace EAutopay.Upsells
         /// <returns>An <see cref="Upsell"/>.</returns>
         public Upsell Get(int id, int productId)
         {
-            return GetByProduct(productId).Where(u => u.ID == id).FirstOrDefault();
+            return GetByProduct(productId)
+                .Where(u => u.ID == id)
+                .FirstOrDefault();
         }
 
         /// <summary>
