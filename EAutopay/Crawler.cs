@@ -65,7 +65,7 @@ namespace EAutopay
             request.CookieContainer = new CookieContainer();
             request.CookieContainer.Add(Cookies);
 
-            WritePostData(request, paramz);
+            CrawlerService.WritePostData(request, paramz, Token);
 
             using (var resp = (HttpWebResponse)request.GetResponse())
             {
@@ -93,7 +93,7 @@ namespace EAutopay
         /// <returns>A <see cref="EAutopayResponse"/> that contains the response from the URI.</returns>
         public EAutopayResponse Get(string uri, NameValueCollection paramz)
         {
-            string uriWithParams = CombineUriWithParams(uri, paramz);
+            string uriWithParams = CrawlerService.CombineUriWithParams(uri, paramz);
 
             var request = (HttpWebRequest)WebRequest.Create(uriWithParams);
             request.CookieContainer = new CookieContainer();
@@ -139,37 +139,6 @@ namespace EAutopay
                 cookies.Add(value);
                 _cache.Set("eautopay_cookies", cookies);
             }
-        }
-
-        private void WritePostData(HttpWebRequest request, NameValueCollection paramz)
-        {
-            using (var stream = request.GetRequestStream())
-            {
-                using (var writer = new StreamWriter(stream))
-                {
-                    string postData = "";
-                    paramz.Add("_token", Token);
-                    foreach (string p in paramz)
-                    {
-                        postData += string.Format("{0}={1}&", p, paramz[p]);
-                    }
-                    writer.Write(postData.Trim('&'));
-                }
-            }
-        }
-
-        private string CombineUriWithParams(string uri, NameValueCollection paramz)
-        {
-            if (paramz != null)
-            {
-                uri += "?";
-                foreach (string p in paramz)
-                {
-                    uri += string.Format("{0}={1}&", p, paramz[p]);
-                }
-                uri = uri.Trim('&');
-            }
-            return uri;
         }
 
         private string RetrieveToken()

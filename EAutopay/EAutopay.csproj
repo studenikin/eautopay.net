@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationMissingException.cs" />
+    <Compile Include="CrawlerService.cs" />
     <Compile Include="Parsers\EAutopayFormParser.cs" />
     <Compile Include="Forms\IFormRepository.cs" />
     <Compile Include="IConfiguration.cs" />
