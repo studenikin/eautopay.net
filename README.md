@@ -34,7 +34,7 @@ int parentId = 4321; // id of the product the upsell is bound to
 
 var upsell = new Upsell();
 upsell.OriginID = originId;
-upsell.Price = 500.99;
+upsell.Price = 500.00;
 upsell.SuccessUri = "http://myecommerce.com/upsells/success";
 
 var repository = new EAutopayUpsellRepository();
