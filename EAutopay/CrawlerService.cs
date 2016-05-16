@@ -19,9 +19,10 @@ namespace EAutopay
         {
             using (var stream = request.GetRequestStream())
             {
-                var writer = new StreamWriter(stream);
-                writer.Write(BuildPostData(paramz, token));
-                
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(BuildPostData(paramz, token));
+                }
             }
         }
 
