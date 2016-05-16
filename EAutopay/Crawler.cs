@@ -9,7 +9,7 @@ using EAutopay.Parsers;
 namespace EAutopay
 {
     /// <summary>
-    /// Provides an easy way to post/get http request from/to E-Autopay.
+    /// Provides an easy way to post/get http requests from/to E-Autopay.
     /// </summary>
     public class Crawler : ICrawler
     {

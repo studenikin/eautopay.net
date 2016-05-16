@@ -8,7 +8,7 @@ namespace EAutopay
     /// </summary>
     public class AppConfig : IConfiguration
     {
-        string _login;
+        readonly string _login;
 
         NameValueCollection _settings;
 
